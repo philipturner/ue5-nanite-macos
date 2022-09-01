@@ -15,6 +15,19 @@ Prerequisites:
 
 > <sup>1</sup>Xcode 14 should be released in September 2022. This information may become outdated soon.
 
+To repeat my steps and investigate bugs, you will switch between Xcode 13 and Xcode 14 beta often. Perform the following in a new Terminal window, then close the window.
+
+```
+>>> sudo xcode-select --switch ~/Applications/Xcode-beta.app
+(prompt to enter password)
+>>> swift --version
+(Swift 5.7 should appear in the output)
+>>> sudo xcode-select --switch ~/Applications/Xcode.app
+(prompt to enter password)
+>>> swift --version
+(Swift 5.6 should appear in the output)
+```
+
 <!--
 Use xcode-select, query `swift --version` to prove with Xcode you're using.
 
