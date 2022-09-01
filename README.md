@@ -55,10 +55,12 @@ While cloning the UE5 repository, it may ask for your credentials. Enter the acc
 <details>
 <summary>Compile the unmodified 'ue5-main' branch</summary>
 
-Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code) starting with step 3 of "Downloading the Source Code". Then, follow [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source). Unreal Editor will not launch from <b>Product > Run</b>, so navigate to the following URL in finder. Click on the `UnrealEditor` application.
+Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code) starting with step 3 of "Downloading the Source Code". Then, follow [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source). Unreal Editor will not launch from <b>Product > Run</b>, so navigate to the following URL in finder.
 
 ```
 /Users/<your username>/Documents/UnrealEngine/UnrealEngine/Engine/Binaries/Mac
 ```
+
+Click on the `UnrealEditor` application. After some time, the "Unreal Project Browser" window appears.
 
 </details>
