@@ -25,7 +25,7 @@ To repeat my steps and investigate bugs, you will switch between Xcode 13 and Xc
 >>> sudo xcode-select --switch ~/Applications/Xcode.app
 (prompt to enter password)
 >>> swift --version
-(Swift 5.6 should appear in the output)
+(Swift 5.6.1 should appear in the output)
 ```
 
 <!--
