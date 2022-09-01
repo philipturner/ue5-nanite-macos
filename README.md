@@ -92,7 +92,11 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 
 <!-- Command ExternalBuildToolExecution crashed -->
 
-<!-- Deleting /Engine/Binaries/Mac,Linux,IOS,TVOS then doing "clean build folder" -->
+<!-- Deleting /Engine/Binaries/Mac,Linux,IOS,TVOS  -->
+
+<!-- Rerun Setup.command and GenerateProjectFiles.command -->
+  
+<!-- TODO: "clean build folder" again -->
 
 </details>
 <details>
