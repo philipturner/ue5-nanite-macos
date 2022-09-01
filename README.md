@@ -75,6 +75,6 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 
 <!-- Compiling with Xcode 14 beta requires choosing "Open With" on the .xcworkspace -->
 
-<!-- Red Error in Xcode > Navigator??? > UE5 > Build Settings > Search Bar; generate info; Change "Generate Info.plist File" from "No" to "Yes"-->
+<!-- Attempt build > Error > Navigator??? > UE5 > Build Settings > Search Bar; generate info; Change "Generate Info.plist File" from "No" to "Yes"-->
 
 </details>
