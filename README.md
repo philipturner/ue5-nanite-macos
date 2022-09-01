@@ -96,6 +96,8 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 
 <!-- Rerun Setup.command and GenerateProjectFiles.command -->
   
+<!-- A conflicting UnrealBuildTool is running, so I have to reboot my Mac -->
+  
 <!-- TODO: "clean build folder" again -->
 
 </details>
