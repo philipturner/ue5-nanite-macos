@@ -72,10 +72,12 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 </details>
 <details>
 <summary>Recompile with Xcode 14 beta</summary>
-
-<!-- Delete the "UnrealEditor" application from binaries -->
+  
+<!-- sudo xcode-select --switch Xcode-beta, quit both Xcode and Xcode-beta -->
 
 <!-- Compiling with Xcode 14 beta requires choosing "Open With" on the .xcworkspace -->
+
+<!-- Clean build folder: fails, but it actually succeeds -->
 
 <!-- Attempt build > Error > Navigator??? > UE5 > Build Settings > Search Bar; generate info; Change "Generate Info.plist File" from "No" to "Yes"-->
 
