@@ -35,7 +35,12 @@ Create a folder called `UnrealEngine` in `~/Documents`. Right-click the folder i
 /Users/<your username>/Documents/UnrealEngine
 ```
 
-Sign into Git through Xcode. Launch the "Xcode" app and go to Menu Bar > Xcode > Preferences > Accounts. Click the "+" button on the bottom left, then select the "GitHub" account type. A popup prompts you for a GitHub access token.
+Sign into Git through Xcode. Launch the "Xcode" app and go to Menu Bar > Xcode > Preferences > Accounts. Click the "+" button on the bottom left, then select the "GitHub" account type. A popup prompts you for a GitHub [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Generate one with the following scopes. <ins>Do not</ins> close the browser window showing that token's letters/digits until you've cloned the UE5 repository.
+
+- admin:public_key
+- write:discussion
+- repo
+- user
 
 Enter the command below. If you are not already signed into Git, it will prompt you to sign in. The password expects an [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), not your GitHub account password. Create a token 
 
