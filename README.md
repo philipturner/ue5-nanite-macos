@@ -28,13 +28,6 @@ To repeat my steps and investigate bugs, you will switch between Xcode 13 and Xc
 (Swift 5.6.1 should appear in the output)
 ```
 
-Create a folder called `UnrealEngine` in `~/Documents`. Right-click the folder in Finder and click "New Terminal at Folder". Enter this command into Terminal:
-
-```
->>> pwd
-/Users/<your username>/Documents/UnrealEngine
-```
-
 Sign into Git through Xcode. Launch the "Xcode" app and go to Menu Bar > Xcode > Preferences > Accounts. Click the "+" button on the bottom left, then select the "GitHub" account type. A popup prompts you for a GitHub [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Generate one with the following scopes. <ins>Do not</ins> close the browser window showing that token's letters/digits until you've cloned the UE5 repository.
 
 - admin:public_key
@@ -42,7 +35,12 @@ Sign into Git through Xcode. Launch the "Xcode" app and go to Menu Bar > Xcode >
 - repo
 - user
 
-Enter the command below. If you are not already signed into Git, it will prompt you to sign in. The password expects an [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), not your GitHub account password. Create a token 
+Enter your GitHub account username and the access token. Click "Sign In", then quit and restart Xcode. Create a folder called `UnrealEngine` in `~/Documents`. Right-click it in Finder and click "New Terminal at Folder". Enter these commands into Terminal:
+
+```
+>>> pwd
+/Users/<your username>/Documents/UnrealEngine
+```
 
 <!--
 Use xcode-select, query `swift --version` to prove with Xcode you're using.
