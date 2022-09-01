@@ -80,7 +80,7 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 
 <!-- Clean build folder: fails, but it actually succeeds -->
 
-<!-- Attempt build > Error > Navigator??? > UE5 > Build Settings > Search Bar; generate info; Change "Generate Info.plist File" from "No" to "Yes" ==== Make sure did not select "TARGETS > UE5"; it's "PROJECT > UE5" -->
+<!-- Attempt build > Error > Navigator??? > UE5 > Build Settings > Search Bar; generate info; Change "Generate Info.plist File" from "No" to "Yes" ==== Make sure did not select "PROJECT > UE5"; it's "TARGETS > UE5" -->
 
 <!-- Let it access your documents folder -->
 
