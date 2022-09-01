@@ -102,6 +102,8 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
  
 <!-- Clean build folder then <b>Product > Build</b> -->
 
+<!-- It's at 100% now! -->
+
 </details>
 <details>
 <summary>Create your 'EpicGames/UnrealEngine' fork and branch</summary>
