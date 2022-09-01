@@ -88,7 +88,7 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 
 </details>
 <details>
-<summary>Set up your 'EpicGames/UnrealEngine' fork and branch</summary>
+<summary>Create your 'EpicGames/UnrealEngine' fork and branch</summary>
   
 <!-- Git add + commit should not show any changes -->
 
