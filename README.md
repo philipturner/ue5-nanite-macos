@@ -45,7 +45,7 @@ Enter your GitHub account username and the access token. Click "Sign In", then q
 
 While cloning the UE5 repository, it may ask for your credentials. Enter the access token from above instead of your account password. The download may take an hour with average internet speeds, so `git clone` has flags that minimize the amount of downloaded commits. 
 
-Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code), starting with "Downloading the Source Code" step 3. Then, follow [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source). Unreal Editor will not launch from <b>Product > Run</b>, so navigate to the following URL in finder. Click on the `UnrealEditor` application.
+Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code) starting with step 3 of "Downloading the Source Code". Then, follow [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source). Unreal Editor will not launch from <b>Product > Run</b>, so navigate to the following URL in finder. Click on the `UnrealEditor` application.
 
 ```
 /Users/<your username>/Documents/UnrealEngine/UnrealEngine/Engine/Binaries/Mac
