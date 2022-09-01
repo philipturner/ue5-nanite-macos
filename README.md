@@ -58,7 +58,7 @@ While cloning the UE5 repository, it may ask for your credentials. Enter the acc
 
 </details>
 <details>
-<summary>Compile the unmodified 'ue5-main' branch</summary>
+<summary>Compile the unmodified 'ue5-main' branch with Xcode 13</summary>
 
 ---
 
