@@ -86,7 +86,9 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 
 <!-- Activity monitor > CPU will spike within 5 minutes with a bunch of "clang". Over 50% of the CPU processing power should be being utilized. -->
 
-<!-- It's strangely stuck on "Constructing description" when the previous compilation showed something like "Running external build tool"-->
+<!-- It's strangely stuck on "Constructing description" when the previous compilation showed something like "Running external build tool" -->
+
+<!-- You can validate that something's going on because the "UnrealEditor" application's contents expand down to an empty folder. Also, why is it only using half the CPU now? -->
 
 </details>
 <details>
