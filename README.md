@@ -58,7 +58,7 @@ While cloning the UE5 repository, it may ask for your credentials. Enter the acc
 
 </details>
 <details>
-<summary>Compile the unmodified 'ue5-main' branch with Xcode 13</summary>
+<summary>Compile unmodified 'ue5-main' with Xcode 13</summary>
 
 ---
 
@@ -85,5 +85,11 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 <!-- Let it access your documents folder -->
 
 <!-- Activity monitor > CPU will spike within 5 minutes with a bunch of "clang". Over 50% of the CPU processing power should be being utilized. -->
+
+</details>
+<details>
+<summary>Set up your 'EpicGames/UnrealEngine' fork and branch</summary>
+  
+<!-- Git add + commit should not show any changes -->
 
 </details>
