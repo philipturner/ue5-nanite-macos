@@ -86,6 +86,8 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 
 <!-- Activity monitor > CPU will spike within 5 minutes with a bunch of "clang". Over 50% of the CPU processing power should be being utilized. -->
 
+<!-- It's strangely stuck on "Constructing description" when the previous compilation showed something like "Running external build tool"-->
+
 </details>
 <details>
 <summary>Create your 'EpicGames/UnrealEngine' fork and branch</summary>
