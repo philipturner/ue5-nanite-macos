@@ -6,7 +6,9 @@ Brings the Nanite feature from Unreal Engine 5 to macOS.
 
 I have not added Nanite to UE5 yet; these steps show my progress so far.
 
-Prerequisites:
+<details>
+<summary>Prerequisites</summary>
+  
 - Install [Homebrew](https://brew.sh)
 - Install Git. This can be accomplished using Homebrew: `brew install git`.
 - Install Xcode 13<sup>1</sup> from the Mac App Store.
@@ -27,6 +29,8 @@ To repeat my steps and investigate bugs, you will switch between Xcode 13 and Xc
 >>> swift --version
 (Swift 5.6.1 should appear in the output)
 ```
+
+</details>
 
 Sign into Git through Xcode. Launch the "Xcode" app and go to <b>Menu Bar > Xcode > Preferences > Accounts</b>. Click the "+" button on the bottom left, then select the "GitHub" account type. A popup prompts you for a GitHub [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Generate one with the following scopes. <ins>Do not</ins> close the browser window showing that token's letters/digits until you've cloned the UE5 repository.
 
