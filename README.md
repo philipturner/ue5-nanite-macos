@@ -8,7 +8,9 @@ I have not added Nanite to UE5 yet; these steps show my progress so far.
 
 <details>
 <summary>Prerequisites</summary>
-  
+
+---
+
 - Install [Homebrew](https://brew.sh)
 - Install Git. This can be accomplished using Homebrew: `brew install git`.
 - Install Xcode 13<sup>1</sup> from the Mac App Store.
@@ -34,6 +36,8 @@ To repeat my steps and investigate bugs, you will switch between Xcode 13 and Xc
 <details>
 <summary>Sign in to Git and download 'EpicGames/UnrealEngine'</summary>
 
+---
+
 Sign into Git through Xcode. Launch the "Xcode" app and go to <b>Menu Bar > Xcode > Preferences > Accounts</b>. Click the "+" button on the bottom left, then select the "GitHub" account type. A popup prompts you for a GitHub [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Generate one with the following scopes. <ins>Do not</ins> close the browser window showing that token's letters/digits until you've cloned the UE5 repository.
 
 - admin:public_key
@@ -55,6 +59,8 @@ While cloning the UE5 repository, it may ask for your credentials. Enter the acc
 <details>
 <summary>Compile the unmodified 'ue5-main' branch</summary>
 
+---
+
 Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code) starting with step 3 of "Downloading the Source Code". Then, follow [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source). Unreal Editor will not launch from <b>Product > Run</b>, so navigate to the following URL in finder.
 
 ```
@@ -63,4 +69,5 @@ Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-e
 
 Click on the `UnrealEditor` application. After some time, the "Unreal Project Browser" window appears.
 
+<!-- Compiling with Xcode 14 beta requires choosing "Open With" on the .xcworkspace -->
 </details>
