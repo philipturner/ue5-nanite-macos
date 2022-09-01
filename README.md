@@ -35,12 +35,15 @@ Sign into Git through Xcode. Launch the "Xcode" app and go to Menu Bar > Xcode >
 - repo
 - user
 
-Enter your GitHub account username and the access token. Click "Sign In", then quit and restart Xcode. Create a folder called `UnrealEngine` in `~/Documents`. Right-click it in Finder and click "New Terminal at Folder". Enter these commands into Terminal:
+Enter your GitHub account username and the access token. Click "Sign In", then quit and restart Xcode. Create a folder called `UnrealEngine` in `~/Documents`. Right-click it in Finder and click "New Terminal at Folder". Enter these commands into the new Terminal window:
 
 ```
 >>> pwd
 /Users/<your username>/Documents/UnrealEngine
+>>> git clone --single-branch -b ue5-main https://github.com/EpicGames/UnrealEngine
 ```
+
+While cloning the UE5 repository, it may ask for your credentials. Enter the access token from above instead of your account password. The download may taken an hour with average internet speeds, so `git clone` minimizes the amount of downloaded commits.
 
 <!--
 Use xcode-select, query `swift --version` to prove with Xcode you're using.
