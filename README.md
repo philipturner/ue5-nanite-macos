@@ -28,6 +28,13 @@ To repeat my steps and investigate bugs, you will switch between Xcode 13 and Xc
 (Swift 5.6.1 should appear in the output)
 ```
 
+Create a folder called `UnrealEngine` in `~/Documents`. Right-click the folder in Finder and click "New Terminal at Folder". Enter this command into Terminal:
+
+```
+>>> pwd
+/Users/<your username>/Documents/UnrealEngine
+```
+
 <!--
 Use xcode-select, query `swift --version` to prove with Xcode you're using.
 
