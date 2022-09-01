@@ -2,7 +2,9 @@
 
 Brings the Nanite feature from Unreal Engine 5 to macOS.
 
-## Notes
+## Usage
+
+I have not added Nanite to UE5 yet, but these steps show how far I am in development.
 
 Prerequisites:
 - Install [Homebrew](https://brew.sh)
