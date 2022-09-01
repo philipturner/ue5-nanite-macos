@@ -35,6 +35,10 @@ Create a folder called `UnrealEngine` in `~/Documents`. Right-click the folder i
 /Users/<your username>/Documents/UnrealEngine
 ```
 
+Sign into Git through Xcode. Launch the "Xcode" app 
+
+Enter the command below. If you are not already signed into Git, it will prompt you to sign in. The password expects an [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), not your GitHub account password. Create a token 
+
 <!--
 Use xcode-select, query `swift --version` to prove with Xcode you're using.
 
