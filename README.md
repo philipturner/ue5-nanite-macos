@@ -83,6 +83,6 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 
 <!-- Let it access your documents folder -->
 
-<!-- Activity monitor should spike within 5 minutes with a bunch of "clang" -->
+<!-- Activity monitor > CPU will spike within 5 minutes with a bunch of "clang" -->
 
 </details>
