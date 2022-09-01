@@ -61,7 +61,7 @@ While cloning the UE5 repository, it may ask for your credentials. Enter the acc
 
 ---
 
-Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code) starting with step 3 of "Downloading the Source Code". Then, follow [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source). Unreal Editor will not launch from <b>Product > Run</b>, so navigate to the following URL in finder.
+Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code) starting with step 3 of "Downloading the Source Code". Then, follow [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source). Building should take on the order of 10 - 30 minutes. Unreal Editor will not launch from <b>Product > Run</b>, so navigate to the following URL in finder.
 
 ```
 /Users/<your username>/Documents/UnrealEngine/UnrealEngine/Engine/Binaries/Mac
@@ -69,5 +69,12 @@ Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-e
 
 Click on the `UnrealEditor` application. After some time, the "Unreal Project Browser" window appears.
 
+</details>
+<details>
+<summary>Recompile with Xcode 14 beta</summary>
+
 <!-- Compiling with Xcode 14 beta requires choosing "Open With" on the .xcworkspace -->
+
+<!-- Red Error in Xcode > Navigator??? > UE5 > Build Settings > Search Bar; generate info; Change "Generate Info.plist File" from "No" to "Yes"-->
+
 </details>
