@@ -99,6 +99,8 @@ Click on the `UnrealEditor` application. After some time, the "Unreal Project Br
 <!-- A conflicting UnrealBuildTool is running, so I have to reboot my Mac -->
 
 <!-- Some wierd errors about provisioning files in GenerateProjectFiles.command, but it regenerates the UE5.xcworkspace (which I deleted) -->
+ 
+<!-- Clean build folder then <b>Product > Build</b> -->
 
 </details>
 <details>
