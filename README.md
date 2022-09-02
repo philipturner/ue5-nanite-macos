@@ -57,18 +57,19 @@ While cloning the UE5 repository, it may ask for your credentials. Enter the acc
 
 ---
 
-Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code) starting with step 3 of "Downloading the Source Code". Then, follow [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source).
+Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code), starting with step 3 of "Downloading the Source Code". Complete [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source) next.
   
-After the first build attempt, it will fail because an `Info.plist` is not generated. In the project navigator, select <b>Engine > UE5</b>. Click the <b>Build Settings</b> tab, then look at <b>TARGETS</b> on the left. Select <b>UE5</b>, which has a gray (not blue) App Store icon next to it. In the build settings search bar, type "generate info". Only one setting pops up: "Generate Info.plist File". Change its value from "No" to "Yes".
-  
-Building should take on the order of 10 - 30 minutes. In the activity monitor, around 8-10 `clang` processes should use 100% of your CPU for several minutes. If they only reach around 50% of the CPU, something is going wrong.
+The attempt at <b>Product > Build</b> fails because an `Info.plist` is not generated. In the project navigator, select <b>Engine > UE5</b>. Click the <b>Build Settings</b> tab, then look at <b>TARGETS</b> on the left. Select <b>UE5</b>, which has a gray (not blue) App Store icon next to it. In the build settings search bar, type "generate info". Only one setting pops up: "Generate Info.plist File". Change its value from "No" to "Yes".
 
-Unreal Editor will not launch from <b>Product > Run</b>, so navigate to the following URL in finder. Double-click the `UnrealEditor` application. After some time, the "Unreal Project Browser" window appears.
+Building should take on the order of 10 - 30 minutes. In the activity monitor, 8-10 `clang` processes should use 100% of the CPU for several minutes. If they max out at 50% of the CPU, something is going wrong.
+
+Unreal Editor will not launch from <b>Product > Run</b>, as it crashes in Xcode after trying to open a nonexistent `YES/YES.uproject`. Navigate to this path in Finder and double-click the `UnrealEditor` application.
 
 ```
 /Users/<your username>/Documents/UnrealEngine/UnrealEngine/Engine/Binaries/Mac
 ```
-<!-- Change double quotes to bold everywhere -->
+
+After some time, the "Unreal Project Browser" window appears.
 
 </details>
 <details>
