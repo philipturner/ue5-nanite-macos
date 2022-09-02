@@ -65,7 +65,7 @@ Click <b>Menu Bar > Product > Build</b>. The command fails\* because an `Info.pl
 
 > \*This failure only happens on Xcode 14 beta.
 
-Click <b>Menu Bar > Product > Build</b>. Building should take on the order of 10 - 30 minutes. In the activity monitor, 8-10 `clang` processes should use 100% of the CPU for several minutes. If they max out at 50% of the CPU, something is going wrong.
+Click <b>Menu Bar > Product > Build</b>. Compilation should take on the order of 10 - 30 minutes. In the activity monitor, 8-10 `clang` processes should use 100% of the CPU for several minutes. If they max out at 50% of the CPU, something is going wrong.
 
 Click <b>Menu Bar > Product > Run</b>. Give Unreal Editor permission to access `Documents`. The application will shut down\* after accessing a nonexistent `YES/YES.uproject`; check the Xcode console to validate that the failure happens. Now, navigate to this path in Finder and double-click the `UnrealEditor` application.
 
