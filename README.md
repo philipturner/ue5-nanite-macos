@@ -4,7 +4,7 @@ Brings the Nanite feature from Unreal Engine 5 to macOS.
 
 ## Usage
 
-I have not added Nanite to UE5 yet; these steps show my progress so far.
+I am currently experimenting with UE5. You can follow these instructions to replicate what I've done.
 
 <details>
 <summary>Prerequisites</summary>
