@@ -11,7 +11,7 @@ I have not added Nanite to UE5 yet; these steps show my progress so far.
 
 ---
 
-- Around 150 GB of free disk space.
+- 140 GB of free disk space, after installing everything described below.
 - Install [Homebrew](https://brew.sh).
 - Install Git. This can be accomplished using Homebrew: `brew install git`.
 - Install Xcode 14 beta from [developer.apple.com](https://developer.apple.com/xcode/resources). Rename the app `Xcode-beta` and place it in `~/Applications`.
