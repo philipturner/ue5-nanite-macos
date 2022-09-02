@@ -84,7 +84,30 @@ After some time, the "Unreal Project Browser" window appears.
 </details>
 <details>
 <summary>Create your 'EpicGames/UnrealEngine' fork and branch</summary>
-  
-<!-- Git add + commit should not show any changes -->
+
+> For this section of instructions, `<username>` refers to your GitHub username.
+
+In GitHub, fork [`EpicGames/UnrealEngine`](https://github.com/EpicGames/UnrealEngine). Check the box for cloning only the `release` branch; this minimizes the fork's size. Verify that a repo exists at `https://github.com/<username>/UnrealEngine`.
+
+In Finder, go to `~/Documents/UnrealEngine/UnrealEngine` and click "New Terminal at Folder". Enter the following commands:
+
+```
+>>> git branch
+* ue5-main
+>>> git remote add <username> https://github.com/<username>/UnrealEngine
+>>> git checkout -b modifications
+>>> git add .
+>>> git commit -m "Test Commit"
+[modifications db644854a9] Test Commit
+ 2 files changed, 98 insertions(+)
+ create mode 100644 Engine/Config/DefaultEngine.ini
+ create mode 100644 Engine/Config/DefaultInput.ini
+>>> git push <username> modifications
+...
+To https://github.com/<username>/UnrealEngine
+ ! [remote rejected]       modifications -> modifications (shallow update not allowed)
+error: failed to push some refs to 'https://github.com/<username>/UnrealEngine'
+>>> git fetch --unshallow <username>
+```
 
 </details>
