@@ -11,7 +11,7 @@ I am currently experimenting with UE5. You can follow these instructions to repl
 
 ---
 
-- At least 130 GB of free disk space, after installing everything described below.
+- At least 155 GB of free disk space, after installing everything described below.
 - Install [Homebrew](https://brew.sh).
 - Install Git. This can be accomplished using Homebrew: `brew install git`.
 - Install Xcode 14 beta from [developer.apple.com](https://developer.apple.com/xcode/resources). Rename the app `Xcode-beta` and place it in `~/Applications`.
@@ -59,13 +59,13 @@ While cloning the UE5 repository, it may ask for your credentials. Enter the acc
 
 ---
 
-Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code), starting with step 3 of "Downloading the Source Code". Complete [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source) next.
+Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code), starting with step 3 of "Downloading the Source Code". The instructions below are based on [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source), which is slightly outdated.
   
-The attempt at <b>Product > Build</b> fails because an `Info.plist` is not generated. In the project navigator, select <b>Engine > UE5</b>. Click the <b>Build Settings</b> tab, then look at <b>TARGETS</b> on the left. Select <b>UE5</b>, which has a gray (not blue) App Store icon next to it. In the build settings search bar, type "generate info". Only one setting pops up: "Generate Info.plist File". Change its value from "No" to "Yes".
+Click <b>Menu Bar > Product > Build</b>. The command fails because an `Info.plist` is not generated. In the project navigator, select <b>Engine > UE5</b>. Click the <b>Build Settings</b> tab, then look at <b>TARGETS</b> on the left. Select <b>UE5</b>, which has a gray (not blue) App Store icon next to it. In the build settings search bar, type "generate info". Only one setting pops up: "Generate Info.plist File". Change its value from "No" to "Yes".
 
-Building should take on the order of 10 - 30 minutes. In the activity monitor, 8-10 `clang` processes should use 100% of the CPU for several minutes. If they max out at 50% of the CPU, something is going wrong.
+Click <b>Menu Bar > Product > Build</b>. Building should take on the order of 10 - 30 minutes. In the activity monitor, 8-10 `clang` processes should use 100% of the CPU for several minutes. If they max out at 50% of the CPU, something is going wrong.
 
-Unreal Editor will not launch from <b>Product > Run</b>, as it crashes in Xcode after trying to open a nonexistent `YES/YES.uproject`. Navigate to this path in Finder and double-click the `UnrealEditor` application.
+Click <b>Menu Bar > Product > Run</b>. Give Unreal Editor permission to access `Documents`. The application will shut down after accessing a nonexistent `YES/YES.uproject`; check the Xcode console to validate that the failure happens. Now, navigate to this path in Finder and double-click the `UnrealEditor` application.
 
 ```
 /Users/<your username>/Documents/UnrealEngine/UnrealEngine/Engine/Binaries/Mac
