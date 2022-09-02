@@ -23,9 +23,9 @@ Perform the following in a new Terminal window, then close the window. This ensu
 
 ```
 >>> sudo xcode-select --switch ~/Applications/Xcode-beta.app
-(prompt to enter password)
+[Prompt to enter password]
 >>> swift --version
-(Swift 5.7 should appear in the output)
+[Swift 5.7 should appear in the output]
 ```
 
 > \*I'm not 100% sure this is necessary, but it's better to play it safe.
@@ -109,7 +109,23 @@ In Finder, go to `~/Documents/UnrealEngine/UnrealEngine` and click "New Terminal
 To https://github.com/<username>/UnrealEngine
  ! [remote rejected]       modifications -> modifications (shallow update not allowed)
 error: failed to push some refs to 'https://github.com/<username>/UnrealEngine'
+```
+
+The push fails because you originally cloned a lightweight snapshot of UE5's repo. This made it shallow, preventing new remotes from being added. Fetch from the Git remote to unshallow, which will take on the order of 10 minutes.
+
+```
 >>> git fetch --unshallow <username>
+remote: Enumerating objects: 4186481, done.
+remote: Counting objects: 100% (3987147/3987147), done.
+remote: Compressing objects: 100% (1202630/1202630), done.
+Receiving objects:  16% (634782/3922823), 1.77 GiB | 9.64 MiB/s
+```
+
+Finally, try pushing again. It should succeed this time.
+
+```
+>>> git push <username> modifications
+[Something that isn't an error message]
 ```
 
 </details>
