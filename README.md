@@ -111,7 +111,7 @@ To https://github.com/<username>/UnrealEngine
 error: failed to push some refs to 'https://github.com/<username>/UnrealEngine'
 ```
 
-The push fails because you originally cloned a lightweight snapshot of UE5's repo. This made it shallow, preventing new remotes from being added. Fetch from the Git remote to unshallow, which will take on the order of 10 minutes.
+The push fails because you originally cloned a lightweight snapshot of UE5's repo. This made it shallow, preventing new remotes from being added. The command below enables pushing to your remote, but may take an hour to download. Skip the rest of this section if you only want to reproduce my modifications to UE5.
 
 ```
 >>> git fetch --unshallow <username>
