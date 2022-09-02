@@ -113,7 +113,7 @@ error: failed to push some refs to 'https://github.com/<username>/UnrealEngine'
 
 The push fails because you originally cloned a lightweight snapshot of UE5's repo. This made it shallow, prohibiting pushes to new remotes. The command below enables pushing to your fork, but may take an hour to complete.
 
-> Skip the rest of this section, unless you want to save custom modifications to the cloud. Waiting for this `git fetch` is not fun and consumes lots of disk space (~30 GB). It might have been faster to omit `--depth 1` from the original `git clone` command and use `--single-branch`.
+> Skip the rest of this section, unless you want to save custom modifications to the cloud. Waiting for this `git fetch` is not fun and consumes lots of disk space (~30 GB). It might have been faster to omit `--depth 1` from the original `git clone` command and use `--single-branch` instead.
 
 ```
 >>> git fetch --unshallow <username>
