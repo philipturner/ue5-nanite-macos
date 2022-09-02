@@ -61,15 +61,19 @@ While cloning the UE5 repository, it may ask for your credentials. Enter the acc
 
 Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code), starting with step 3 of "Downloading the Source Code". The instructions below are adapted from [another guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source), which is slightly outdated; no `UE4Editor` or `UE5Editor` scheme exists. Do not run through the latter guide.
   
-Click <b>Menu Bar > Product > Build</b>. The command fails because an `Info.plist` is not generated. In the project navigator, select <b>Engine > UE5</b>. Click the <b>Build Settings</b> tab, then look at <b>TARGETS</b> on the left. Select <b>UE5</b>, which has a gray (not blue) App Store icon next to it. In the build settings search bar, type "generate info". Only one setting pops up: "Generate Info.plist File". Change its value from "No" to "Yes".
+Click <b>Menu Bar > Product > Build</b>. The command fails\* because an `Info.plist` is not generated. In the project navigator, select <b>Engine > UE5</b>. Click the <b>Build Settings</b> tab, then look at <b>TARGETS</b> on the left. Select <b>UE5</b>, which has a gray (not blue) App Store icon next to it. In the build settings search bar, type "generate info". Only one setting pops up: "Generate Info.plist File". Change its value from "No" to "Yes".
+
+> \*This failure only happens on Xcode 14 beta.
 
 Click <b>Menu Bar > Product > Build</b>. Building should take on the order of 10 - 30 minutes. In the activity monitor, 8-10 `clang` processes should use 100% of the CPU for several minutes. If they max out at 50% of the CPU, something is going wrong.
 
-Click <b>Menu Bar > Product > Run</b>. Give Unreal Editor permission to access `Documents`. The application will shut down after accessing a nonexistent `YES/YES.uproject`; check the Xcode console to validate that the failure happens. Now, navigate to this path in Finder and double-click the `UnrealEditor` application.
+Click <b>Menu Bar > Product > Run</b>. Give Unreal Editor permission to access `Documents`. The application will shut down\* after accessing a nonexistent `YES/YES.uproject`; check the Xcode console to validate that the failure happens. Now, navigate to this path in Finder and double-click the `UnrealEditor` application.
 
 ```
 /Users/<your username>/Documents/UnrealEngine/UnrealEngine/Engine/Binaries/Mac
 ```
+
+> \*This failure happens on both Xcode 13 (from the Mac App Store) and Xcode 14 beta.
 
 After some time, the "Unreal Project Browser" window appears.
 
