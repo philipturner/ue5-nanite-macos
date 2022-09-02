@@ -32,7 +32,7 @@ Perform the following in a new Terminal window, then close the window. This ensu
 
 </details>
 <details>
-<summary>Sign in to Git and download 'EpicGames/UnrealEngine'</summary>
+<summary>Sign in and download 'EpicGames/UnrealEngine'</summary>
 
 ---
 
@@ -83,7 +83,7 @@ After some time, the "Unreal Project Browser" window appears.
 
 </details>
 <details>
-<summary>Create your 'EpicGames/UnrealEngine' fork and branch</summary>
+<summary>Fork 'EpicGames/UnrealEngine'</summary>
 
 ---
 
