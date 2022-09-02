@@ -144,4 +144,4 @@ TODO
 
 ## Notes
 
-After compiling the Unreal Engine from source, you might get random popups saying "XCBBuildService" crashed unexpectedly. Ignore these; they do not mean the compilation of UE5 failed.
+After compiling the Unreal Engine from source, you may get random popups saying "XCBBuildService" crashed unexpectedly. Ignore them; they do not mean the compilation of UE5 failed.
