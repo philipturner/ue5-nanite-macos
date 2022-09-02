@@ -34,7 +34,7 @@ Perform the following in a new Terminal window, then close the window.
 
 ---
 
-  Sign into Git through Xcode. Launch the `Xcode` app and go to <b>Menu Bar > Xcode > Preferences > Accounts</b>. Click the "+" button on the bottom left, then select the "GitHub" account type. A popup prompts you for a GitHub [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Generate one with the following scopes. <ins>Do not</ins> close the browser window showing that token's letters/digits until you've cloned the UE5 repository.
+Launch the `Xcode` app and go to <b>Menu Bar > Xcode > Preferences > Accounts</b>. Click the "+" button on the bottom left, then select the "GitHub" account type. A popup prompts you for a GitHub [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Generate one with the following scopes. <ins>Do not</ins> close the browser window showing that token's letters/digits until you've cloned the UE5 repository.
 
 - admin:public_key
 - write:discussion
@@ -59,52 +59,16 @@ While cloning the UE5 repository, it may ask for your credentials. Enter the acc
 
 Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code) starting with step 3 of "Downloading the Source Code". Then, follow [this guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source).
   
-After the first build attempt, it will fail because an `Info.plist` is not generated. In the project navigator, select <b>Engine > UE5</b>. Click the <b>Build Settings</b> tab, then look at <b>TARGETS</b> on the left. Select <b>UE5</b>, which has a gray (not blue) App Store icon next to it. In the build setting search bar, type "generate info". Only one setting pops up: "Generate Info.plist File". Change its value from "No" to "Yes".
+After the first build attempt, it will fail because an `Info.plist` is not generated. In the project navigator, select <b>Engine > UE5</b>. Click the <b>Build Settings</b> tab, then look at <b>TARGETS</b> on the left. Select <b>UE5</b>, which has a gray (not blue) App Store icon next to it. In the build settings search bar, type "generate info". Only one setting pops up: "Generate Info.plist File". Change its value from "No" to "Yes".
   
-Building should take on the order of 10 - 30 minutes.
-  
-Unreal Editor will not launch from <b>Product > Run</b>, so navigate to the following URL in finder. Click on the `UnrealEditor` application. After some time, the "Unreal Project Browser" window appears.
+Building should take on the order of 10 - 30 minutes. In the activity monitor, around 8-10 `clang` processes should use 100% of your CPU for several minutes. If they only reach around 50% of the CPU, something is going wrong.
+
+Unreal Editor will not launch from <b>Product > Run</b>, so navigate to the following URL in finder. Double-click the `UnrealEditor` application. After some time, the "Unreal Project Browser" window appears.
 
 ```
 /Users/<your username>/Documents/UnrealEngine/UnrealEngine/Engine/Binaries/Mac
 ```
 <!-- Change double quotes to bold everywhere -->
-
-</details>
-<details>
-<summary>Recompile with Xcode 14 beta</summary>
-  
-<!-- sudo xcode-select --switch Xcode-beta, quit both Xcode and Xcode-beta -->
-
-<!-- Compiling with Xcode 14 beta requires choosing "Open With" on the .xcworkspace -->
-
-<!-- Clean build folder: fails, but it actually succeeds -->
-
-<!-- Attempt build > Error > Navigator??? > UE5 > Build Settings > Search Bar; generate info; Change "Generate Info.plist File" from "No" to "Yes" ==== Make sure did not select "PROJECT > UE5"; it's "TARGETS > UE5" -->
-
-<!-- Let it access your documents folder -->
-
-<!-- Activity monitor > CPU will spike within 5 minutes with a bunch of "clang". Over 50% of the CPU processing power should be being utilized. -->
-
-<!-- It's strangely stuck on "Constructing description" when the previous compilation showed something like "Running external build tool" -->
-
-<!-- You can validate that something's going on because the "UnrealEditor" application's contents expand down to an empty folder. Also, why is it only using half the CPU now? -->
-
-<!-- Command ExternalBuildToolExecution crashed -->
-
-<!-- Deleting /Engine/Binaries/Mac,Linux,IOS,TVOS  -->
-
-<!-- Rerun Setup.command and GenerateProjectFiles.command -->
-  
-<!-- A conflicting UnrealBuildTool is running, so I have to reboot my Mac -->
-
-<!-- Some wierd errors about provisioning files in GenerateProjectFiles.command, but it regenerates the UE5.xcworkspace (which I deleted) -->
- 
-<!-- Clean build folder then <b>Product > Build</b> -->
-
-<!-- It's at 100% now! -->
-
-<!-- Crashed again -->
 
 </details>
 <details>
