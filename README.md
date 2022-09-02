@@ -134,6 +134,10 @@ Finally, try pushing again. It should succeed this time.
 <details>
 <summary>'Hello World' modifications to UE5</summary>
 
+---
+
 <!-- Modify both the Unreal Editor and a product app using Unreal Engine -->
+
+TODO
 
 </details>
