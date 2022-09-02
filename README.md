@@ -85,7 +85,9 @@ After some time, the "Unreal Project Browser" window appears.
 <details>
 <summary>Create your 'EpicGames/UnrealEngine' fork and branch</summary>
 
-> For this section of instructions, `<username>` refers to your GitHub username.
+---
+
+> Throughout this section, `<username>` refers to your GitHub username.
 
 In GitHub, fork [`EpicGames/UnrealEngine`](https://github.com/EpicGames/UnrealEngine). Check the box for cloning only the `release` branch; this minimizes the fork's size. Verify that a repo exists at `https://github.com/<username>/UnrealEngine`.
 
