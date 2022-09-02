@@ -59,7 +59,7 @@ While cloning the UE5 repository, it may ask for your credentials. Enter the acc
 
 ---
 
-Follow [this guide (1)](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code), starting with step 3 of "Downloading the Source Code". The instructions below are adapted from [this guide (2)](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source), which is slightly outdated. Do not actually run through (2).
+Follow [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engine-source-code), starting with step 3 of "Downloading the Source Code". The instructions below are adapted from [another guide](https://docs.unrealengine.com/5.0/en-US/building-unreal-engine-from-source), which is slightly outdated. Do not follow the latter guide.
   
 Click <b>Menu Bar > Product > Build</b>. The command fails because an `Info.plist` is not generated. In the project navigator, select <b>Engine > UE5</b>. Click the <b>Build Settings</b> tab, then look at <b>TARGETS</b> on the left. Select <b>UE5</b>, which has a gray (not blue) App Store icon next to it. In the build settings search bar, type "generate info". Only one setting pops up: "Generate Info.plist File". Change its value from "No" to "Yes".
 
