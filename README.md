@@ -19,7 +19,7 @@ I am currently experimenting with UE5. You can follow these instructions to repl
 
 > <sup>1</sup>Xcode 14 should be released in September 2022. When it is no longer in beta, Xcode from the Mac App Store will work.
 
-Perform the following in a new Terminal window, then close the window. This might force UnrealBuildTool to use Xcode beta instead of Xcode downloaded from the Mac App Store, but I'm not 100% sure this does anything.
+Perform the following in a new Terminal window, then close the window. This ensures\* that UnrealBuildTool to uses Xcode beta instead of regular Xcode.
 
 ```
 >>> sudo xcode-select --switch ~/Applications/Xcode-beta.app
@@ -27,6 +27,8 @@ Perform the following in a new Terminal window, then close the window. This migh
 >>> swift --version
 (Swift 5.7 should appear in the output)
 ```
+
+> \*I'm not 100% sure this is necessary, but it's better to play it safe.
 
 </details>
 <details>
