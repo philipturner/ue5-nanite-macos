@@ -110,7 +110,7 @@ In Finder, go to `~/Documents/UnrealEngine/UnrealEngine` and click "New Terminal
 
 </details>
 <details>
-<summary>Open first Unreal Project</summary>
+<summary>First Unreal Project</summary>
 
 ---
 
