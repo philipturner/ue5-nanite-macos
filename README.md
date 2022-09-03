@@ -120,7 +120,7 @@ In the Unreal Project Browser, go to <b>GAMES > First Person > Project Defaults 
 
 The Unreal Editor automatically quits, then opens an Xcode project titled `UnrealProject1`. Relaunch the Unreal Editor app go to <b>RECENT PROJECTS > UnrealProject1 > Open</b>. A popup says certain modules are missing; click <b>Yes</b> to rebuild them. A few seconds later, another popup says the modules cannot compile. Dismiss it and click on the Xcode window for UnrealProject1.
 
-Click <b>Menu Bar > Product > Build</b>. The command fails just like when building UE5 from source. Scroll up to the section of this document that describes the workaround. Go through <b>Games > ProjectName > Build Settings</b> in the Xcode project navigator, instead of <b>Engine > UE5 > Build Settings</b>. The latter path does not affect this project and might cause Xcode to recompile UE5 from scratch.
+Click <b>Menu Bar > Product > Build</b>. The command fails just like when building UE5 from source. Scroll up to the section of this document that describes the workaround. Go through <b>Games > ProjectName > Build Settings</b> in the Xcode project navigator, instead of <b>Engine > UE5 > Build Settings</b>. The latter path does not affect this project and may cause Xcode to recompile UE5 from scratch.
 
 </details>
 <details>
