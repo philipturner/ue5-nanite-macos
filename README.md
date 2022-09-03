@@ -114,7 +114,7 @@ In Finder, go to `~/Documents/UnrealEngine/UnrealEngine` and click "New Terminal
 
 ---
 
-Open the Unreal Editor app from `Engine/Binaries/Mac` inside the UE5 source folder. Right-click the app in Dock and select <b>Options > Keep in Dock</b>. This removes the need to search through Finder when launching the editor.
+Open the Unreal Editor app from `Engine/Binaries/Mac` inside the UE5 source folder. Right-click it in Dock and select <b>Options > Keep in Dock</b>. This removes the need to search through Finder when launching the editor.
 
 </details>
 <details>
