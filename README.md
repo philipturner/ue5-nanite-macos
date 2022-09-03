@@ -63,7 +63,7 @@ On [this guide](https://docs.unrealengine.com/5.0/en-US/downloading-unreal-engin
 
 Click <b>Menu Bar > Product > Build</b>. The command fails\* because an `Info.plist` is not generated. In the project navigator, select <b>Engine > UE5</b>. Click the <b>Build Settings</b> tab, then look at <b>TARGETS</b> on the left. Select <b>UE5</b>, which has a gray (not blue) App Store icon next to it. In the build settings search bar, type "generate info". Only one setting pops up: "Generate Info.plist File". Change its value from "No" to "Yes". Repeat these steps for <b>Build Settings > PROJECT > UE5</b>.
 
-> \*This failure only happens on Xcode 14 beta. You must replicate its workaround in any Unreal Projects, going through <b>Games > ProjectName > Build Settings</b> in the Xcode project navigator - why?.
+> \*This failure only happens on Xcode 14 beta.
 
 Click <b>Menu Bar > Product > Build</b>. Compilation should take on the order of 10 - 30 minutes. Open the `Activity Monitor` application, and 8-10 `clang` processes\* should create ~100% CPU load\** after the build starts. If they max out at ~50% CPU load, something is going wrong.
 
@@ -119,6 +119,9 @@ Open the Unreal Editor app from `Engine/Binaries/Mac` inside the UE5 source fold
 In the Unreal Project Browser, go to <b>GAMES > First Person > Project Defaults > C++</b>. Do not choose <b>BLUEPRINT</b>. Blueprint projects launch seamlessly with a custom UE5 build, but C++ projects require the troubleshooting detailed in this section. Set <b>Project Name</b> to `UnrealProject1` and click <b>Create</b>.
 
 The Unreal Editor automatically quits, then opens an Xcode project titled `UnrealProject1`. Relaunch the Unreal Editor app go to <b>RECENT PROJECTS > UnrealProject1 > Open</b>. A popup says certain modules are missing; click <b>Yes</b> to rebuild them. A few seconds later, another popup says the modules cannot compile. Dismiss it and click on the Xcode window for UnrealProject1.
+
+Click <b>Menu Bar > Product > Build</b>. The command fails just like when building UE5 from source. Scroll up to the section of this document that describes the workaround. Go through <b>Games > ProjectName > Build Settings</b> in the Xcode project navigator, instead of <b>Engine > UE5 > Build Settings</b>. The latter path does not affect this project and might cause Xcode to recompile UE5 from scratch.
+
 </details>
 <details>
 <summary>'Hello World' modifications to Unreal Editor</summary>
