@@ -96,6 +96,8 @@ In Finder, go to `~/Documents/UnrealEngine/UnrealEngine` and click "New Terminal
 ```
 >>> git branch
 * ue5-main
+>>> git remote
+origin
 >>> git remote add <username> https://github.com/<username>/UnrealEngine
 >>> git checkout -b modifications
 >>> git add .
