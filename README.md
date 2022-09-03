@@ -51,7 +51,7 @@ Enter your GitHub account username and the access token. Click "Sign In", then q
 >>> git clone --single-branch -b ue5-main https://github.com/EpicGames/UnrealEngine
 ```
 
-While cloning the UE5 repository, it may ask for your credentials. Enter the access token from above instead of your account password. The download may take an hour with average internet speeds, so `git clone` has flags that minimize the amount of downloaded commits.
+While cloning the UE5 repository, it may ask for your credentials. Enter the access token from above instead of your account password. The download takes over 10 minutes with average internet speeds, so `git clone` has flags that minimize the amount of downloaded commits.
 
 </details>
 <details>
