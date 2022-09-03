@@ -110,6 +110,8 @@ origin
 [Push should succeed]
 ```
 
+Open your `modifications` branch on GitHub and view the commit history. Click the commit titled "Test Commit". It should add two new files to `Engine/Config`.
+
 </details>
 <details>
 <summary>First Unreal Project</summary>
