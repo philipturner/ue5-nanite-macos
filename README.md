@@ -118,7 +118,7 @@ Open the Unreal Editor app from `Engine/Binaries/Mac` inside the UE5 source fold
 
 </details>
 <details>
-<summary>'Hello World' modifications to UE5</summary>
+<summary>'Hello World' modifications to Unreal Editor</summary>
 
 ---
 
