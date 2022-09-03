@@ -89,7 +89,7 @@ After some time, the "Unreal Project Browser" window appears.
 
 > Throughout this section, `<username>` refers to your GitHub username.
 
-On the GitHub website, fork [`EpicGames/UnrealEngine`](https://github.com/EpicGames/UnrealEngine). Check the box for cloning only the `release` branch; this minimizes the fork's size. Verify that a repo exists at `https://github.com/<username>/UnrealEngine`.
+On the GitHub website, fork [`EpicGames/UnrealEngine`](https://github.com/EpicGames/UnrealEngine). Check the box for cloning only the `release` branch; this minimizes the fork's size. Verify that a private repo exists at `https://github.com/<username>/UnrealEngine`.
 
 In Finder, go to `~/Documents/UnrealEngine/UnrealEngine` and click "New Terminal at Folder". Enter the following commands:
 
