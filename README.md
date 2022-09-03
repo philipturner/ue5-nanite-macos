@@ -126,6 +126,8 @@ Build the project again. It should succeed\*, taking only a minute. If it takes 
 
 > \*Ignore the warning stating "Run script build phase 'Sign Manual Frameworks' will be run during every build".
 
+Launch the Unreal Editor and open UnrealProject1. This time, the 3D graphical user interface should appear. <!-- Modify the C++ code, compile and ship the app as a standalone application. -->
+
 </details>
 <details>
 <summary>'Hello World' modifications to Unreal Editor</summary>
