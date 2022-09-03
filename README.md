@@ -48,7 +48,7 @@ Enter your GitHub account username and the access token. Click "Sign In", then q
 ```
 >>> pwd
 /Users/<your username>/Documents/UnrealEngine
->>> git clone --depth 1 --no-single-branch -b ue5-main https://github.com/EpicGames/UnrealEngine
+>>> git clone --single-branch -b ue5-main https://github.com/EpicGames/UnrealEngine
 ```
 
 While cloning the UE5 repository, it may ask for your credentials. Enter the access token from above instead of your account password. The download may take an hour with average internet speeds, so `git clone` has flags that minimize the amount of downloaded commits.
@@ -87,9 +87,9 @@ After some time, the "Unreal Project Browser" window appears.
 
 ---
 
-On the GitHub website, fork [`EpicGames/UnrealEngine`](https://github.com/EpicGames/UnrealEngine). Check the box for cloning only the `release` branch; this minimizes the fork's size. Verify that a repo exists at `https://github.com/<username>/UnrealEngine`.
-
 > Throughout this section, `<username>` refers to your GitHub username.
+
+On the GitHub website, fork [`EpicGames/UnrealEngine`](https://github.com/EpicGames/UnrealEngine). Check the box for cloning only the `release` branch; this minimizes the fork's size. Verify that a repo exists at `https://github.com/<username>/UnrealEngine`.
 
 In Finder, go to `~/Documents/UnrealEngine/UnrealEngine` and click "New Terminal at Folder". Enter the following commands:
 
@@ -105,30 +105,16 @@ In Finder, go to `~/Documents/UnrealEngine/UnrealEngine` and click "New Terminal
  create mode 100644 Engine/Config/DefaultEngine.ini
  create mode 100644 Engine/Config/DefaultInput.ini
 >>> git push <username> modifications
-...
-To https://github.com/<username>/UnrealEngine
- ! [remote rejected]       modifications -> modifications (shallow update not allowed)
-error: failed to push some refs to 'https://github.com/<username>/UnrealEngine'
+[Push should succeed]
 ```
 
-The push fails because you originally cloned a lightweight snapshot of UE5's repo. This made it shallow, prohibiting pushes to new remotes. The command below enables pushing to your fork, but may take an hour to complete.
+</details>
+<details>
+<summary>Launch first Unreal Project</summary>
 
-> Skip the rest of this section, unless you want to save custom modifications to the cloud. Waiting for this `git fetch` is not fun and consumes lots of disk space (~30 GB). It might have been faster to omit `--depth 1` from the original `git clone` command and use `--single-branch` instead.
+---
 
-```
->>> git fetch --unshallow <username>
-remote: Enumerating objects: 4186481, done.
-remote: Counting objects: 100% (3987147/3987147), done.
-remote: Compressing objects: 100% (1202630/1202630), done.
-Receiving objects:  16% (634782/3922823), 1.77 GiB | 9.64 MiB/s
-```
-
-Finally, try pushing again. It should succeed this time.
-
-```
->>> git push <username> modifications
-[Something that isn't an error message]
-```
+TODO
 
 </details>
 <details>
