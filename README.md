@@ -141,7 +141,7 @@ On a local machine, I force-enabled [`NaniteAtomicsSupported()`](https://github.
  
 Disk space started getting eaten up and I could not find which folder was consuming increasingly more disk space. `~/Documents/UnrealEngine` stayed constant at 199 GB, while <b>Menu Bar >  > About This Mac > Storage</b> showed a gigabyte being consumed every ~10 seconds. I had to reboot my Mac, reset the `UnrealEngine` directory, and recompile with Xcode 13. Nanite doesn't require Metal 3 functionality, so Xcode 14 beta is not necessary.
 
-To debug Unreal Editor when it crashes, it must be launchable from within Xcode. Repeat the process for creating `UnrealProject1`, using the Blueprint template instead of C++. This prevents `UnrealBuildTool` from asking you to recompile missing modules. From now on, all Nanite demonstrations will use Blueprint projects.
+To debug `UnrealEditor.app` when it crashes, it must be launchable from within Xcode. Repeat the process for creating UnrealProject1, using the Blueprint template instead of C++. This prevents UnrealBuildTool from asking you to recompile missing modules. From now on, all Nanite demonstrations will use Blueprint projects.
  
 In Finder, copy the project from `~/Documents/Unreal Projects` to `~/Documents/UnrealEngine/UnrealEngine`. Rename your new project's encapsulating folder (the one copied into a new directory) to `YES`. Then, rename its project file to `YES.uproject`. This bypasses the `YES/YES.uproject` failure described in "Compile unmodified 'ue5-main'".
 
