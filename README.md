@@ -1,6 +1,6 @@
 # Nanite on macOS
 
-Brings the Nanite feature from Unreal Engine 5 to macOS and iOS. Read over [this forum thread](https://forums.unrealengine.com/t/lumen-nanite-on-macos/508411) for more context.
+Brings the Nanite feature from Unreal Engine 5 to Apple platforms. Read over [this forum thread](https://forums.unrealengine.com/t/lumen-nanite-on-macos/508411) for more context.
 
 ## Usage
 
