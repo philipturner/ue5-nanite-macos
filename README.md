@@ -143,7 +143,7 @@ Disk space started getting eaten up and I could not find which folder was consum
 
 To debug `UnrealEditor.app` when it crashes, you must launch it from Xcode. This requires a pre-existing project that the Unreal Editor can open by default. Follow the process for creating UnrealProject1 and name the project `UnrealProject2`. Using the Blueprint template instead of C++, which prevents UnrealBuildTool from requesting to recompile missing modules.
  
-In Finder, copy the project from `~/Documents/Unreal Projects` to `~/Documents/UnrealEngine/UnrealEngine`. Rename `UnrealProject2` to `YES` and `UnrealProject2.uproject` to `YES.uproject`. This bypasses the `YES/YES.uproject` failure described in "Compile unmodified 'ue5-main'".
+In Finder, copy the project from `~/Documents/Unreal Projects` to `~/Documents/UnrealEngine/UnrealEngine`. Rename `UnrealProject2` to `YES` and `UnrealProject2.uproject` to `YES.uproject`. This bypasses the `YES/YES.uproject` failure described in "Compile unmodified 'ue5-main'". Finally, open `UE5.xcworkspace` and select <b>Menu Bar > Product > Run</b>.
 
 </details>
 
