@@ -130,19 +130,14 @@ Build the project again. It should succeed\*, taking only a minute. If it takes 
 
 > \*Ignore the warning stating "Run script build phase 'Sign Manual Frameworks' will be run during every build".
 
-Launch the Unreal Editor and open UnrealProject1. This time, the 3D graphical user interface should appear. <!-- Modify the C++ code, compile and ship the app as a standalone application. -->
-
+Launch the Unreal Editor and open UnrealProject1. This time, the 3D graphical user interface should appear.
 </details>
 <details>
-<summary>'Hello World' modifications to Unreal Editor</summary>
+<summary>Enable Nanite (WIP)</summary>
 
 ---
 
-<!-- Example of Unreal Editor silently crashing because I made a shader that won't compile (invalid syntax). -->
-
-<!-- Modify both the Unreal Editor and a product app using Unreal Engine -->
-
-TODO
+The most recent progress is posted on this branch as GitHub commits: https://github.com/philipturner/UnrealEngine/tree/modifications. On a local machine, I force-enabled `NaniteAtomicsSupported()` and the build system subsequently acted very strangely. XCBBuildService would crash in the middle of a build. That made the UnrealBuildTool execute in the background, with no way to track its progress in Xcode. I had to delete all build products and recompile using Xcode 13. Nanite doesn't require Metal 3 functionality, so Xcode 14 beta is unnecessary.
 
 </details>
 
