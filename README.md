@@ -141,7 +141,9 @@ On a local machine, I force-enabled [`NaniteAtomicsSupported()`](https://github.
  
 Disk space started getting eaten up and I could not find which folder was consuming increasingly more disk space. `~/Documents/UnrealEngine` stayed constant at 199 GB, while <b>Menu Bar >  > About This Mac > Storage</b> showed a gigabyte being consumed every ~10 seconds.
  
-I had to reboot my Mac, reset the `UnrealEngine` directory, and recompile with Xcode 13. Nanite doesn't require Metal 3 functionality, so Xcode 14 beta is not necessary. Switching to Xcode 13 should make compilation more robust and improve my productivity. The most recent progress is posted on this branch as GitHub commits: [philipturner/UnrealEngine/modifications](https://github.com/philipturner/UnrealEngine/tree/modifications).
+I had to reboot my Mac, reset the `UnrealEngine` directory, and recompile with Xcode 13. Switching to Xcode 13 makes compilation more robust and should improve my productivity. Nanite doesn't require Metal 3 functionality, so Xcode 14 beta is not necessary.
+ 
+The most recent modifications to UE5 are posted here: [philipturner/UnrealEngine/modifications](https://github.com/philipturner/UnrealEngine/tree/modifications).
 
 </details>
 
