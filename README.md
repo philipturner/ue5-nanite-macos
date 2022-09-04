@@ -143,17 +143,17 @@ Disk space started getting eaten up and I could not find which folder was consum
  
 I had to reboot my Mac, reset the `UnrealEngine` directory, and recompile with Xcode 13. Switching to Xcode 13 makes compilation more robust and should improve my productivity. Nanite doesn't require Metal 3 functionality, so Xcode 14 beta is not necessary.
 
----
-
-### Explanation of Modifications
-
-TODO
-
 </details>
+
+## Modifications to UE5
 
 The most recent modifications to UE5 are posted here: [philipturner/UnrealEngine/modifications](https://github.com/philipturner/UnrealEngine/tree/modifications).
 
-## Notes
+### Explanation of Modifications
+
+n/a
+
+## Attribution
 
 After compiling the Unreal Engine from source, you may get random popups saying "XCBBuildService crashed". Ignore them; they do not mean the compilation of UE5 failed. I have no idea why they appear.
 
