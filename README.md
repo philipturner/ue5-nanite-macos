@@ -147,7 +147,7 @@ I had to reboot my Mac, reset the `UnrealEngine` directory, and recompile with X
 
 ## Modifications to UE5
 
-The most recent modifications to UE5 are posted here: [philipturner/UnrealEngine/modifications](https://github.com/philipturner/UnrealEngine/tree/modifications).
+The most recent modifications to Unreal Engine are posted here: [philipturner/UnrealEngine/modifications](https://github.com/philipturner/UnrealEngine/tree/modifications). Check out the commit history to see the changes.
 
 ### Explanation of Modifications
 
