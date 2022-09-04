@@ -145,7 +145,7 @@ Disk space started getting eaten up and I could not find which folder was consum
 
 ## Modifications to UE5
 
-[philipturner/UnrealEngine/commits/modifications](https://github.com/philipturner/UnrealEngine/commits/modifications) shows my most recent modifications to Unreal Engine.
+[philipturner/UnrealEngine/commits/modifications](https://github.com/philipturner/UnrealEngine/commits/modifications) (private to Epic Games licensees) shows my most recent modifications to Unreal Engine.
 
 ### Explanation of Modifications
 
