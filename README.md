@@ -137,7 +137,7 @@ Launch the Unreal Editor and open UnrealProject1. This time, the 3D graphical us
 
 ---
 
-On a local machine, I force-enabled `NaniteAtomicsSupported()` and the build system acted strangely. `XCBBuildService` crashed in the middle of every build, making `UnrealBuildTool` execute in the background. I could not track UnrealBuildTool's progress in Xcode to estimate when it would finish. The second time this happened, I noticed that Clang was still consuming 100% CPU. Also, disk space started getting eaten up and I could not find which folder was consuming disk space. `~/Documents/UnrealEngine/UnrealEngine` stayed constant at 199 GB, while a <b> > About This Mac > Storage</b> showed a gigabyte being consumed every ~10 seconds.
+On a local machine, I force-enabled `NaniteAtomicsSupported()` and the build system acted strangely. `XCBBuildService` crashed in the middle of every build, making `UnrealBuildTool` execute in the background. I could not track UnrealBuildTool's progress in Xcode to estimate when it would finish. The second time this happened, I noticed that Clang was still consuming 100% CPU. Also, disk space started getting eaten up and I could not find which folder was consuming disk space. `~/Documents/UnrealEngine/UnrealEngine` stayed constant at 199 GB, while <b> > About This Mac > Storage</b> showed a gigabyte being consumed every ~10 seconds.
  
 I had to reboot my Mac, delete all build products, and recompile with Xcode 13. Nanite doesn't require Metal 3 functionality, so Xcode 14 beta is not necessary. The most recent progress is posted on this branch as GitHub commits: https://github.com/philipturner/UnrealEngine/tree/modifications.
 
