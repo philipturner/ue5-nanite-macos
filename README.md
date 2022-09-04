@@ -138,6 +138,8 @@ Launch the Unreal Editor and open UnrealProject1. This time, the 3D graphical us
 
 ---
 
+<!-- Example of Unreal Editor silently crashing because I made a shader that won't compile (invalid syntax). -->
+
 <!-- Modify both the Unreal Editor and a product app using Unreal Engine -->
 
 TODO
