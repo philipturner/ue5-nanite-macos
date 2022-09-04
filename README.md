@@ -141,6 +141,8 @@ On a local machine, I force-enabled [`NaniteAtomicsSupported()`](https://github.
  
 Disk space started getting eaten up and I could not find which folder was consuming increasingly more disk space. `~/Documents/UnrealEngine` stayed constant at 199 GB, while <b>Menu Bar >  > About This Mac > Storage</b> showed a gigabyte being consumed every ~10 seconds. I had to reboot my Mac, reset the `UnrealEngine` directory, and recompile with Xcode 13. Nanite doesn't require Metal 3 functionality, so Xcode 14 beta is not necessary.
 
+To launch the Unreal Editor inside Xcode (where I can debug its crashes), I copied an project from ~/Documents/Unreal Projects`. I pasted it into `~/Documents/UnrealEngine/UnrealEngine` and renamed its encapsulating folder from `UnrealProject1` to `YES`. Then, I renamed the `.uproject` it contains from `UnrealProject1.uproject` to `YES.uproject`. This successfully bypassed the `YES/YES.uproject` failure described in a previous section.
+
 </details>
 
 ## Modifications to UE5
