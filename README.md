@@ -1,6 +1,6 @@
 # Nanite on macOS
 
-Brings the Nanite feature from Unreal Engine 5 to macOS and iOS.
+Brings the Nanite feature from Unreal Engine 5 to macOS and iOS. Read over [this forum thread](https://forums.unrealengine.com/t/lumen-nanite-on-macos/508411) for more context.
 
 ## Usage
 
@@ -147,4 +147,4 @@ I had to reboot my Mac, delete all build products, and recompile with Xcode 13. 
 
 After compiling the Unreal Engine from source, you may get random popups saying "XCBBuildService crashed". Ignore them; they do not mean the compilation of UE5 failed. I have no idea why they appear.
 
-This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort), so I am giving attribution by linking to the repository.
+This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
