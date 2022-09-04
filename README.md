@@ -137,7 +137,7 @@ Launch the Unreal Editor and open UnrealProject1. This time, the 3D graphical us
 
 ---
 
-The most recent progress is posted on this branch as GitHub commits: https://github.com/philipturner/UnrealEngine/tree/modifications. On a local machine, I force-enabled `NaniteAtomicsSupported()` and the build system subsequently acted very strangely. XCBBuildService would crash in the middle of a build. That made the UnrealBuildTool execute in the background, with no way to track its progress in Xcode. I had to delete all build products and recompile using Xcode 13. Nanite doesn't require Metal 3 functionality, so Xcode 14 beta is unnecessary.
+The most recent progress is posted on this branch as GitHub commits: https://github.com/philipturner/UnrealEngine/tree/modifications. On a local machine, I force-enabled `NaniteAtomicsSupported()` and the build system subsequently acted very strangely. XCBBuildService would crash in the middle of a build. That made the UnrealBuildTool execute in the background, with no way to track its progress in Xcode. I had to reboot my Mac, delete all build products, and recompile with Xcode 13. Nanite doesn't require Metal 3 functionality, so Xcode 14 beta is not necessary.
 
 </details>
 
