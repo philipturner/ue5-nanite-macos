@@ -143,7 +143,7 @@ Disk space started getting eaten up and I could not find which folder was consum
 
 To debug Unreal Editor when it crashes, it must be launchable from within Xcode. Repeat the process for creating `UnrealProject1`, using the Blueprint template instead of C++. This prevents `UnrealBuildTool` from asking you to recompile missing modules. From now on, all Nanite demonstrations will use Blueprint projects.
  
-In Finder, copy the project from `~/Documents/Unreal Projects` to `~/Documents/UnrealEngine/UnrealEngine`. Rename its encapsulating folder from `UnrealProject2` to `YES` and its project file to `YES.uproject`. This bypasses the `YES/YES.uproject` failure described in "Compile unmodified 'ue5-main'".
+In Finder, copy the project from `~/Documents/Unreal Projects` to `~/Documents/UnrealEngine/UnrealEngine`. Rename your new project's encapsulating folder (the one copied into a new directory) to `YES`. Then, rename its project file to `YES.uproject`. This bypasses the `YES/YES.uproject` failure described in "Compile unmodified 'ue5-main'".
 
 </details>
 
