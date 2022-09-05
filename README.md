@@ -162,7 +162,7 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engin, and eac
 | - | ----------------------------------- | ---------------------------------- |
 | `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled | Currently compiling, waiting on results, expecting a crash on launch |
 | `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | I compiled this once and it didn't crash on launch, but I need to reproduce it | |
-| `NaniteAtomicsSupported()` always returns true; its original code is commented out | I plan to test this next | This will be my final test |
+| `NaniteAtomicsSupported()` always returns true; its original code is commented out | This will be my final test | I plan to test this next |
 
 ## Attribution
 
