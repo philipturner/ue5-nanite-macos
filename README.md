@@ -162,7 +162,7 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 | - | ----------------------------------- | ---------------------------------- |
 | `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled. Compilation time: unknown | Currently compiling, waiting on results, expecting a crash on launch. Compilation time: currently 50 minutes (Xcode 13, from scratch) |
 | `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | I compiled this once and it didn't crash on launch, but I need to reproduce it | |
-| `NaniteAtomicsSupported()` always returns true; its original code is commented out | This will be my final test | I plan to test this next. n/a minutes (Xcode 13, with previous compilation's build products in place) |
+| `NaniteAtomicsSupported()` always returns true; its original code is commented out | This will be my final test | I plan to test this next. n/a minutes (Xcode 13, with previous compilation's build products present) |
 
 ## Attribution
 
