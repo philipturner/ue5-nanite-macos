@@ -185,7 +185,7 @@ Next, I tried forcing UE5 to perform unity builds. These supposedly decrease com
 
 ### Change 1
 
-Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`. This only enables Nanite on macOS, not iOS or tvOS yet.
+Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`. This only enables Nanite on macOS, not iOS or tvOS yet. The engine now crashes at runtime.
 
 ```
 (1) Engine/Source/Runtime/RenderCore/Public/RenderUtils.h
