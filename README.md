@@ -202,6 +202,14 @@ GPU Soft Fault count: 1
 Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
 ```
 
+### Change 3
+
+I got Nanite to activate, but it crashes whenever the Unreal Editor touches it. This will require a lot of work to fix. Furthermore, Epic made [this commit](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) which removed support for Nanite on devices without UInt64 image atomics. I will need to undo the changes in that commit.
+
+Another issue: the previous (now removed) 32-bit atomic workaround still performed operations on textures. Metal only supports atomics on buffers. This is not a big deal, because I can make the lock buffer into a buffer, not a texture. I have to know the color texture's width, then give each thread an independent index by multiplying (Y * width + X).
+
+Alternatively, I could create a common buffer and texture that stores 64-bit data. Create the texture by sub-allocating the resource from a buffer, then pass in the resources as both texture and buffer form into the texture. Atomic operations would happen on the same data that's being written to. Perhaps I can pull off a few more tricks that exploit Apple silicon's memory coherency traits, creating a robust lock-based workaround to UInt64 atomics.
+
 </details>
 
 ## Attribution
