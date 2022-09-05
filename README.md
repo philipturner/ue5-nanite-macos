@@ -222,7 +222,7 @@ Finally, there's the issue of whether Epic will accept this hack. They might acc
 
 There's one more idea. You don't need all 32 bits of the depth; 30 would be fine. What if you could split up 62 bits of data into two 32-bit chunks, each prefixed with one bit that states whether it's in use? Then an external lock (separate buffer of 32-bit data) coordinates thread accesses, and you do a bunch of spin lock-like atomic loads/stores to sanitize accesses to each half of the 64-bit texture/buffer slot. This might have low performance, but could have zero data races on Apple7. Then, we use native 64-bit UInt64 min/max on Apple8 for better performance. This could be enough for Epic to merge the Nanite port into UE5.
 
-> I'll try prototyping this workaround for Apple7 GPUs in an isolated Xcode project.
+> I'll try prototyping this workaround for Apple7 GPUs in an isolated Xcode project. I'll put it through intense testing to detect any theoretically possible data races.
 
 ## Attribution
 
