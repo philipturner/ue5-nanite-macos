@@ -160,7 +160,7 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 
 |   | `GRHISupportsAtomicUInt64` is false | `GRHISupportsAtomicUInt64` is true |
 | - | ----------------------------------- | ---------------------------------- |
-| `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled | Currently compiling, waiting on results, expect a crash on launch |
+| `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled | Currently compiling, waiting on results, expecting a crash on launch |
 | `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | I compiled this once and it didn't crash on launch, but I need to reproduce it | |
 | `NaniteAtomicsSupported()` always returns true; its original code is commented out | | |
 
