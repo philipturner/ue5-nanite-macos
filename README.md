@@ -166,6 +166,10 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 
 I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatformInfo.ini`. My next step is cleaning up the UnrealEngine fork.
 
+### First Reproducible Change
+
+
+
 <details>
 <summary>Crash description</summary>
 
