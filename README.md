@@ -160,9 +160,9 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 
 |   | `GRHISupportsAtomicUInt64` is false | `GRHISupportsAtomicUInt64` is true |
 | - | ----------------------------------- | ---------------------------------- |
-| `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled. <ins>Build time: unknown</ins> | Observations not usable because `bSupportsNanite=true` was not set. <ins>Build time: 55 minutes</ins> (from scratch, 3600 actions, 8 processes) |
-| `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | I compiled this once and it didn't crash on launch, but I need to reproduce it <ins>Build time: n/a</ins> (using cached build products, 2400 actions, 10 processes) | |
-| `NaniteAtomicsSupported()` always returns true; its original code is commented out | | <ins>Build time: aborted</ins> |
+| `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled. <ins>Build time: unknown</ins> | Observations unusable; `bSupportsNanite=true` was unset. <ins>Build time: 55 minutes</ins> (from scratch, 3600 actions, 8 processes) |
+| `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | Waiting on results. <ins>Build time: n/a</ins> (using cached build products, 2400 actions, 10 processes) | |
+| `NaniteAtomicsSupported()` always returns true; its original code is commented out | | Did not finish compilation. <ins>Build time: aborted</ins> |
 
 I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatformInfo.ini`. My next step is cleaning up the UnrealEngine fork.
 
