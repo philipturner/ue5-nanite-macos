@@ -185,6 +185,6 @@ Crash not yet reproduced.
 
 ## Attribution
 
-After compiling the Unreal Engine from source, you may get random popups saying "XCBBuildService crashed". Ignore them; they do not mean the compilation of UE5 failed. I have no idea why they appear.
-
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
+
+I also reused ideas found on the "Lumen & Nanite on MacOS" thread from Epic Dev Community forums.
