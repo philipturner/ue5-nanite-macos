@@ -161,7 +161,7 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 |   | `GRHISupportsAtomicUInt64` is false | `GRHISupportsAtomicUInt64` is true |
 | - | ----------------------------------- | ---------------------------------- |
 | `NaniteAtomicsSupported()` left as-is | Runs smoothly with Nanite disabled. <ins>Build time: unknown</ins> | Observations unusable; `bSupportsNanite=true` was unset. <ins>Build time: 55 minutes</ins> (from scratch, 3600 actions, 8 processes) |
-| `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | Waiting on results. <ins>Build time: 44 minutes</ins> (using cached build products, 2400 actions, 10 processes) | |
+| `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | Crashes after rendering anything to the Level Viewport <ins>Build time: 44 minutes</ins> (using cached build products, 2400 actions, 10 processes) | |
 | `NaniteAtomicsSupported()` always returns true; its original code is commented out | | Did not finish compilation. <ins>Build time: aborted</ins> |
 
 I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatformInfo.ini`. My next step is cleaning up the UnrealEngine fork. Heads up for anyone compiling my fork: Git corrupted the `YES/YES.uproject`. It's sufficient to launch Unreal Editor from within Xcode, but the scene is empty. Navigate to <b>Menu Bar > File</b> in the editor and open a different project.
@@ -179,7 +179,8 @@ Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code,
 <summary>Crash description</summary>
 
 ```
-Crash not yet reproduced.
+[UE] Assertion failed: GRHIPersistentThreadGroupCount > 0 [File:./Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp] [Line: 1738] 
+GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
 ```
 
 </details>
