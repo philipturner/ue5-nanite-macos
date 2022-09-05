@@ -168,7 +168,7 @@ I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatfo
 
 ### First Reproducible Change
 
-Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`.
+Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`. This only enables Nanite on macOS, not for iOS or tvOS yet.
 
 ```
 (1) Engine/Source/Runtime/RenderCore/Public/RenderUtils.h
