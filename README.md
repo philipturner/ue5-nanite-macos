@@ -156,12 +156,12 @@ Copy the `YES` project folder from `~/Documents/Unreal Projects` to `~/Documents
 UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and each full recompilation takes about an hour with Xcode 13. I haven't validated whether it ran faster with Xcode 14 beta. I am trying to debug certain changes to the code because some results are unexpected. Here is a grid of all the combinations of conditions, along with the observed behavior.
 
 - `NaniteAtomicsSupported()`: [RenderUtils.h](https://github.com/EpicGames/UnrealEngine/blob/07cf5345692d0c6ce80a748c001efea5eee16eb1/Engine/Source/Runtime/RenderCore/Public/RenderUtils.h#L713-L743)
-- `GRHISupportsAtomicUInt64`: Unknown
+- `GRHISupportsAtomicUInt64`: [RHI.cpp](https://github.com/EpicGames/UnrealEngine/blob/07cf5345692d0c6ce80a748c001efea5eee16eb1/Engine/Source/Runtime/RHI/Private/RHI.cpp#L1391)
 
 |   | `GRHISupportsAtomicUInt64` is false | `GRHISupportsAtomicUInt64` is true |
 | - | ----------------------------------- | ---------------------------------- |
-| `NaniteAtomicsSupported()` left as-is | | |
-| `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | | |
+| `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled | Currently compiling, waiting on results |
+| `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | I compiled this once and it didn't crash on launch, but I reproduce it | |
 | `NaniteAtomicsSupported()` always returns true; its original code is commented out | | |
 
 ## Attribution
