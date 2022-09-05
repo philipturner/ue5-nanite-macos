@@ -147,11 +147,8 @@ Copy the `YES` project folder from `~/Documents/Unreal Projects` to `~/Documents
 
 </details>
 
-## Modifications to UE5
-
-[philipturner/UnrealEngine/commits/modifications](https://github.com/philipturner/UnrealEngine/commits/modifications) shows my most recent modifications to Unreal Engine. Sign into your Epic Games-licensed GitHub account to view it. I will also post raw source code in `ue5-nanite-macos`, explaining it below.
-
-### Explanation of Modifications
+<details>
+<summary>Facing extremely long build times</summary>
 
 UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and each full recompilation takes about an hour with Xcode 13. I haven't validated whether it ran faster with Xcode 14 beta. I am trying to debug certain changes to the code because some results are unexpected. Here is a grid of all the combinations of conditions, along with the observed behavior.
 
@@ -178,6 +175,12 @@ GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
 
 </details>
 
+</details>
+
+## Modifications to UE5
+
+[philipturner/UnrealEngine/commits/modifications](https://github.com/philipturner/UnrealEngine/commits/modifications) shows my most recent modifications to Unreal Engine. Sign into your Epic Games-licensed GitHub account to view it. I will also post raw source code in `ue5-nanite-macos`, explaining it below.
+
 ### Change 1
 
 Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`. This only enables Nanite on macOS, not iOS or tvOS yet.
@@ -186,6 +189,16 @@ Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code,
 (1) Engine/Source/Runtime/RenderCore/Public/RenderUtils.h
 (2) Engine/Config/Mac/DataDrivenPlatformInfo.ini
 ```
+
+<details>
+<summary>Crash description</summary>
+
+```
+[UE] Assertion failed: GRHIPersistentThreadGroupCount > 0 [File:./Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp] [Line: 1738] 
+GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
+```
+
+</details>
 
 ### Change 2
 
