@@ -168,7 +168,7 @@ I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatfo
 
 ### First Reproducible Change
 
-Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code, find `Engine/Source/Runtime/RenderCore/Public/RenderUtils.h`. Replace the body of `NaniteAtomicsSupported()` with my changes.
+Look `RenderUtils_Changes.cpp` in this repository. In UE source code, find "Engine/Source/Runtime/RenderCore/Public/RenderUtils.h". Replace the body of `NaniteAtomicsSupported()` with my changes.
 
 <details>
 <summary>Crash description</summary>
