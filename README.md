@@ -153,7 +153,13 @@ Copy the `YES` project folder from `~/Documents/Unreal Projects` to `~/Documents
 
 ### Explanation of Modifications
 
-n/a
+UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and each full recompilation takes about an hour with Xcode 13. I haven't validated whether it ran faster with Xcode 14 beta. I am trying to debug certain changes to the code because some results are unexpected. Here is a grid of all the combinations of conditions, along with the observed behavior.
+
+|   | `GRHISupportsAtomicUInt64` is false | `GRHISupportsAtomicUInt64` is true |
+| - | ----------------------------------- | ---------------------------------- |
+| `NaniteAtomicsSupported()` left as-is | | |
+| `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | | |
+| `NaniteAtomicsSupported()` always returns true; its original code is commented out | | |
 
 ## Attribution
 
