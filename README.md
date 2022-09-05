@@ -11,7 +11,7 @@ Thorough instructions for how to compile UE5 from source and replicate what I've
 
 ---
 
-- At least 185 GB of free disk space, after installing everything described below.
+- At least 200 GB of free disk space, after installing everything described below.
 - Install [Homebrew](https://brew.sh).
 - Install Git. This can be accomplished using Homebrew: `brew install git`.
 - Install Xcode 14 beta from [developer.apple.com](https://developer.apple.com/xcode/resources). Place the unzipped `Xcode-beta` app in `~/Applications`.
