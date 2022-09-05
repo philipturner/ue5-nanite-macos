@@ -166,7 +166,7 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 
 Crash descriptions:
 
-- 1) 
+- (1) 
 
 ## Attribution
 
