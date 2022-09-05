@@ -164,7 +164,7 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 | `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | I compiled this once and it didn't crash on launch, but I need to reproduce it <ins>Build time: n/a</ins> (Xcode 13, n/a processes, with previous compilation's build products present) | |
 | `NaniteAtomicsSupported()` always returns true; its original code is commented out | | <ins>Build time: aborted</ins> |
 
-Now, I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatformInfo.ini`. My next step is cleaning up the UnrealEngine fork.
+I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatformInfo.ini`. My next step is cleaning up the UnrealEngine fork.
 
 <details>
 <summary>Crash description</summary>
