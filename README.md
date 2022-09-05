@@ -164,6 +164,8 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 | `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | I compiled this once and it didn't crash on launch, but I need to reproduce it | |
 | `NaniteAtomicsSupported()` always returns true; its original code is commented out | This will be my final test | I plan to test this next. <ins>Build time: n/a minutes</ins> (Xcode 13, with previous compilation's build products present) |
 
+Crash descriptions:
+
 ## Attribution
 
 After compiling the Unreal Engine from source, you may get random popups saying "XCBBuildService crashed". Ignore them; they do not mean the compilation of UE5 failed. I have no idea why they appear.
