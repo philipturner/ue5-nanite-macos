@@ -176,7 +176,7 @@ GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
 
 </details>
 
-### First Reproducible Change
+### Change 1
 
 Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`. This only enables Nanite on macOS, not iOS or tvOS yet.
 
@@ -184,6 +184,25 @@ Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code,
 (1) Engine/Source/Runtime/RenderCore/Public/RenderUtils.h
 (2) Engine/Config/Mac/DataDrivenPlatformInfo.ini
 ```
+
+### Change 2
+
+At the path below, change the body `FMetalDynamicRHI::Init()` to what is described in `Sources/MetalRHI_Changes.cpp`. The engine crashes at runtime because it cannot find `FInstanceCull_CS`. The GPU had a soft fault before UE crashed, so something is going very wrong.
+
+```
+Engine/Source/Runtime/Apple/MetalRHI/Private/MetalRHI.cpp
+```
+
+<details>
+<summary>Crash description</summary>
+
+```
+GPU Soft Fault count: 1
+2022-09-05 09:50:10.761740-0400 UnrealEditor[68890:538318] [UE] Assertion failed: Shader.IsValid() [File:Runtime/RenderCore/Public/GlobalShader.h] [Line: 201] 
+Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
+```
+
+</details>
 
 ## Attribution
 
