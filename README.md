@@ -164,6 +164,8 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 | `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | Crashes<sup>[1]</sup> after rendering anything. <ins>Build time: 44 minutes</ins> (using cached build products, 2400 actions, 10 processes) | |
 | `NaniteAtomicsSupported()` always returns true; its original code is commented out | | Did not finish compilation. <ins>Build time: aborted</ins> |
 
+I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatformInfo.ini`. After setting that, the editor crashes as expected. My next step is cleaning up the UnrealEngine fork. Heads up for anyone compiling my fork: Git corrupted the `YES/YES.uproject`. It's sufficient to launch Unreal Editor from within Xcode, but the scene is empty. Navigate to <b>Menu Bar > File</b> in the editor and open a different project.
+
 <details>
 <summary><sup>1</sup>Crash description</summary>
 
@@ -173,8 +175,6 @@ GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
 ```
 
 </details>
-
-I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatformInfo.ini`. My next step is cleaning up the UnrealEngine fork. Heads up for anyone compiling my fork: Git corrupted the `YES/YES.uproject`. It's sufficient to launch Unreal Editor from within Xcode, but the scene is empty. Navigate to <b>Menu Bar > File</b> in the editor and open a different project.
 
 ### First Reproducible Change
 
