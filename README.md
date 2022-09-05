@@ -206,7 +206,7 @@ Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
 
 ### Change 3
 
-> Warning: The text in this section is poorly/quickly written, so it may not make sense.
+> Warning: The text in this section is poorly written, so it may not make sense.
 
 I got Nanite to activate, but it crashes whenever the Unreal Editor touches it. This will require a lot of work to fix. Furthermore, Epic made [this commit](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) which removed support for Nanite on devices without UInt64 image atomics. I will need to undo the changes in that commit.
 
