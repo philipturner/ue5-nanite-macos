@@ -150,6 +150,8 @@ Copy the `YES` project folder from `~/Documents/Unreal Projects` to `~/Documents
 <details>
 <summary>Facing extremely long build times</summary>
 
+---
+
 UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and each full recompilation takes about an hour with Xcode 13. I haven't validated whether it ran faster with Xcode 14 beta. I am trying to debug certain changes to the code because some results are unexpected. Here is a grid of all the combinations of conditions, along with the observed behavior.
 
 > Note: Later on, I forced UE5 to perform unity builds. These supposedly decrease compile time but allow for mistakes where you forget an `#include` directive. Under `~/.config/Unreal Engine/UnrealBuildTool/BuildConfiguration.xml`, I set the following XML tags to `true`: "bUseUnityBuild", "bForceUnityBuild", and "bUseUBTMakefiles". I'm not 100% sure this works, but I'm keeping my setup configured this way.
