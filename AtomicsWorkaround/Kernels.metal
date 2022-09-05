@@ -18,12 +18,12 @@ struct RandomData {
 constant uint testMode [[function_constant(0)]];
 
 // Lock buffer and out buffer must be initialized to zero.
-kernel void atomicTest(constant uint &writesPerThread [[buffer(0)]],
-                       device RandomData *randomData [[buffer(1)]],
-                       device atomic_uint *lockBuffer [[buffer(2)]],
-                       device ulong *outBuffer [[buffer(3)]],
-                       texture2d<uint, access::read_write> outTexture [[texture(0)]],
-                       uint tid [[thread_position_in_grid]])
+kernel void atomicsTest(constant uint &writesPerThread [[buffer(0)]],
+                        device RandomData *randomData [[buffer(1)]],
+                        device atomic_uint *lockBuffer [[buffer(2)]],
+                        device ulong *outBuffer [[buffer(3)]],
+                        texture2d<uint, access::read_write> outTexture [[texture(0)]],
+                        uint tid [[thread_position_in_grid]])
 {
     uint startIndex = tid * writesPerThread;
     uint endIndex = startIndex + writesPerThread;
