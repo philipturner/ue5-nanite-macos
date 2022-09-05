@@ -223,7 +223,7 @@ Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
 
 ### Change 3
 
-> Warning: The text in this section is poorly written, so it may not make sense.
+> Warning: The text in this section is poorly written, so it may be difficult to understand.
 
 TODO: Clean up changes to shaders, consolidate change 3 to only describe those changes.
 
