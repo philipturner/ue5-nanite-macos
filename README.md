@@ -218,6 +218,10 @@ For example, reads and writes to 64-bit chunks of data might be naturally atomic
 
 Finally, there's the issue of whether Epic will accept this hack. They might accept it if I restrict it to Apple8 GPUs, which have a hardware instruction for UInt64 min/max atomics. Other GPUs (like the Apple7 M1) would use a hack or even non-atomic operations just for the purpose of creating Nanite support. Once that is developed, we remove the hack version from Apple7 and only enable such atomics on Apple8.
 
+---
+
+I didn't think about this, but there's one more idea. You don't need all 32 bits of the depth. What if you could split up 62 bits of data into two 32-bit chunks, each prefixed with one bit that states whether it's in use? Then an external lock (separate buffer of 32-bit data) coordinates thread accesses, and you do a bunch of spin lock-like operations to sanitize accesses to each half of the 64-bit texture/buffer slot. This might have low performance, but could have zero data races on Apple7. Then, we use native 64-bit UInt64 min/max on Apple8 for better performance. This could be enough for Epic to merge the Nanite port into UE5.
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
