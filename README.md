@@ -204,7 +204,7 @@ GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
 
 ### Change 2
 
-To fix the crash above, set the persistent thread group count for MetalRHI to 1440. Navigate to the path below and change `FMetalDynamicRHI::Init()` to the contents of `Sources/MetalRHI_Changes.cpp`. The engine now crashes because it cannot find `FInstanceCull_CS`. The GPU had a soft fault before UE crashed, so something is going very wrong.
+To fix the crash above, set the persistent thread group count for MetalRHI to 1440 - the same value as DirectX and Vulkan. Navigate to the path below and change `FMetalDynamicRHI::Init()` to the contents of `Sources/MetalRHI_Changes.cpp`. The engine now crashes because it cannot find `FInstanceCull_CS`. The GPU had a soft fault before UE crashed, so something is going very wrong.
 
 ```
 Engine/Source/Runtime/Apple/MetalRHI/Private/MetalRHI.cpp
