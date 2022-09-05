@@ -149,7 +149,7 @@ Copy the `YES` project folder from `~/Documents/Unreal Projects` to `~/Documents
 
 ## Modifications to UE5
 
-[philipturner/UnrealEngine/commits/modifications](https://github.com/philipturner/UnrealEngine/commits/modifications) shows my most recent modifications to Unreal Engine. Sign into your Epic Games-licensed GitHub account to view it. I will also post raw source code in this repository, explaining it below.
+[philipturner/UnrealEngine/commits/modifications](https://github.com/philipturner/UnrealEngine/commits/modifications) shows my most recent modifications to Unreal Engine. Sign into your Epic Games-licensed GitHub account to view it. I will also post raw source code in `ue5-nanite-macos`, explaining it below.
 
 ### Explanation of Modifications
 
