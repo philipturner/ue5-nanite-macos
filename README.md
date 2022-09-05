@@ -187,7 +187,7 @@ Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code,
 
 ### Change 2
 
-At the path below, change the body `FMetalDynamicRHI::Init()` to what is described in `Sources/MetalRHI_Changes.cpp`. The engine crashes at runtime because it cannot find `FInstanceCull_CS`. The GPU had a soft fault before UE crashed, so something is going very wrong.
+At the path below, change the body `FMetalDynamicRHI::Init()` to what is described in `Sources/MetalRHI_Changes.cpp`. I added a line that sets the persistent thread group count to 1440. The engine crashes at runtime because it cannot find `FInstanceCull_CS`. The GPU had a soft fault before UE crashed, so something is going very wrong.
 
 ```
 Engine/Source/Runtime/Apple/MetalRHI/Private/MetalRHI.cpp
