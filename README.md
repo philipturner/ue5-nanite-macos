@@ -160,7 +160,7 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 
 |   | `GRHISupportsAtomicUInt64` is false | `GRHISupportsAtomicUInt64` is true |
 | - | ----------------------------------- | ---------------------------------- |
-| `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled. <ins>Build time: unknown</ins> | Does not crash (I expected that it would crash). Runs smoothly, but Nanite is disabled. <ins>Build time: 55 minutes</ins> (Xcode 13, 8 processes, from scratch). <ins>Results not usable 😠</ins>. I forgot to set `bSupportsNanite=true` in DataDrivenPlatformInfo.ini. |
+| `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled. <ins>Build time: unknown</ins> | Observations not usable because `bSupportsNanite=true` was not set. <ins>Build time: 55 minutes</ins> (Xcode 13, 8 processes, from scratch) |
 | `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | I compiled this once and it didn't crash on launch, but I need to reproduce it <ins>Build time: n/a</ins> (Xcode 13, n/a processes, with previous compilation's build products present) | |
 | `NaniteAtomicsSupported()` always returns true; its original code is commented out | | I plan to test this next. <ins>Build time: aborted</ins> |
 
