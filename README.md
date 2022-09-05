@@ -168,10 +168,11 @@ I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatfo
 
 ### First Reproducible Change
 
-Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code, navigate to the path below. Replace the body of `NaniteAtomicsSupported()` with my changes.
+Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`.
 
 ```
-Engine/Source/Runtime/RenderCore/Public/RenderUtils.h
+(1) Engine/Source/Runtime/RenderCore/Public/RenderUtils.h
+(2) Engine/Config/Mac/DataDrivenPlatformInfo.ini
 ```
 
 <details>
