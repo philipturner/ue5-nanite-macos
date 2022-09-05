@@ -160,13 +160,15 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 
 |   | `GRHISupportsAtomicUInt64` is false | `GRHISupportsAtomicUInt64` is true |
 | - | ----------------------------------- | ---------------------------------- |
-| `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled. <ins>Build time: unknown</ins> | Does not crash (I expected that it would crash). Runs smoothly, but Nanite is disabled. <ins>Build time: 55 minutes</ins> (Xcode 13, 8 processes, from scratch). <ins>Results not usable 😠</ins>. I forgot to set `bSupportsNanite=true` in DataDrivenPlatformInfo.ini |
+| `NaniteAtomicsSupported()` left as-is | Default build config; runs smoothly with Nanite disabled. <ins>Build time: unknown</ins> | Does not crash (I expected that it would crash). Runs smoothly, but Nanite is disabled. <ins>Build time: 55 minutes</ins> (Xcode 13, 8 processes, from scratch). <ins>Results not usable 😠</ins>. I forgot to set `bSupportsNanite=true` in DataDrivenPlatformInfo.ini. |
 | `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | I compiled this once and it didn't crash on launch, but I need to reproduce it | |
 | `NaniteAtomicsSupported()` always returns true; its original code is commented out | | I plan to test this next. <ins>Build time: n/a minutes</ins> (Xcode 13, with previous compilation's build products present) |
 
 Crash descriptions:
 
 - (1) 
+
+Now, I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatformInfo.ini`. My next step is cleaning up the UnrealEngine fork, and making the commits look professional.
 
 ## Attribution
 
