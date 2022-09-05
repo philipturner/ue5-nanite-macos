@@ -4,7 +4,7 @@ Brings the Nanite feature from Unreal Engine 5 to Apple platforms. Read over [th
 
 ## Usage
 
-I am currently experimenting with UE5. You can follow these instructions to replicate what I've done.
+Thorough instructions for how to compile UE5 from source and replicate what I've done:
 
 <details>
 <summary>Prerequisites</summary>
