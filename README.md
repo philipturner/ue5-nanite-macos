@@ -154,8 +154,6 @@ Copy the `YES` project folder from `~/Documents/Unreal Projects` to `~/Documents
 
 UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and each full recompilation takes about an hour with Xcode 13. I haven't validated whether it ran faster with Xcode 14 beta. I am trying to debug certain changes to the code because some results are unexpected. Here is a grid of all the combinations of conditions, along with the observed behavior.
 
-> Note: Later on, I forced UE5 to perform unity builds. These supposedly decrease compile time but allow for mistakes where you forget an `#include` directive. Under `~/.config/Unreal Engine/UnrealBuildTool/BuildConfiguration.xml`, I set the following XML tags to `true`: "bUseUnityBuild", "bForceUnityBuild", and "bUseUBTMakefiles". I'm not 100% sure this works, but I'm keeping my setup configured this way.
-
 - `NaniteAtomicsSupported()`: [RenderUtils.h](https://github.com/EpicGames/UnrealEngine/blob/07cf5345692d0c6ce80a748c001efea5eee16eb1/Engine/Source/Runtime/RenderCore/Public/RenderUtils.h#L713-L743)
 - `GRHISupportsAtomicUInt64`: [RHI.cpp](https://github.com/EpicGames/UnrealEngine/blob/07cf5345692d0c6ce80a748c001efea5eee16eb1/Engine/Source/Runtime/RHI/Private/RHI.cpp#L1391)
 
@@ -164,8 +162,6 @@ UnrealBuildTool performs poorly with incremental builds of Unreal Engine, and ea
 | `NaniteAtomicsSupported()` left as-is | Runs smoothly with Nanite disabled. <ins>Build time: unknown</ins> | Observations unusable; `bSupportsNanite=true` was unset. <ins>Build time: 55 minutes</ins> (from scratch, 3600 actions, 8 processes) |
 | `NaniteAtomicsSupported()` always returns true, only when `PLATFORM_APPLE` is defined | Crashes<sup>[1]</sup> after rendering anything. <ins>Build time: 44 minutes</ins> (using cached build products, 2400 actions, 10 processes) | |
 | `NaniteAtomicsSupported()` always returns true; its original code is commented out | | Did not finish compilation. <ins>Build time: aborted</ins> |
-
-I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatformInfo.ini`. After setting that, the editor crashes as expected. My next step is cleaning up the UnrealEngine fork. Heads up for anyone compiling my fork: Git corrupted the `YES/YES.uproject`. It's sufficient to launch Unreal Editor from within Xcode, but the scene is empty. Navigate to <b>Menu Bar > File</b> in the editor and open a different project.
 
 <details>
 <summary><sup>1</sup>Crash description</summary>
@@ -176,6 +172,10 @@ GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
 ```
 
 </details>
+
+I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatformInfo.ini`. After setting that, the editor crashes as expected. My next step is cleaning up the UnrealEngine fork. Heads up for anyone compiling my fork: Git corrupted the `YES/YES.uproject`. It's sufficient to launch Unreal Editor from within Xcode, but the scene is empty. Navigate to <b>Menu Bar > File</b> in the editor and open a different project.
+
+Next, I tried forcing UE5 to perform unity builds. These supposedly decrease compile time but allow for mistakes where you forget an `#include` directive. Under `~/.config/Unreal Engine/UnrealBuildTool/BuildConfiguration.xml`, I set the following XML tags to `true`: "bUseUnityBuild", "bForceUnityBuild", and "bUseUBTMakefiles". I'm not 100% sure this works, but incremental builds seem to be running faster now.
 
 </details>
 
