@@ -211,6 +211,10 @@ I got Nanite to activate, but it crashes whenever the Unreal Editor touches it. 
 Another issue: the previous (now removed) 32-bit atomic workaround still performed operations on textures. Metal only supports atomics on buffers. This is not a big deal, because I can make the lock buffer into a buffer, not a texture. I have to know the color texture's width, then give each thread an independent index by multiplying (Y * width + X).
 
 Alternatively, I could create a common buffer and texture that stores 64-bit data. Create the texture by sub-allocating the resource from a buffer, then pass in the resources as both texture and buffer form into the shader. Atomic operations would happen on the same data that's being written to. Perhaps I can pull off a few more tricks that exploit Apple silicon's memory coherency traits, creating a robust lock-based workaround to UInt64 atomics.
+ 
+For example, reads and writes to 64-bit chunks of data might be naturally atomic if aligned to 8 bytes. I could do a compare-and-swap to validate that any accesses did not have a data race. Also, Metal Shading Language has texture synchronization functions that ensure if one thread writes to a texture, then reads from the same position, the read value reflects the written value. This might trigger some synchronization mechanism in hardware that helps with the UInt64 image atomics workaround.
+
+Finally, there's the issue of whether Epic will accept this hack. They might accept it if I restrict it to Apple8 GPUs, which have a hardware instruction for UInt64 min/max atomics. Other GPUs (like the Apple7 M1) would use a hack or even non-atomic operations just for the purpose of creating Nanite support. Once that is developed, we remove the hack version from Apple7 and only enable such atomics on Apple8.
 
 ## Attribution
 
