@@ -26,7 +26,7 @@ let textureHeight = 2
 // TODO: Create a counter that increments when each type of data race is
 // encountered. Also, increase number of invocations so that lower 8 bits of
 // some depth values overflow to 0x00000000.
-let numIterationsPerKernelInvocation = 20//20
+let numIterationsPerKernelInvocation = 2//20
 let numKernelInvocations = 1//10
 let numTests = 5
 
@@ -242,6 +242,10 @@ for i in 0..<numTests {
     let blitEncoder = commandBuffer.makeBlitCommandEncoder()!
     blitEncoder.fill(buffer: recycledBuffer, range: 0..<recycledBuffer.length, value: 0)
     blitEncoder.fill(buffer: outBuffer, range: 0..<outBuffer.length, value: 0)
+    if enableDebugMode {
+        blitEncoder.fill(buffer: __debug_depthBuffer, range: 0..<__debug_depthBuffer.length, value: 0)
+        blitEncoder.fill(buffer: __debug_countBuffer, range: 0..<__debug_countBuffer.length, value: 0)
+    }
     blitEncoder.endEncoding()
     
     let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
