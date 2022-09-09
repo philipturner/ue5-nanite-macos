@@ -248,7 +248,21 @@ Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp
 
 Now, Nanite debug views appear in the editor. Rendering any Nanite-enabled object causes a crash.
 
-> TODO: Crash description.
+<details>
+<summary>Crash description</summary>
+
+```
+[UE] [2022.09.09-17.56.48:845][ 12]LogMaterial: Display: Material /Game/StarterContent/Materials/M_Basic_Wall.M_Basic_Wall needed to have new flag set bUsedWithNanite !
+[UE] [2022.09.09-17.57.01:471][129]LogEditorViewport: Clicking Background
+[UE] [2022.09.09-17.57.04:933][441]LogSlate: Took 0.000082 seconds to synchronously load lazily loaded font '../../../Engine/Content/Slate/Fonts/Roboto-Regular.ttf' (155K)
+[UE] [2022.09.09-17.57.12:041][858]LogActorFactory: Actor Factory attempting to spawn StaticMesh /Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere
+[UE] [2022.09.09-17.57.12:041][858]LogActorFactory: Actor Factory attempting to spawn StaticMesh /Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere
+[UE] [2022.09.09-17.57.12:042][858]LogActorFactory: Actor Factory spawned StaticMesh /Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere as actor: StaticMeshActor /Temp/Untitled_0.Untitled:PersistentLevel.StaticMeshActor_0
+[UE] Ensure condition failed: 0 [File:./Runtime/Apple/MetalRHI/Private/MetalStateCache.cpp] [Line: 1958] 
+Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != TexTypes 9
+```
+
+</details>
 
 ## Attribution
 
