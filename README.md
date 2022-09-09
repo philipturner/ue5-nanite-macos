@@ -181,7 +181,7 @@ Next, I tried forcing UE5 to perform unity builds. These supposedly decrease com
 
 ## Modifications to UE5
 
-[philipturner/UnrealEngine/commits/modifications](https://github.com/philipturner/UnrealEngine/commits/modifications) shows my most recent modifications to Unreal Engine. Sign into your Epic Games-licensed GitHub account to view it. I will also post raw source code in `ue5-nanite-macos`, explaining it below.
+[This link](https://github.com/philipturner/UnrealEngine/commits/modifications) shows my most recent modifications to Unreal Engine. Sign into your Epic Games-licensed GitHub account to view it. I also post raw source code in `ue5-nanite-macos`, explaining it below.
 
 ### Change 1
 
