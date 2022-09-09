@@ -15,12 +15,14 @@ struct RandomData {
     float depth;
 };
 
+constant uint MAX_DEPTH = (1 << 24) - 1;
+
 ushort test_depth(uint index,
                   float depth,
                   device atomic_uint *depthBuffer,
                   device atomic_uint *countBuffer);
 
-// Must zero-initialize lock, count, out buffers beforehand.
+// Must zero-initialize lock, count, and out buffers beforehand.
 kernel void atomicsTest(constant uint &writesPerThread [[buffer(0)]],
                         device RandomData *randomData [[buffer(1)]],
 						device atomic_uint *depthBuffer [[buffer(2)]],
@@ -41,10 +43,10 @@ kernel void atomicsTest(constant uint &writesPerThread [[buffer(0)]],
             continue;
         }
         
-        ushort2 color_split = as_type<ushort2>(data.color);
+        ushort2 color_parts = as_type<ushort2>(data.color);
         uint atomic_words[2] = {
-            as_type<uint>(ushort2(color_split[0], counter)),
-            as_type<uint>(ushort2(color_split[1], counter)),
+            as_type<uint>(ushort2(color_parts[0], counter)),
+            as_type<uint>(ushort2(color_parts[1], counter)),
         };
         
         device atomic_uint *out_ptr = outBuffer + (index * 2);
@@ -53,10 +55,30 @@ kernel void atomicsTest(constant uint &writesPerThread [[buffer(0)]],
     }
 }
 
-// TODO: Shader that reconstructs depthBuffer and outBuffer into outTexture.
-kernel void reconstructTexture()
+// Thread dispatch size must equal texture dimensions.
+kernel void reconstructTexture(device uint *depthBuffer [[buffer(2)]],
+                               texture2d<uint, access::read_write> outTexture [[texture(0)]],
+                               uint2 tid [[thread_position_in_grid]])
 {
+    uint index = tid.y * outTexture.get_width() + tid.x;
     
+    // The converted float is clamped to 0.99999999. In the Nanite
+    // implementation with 64-bit atomics, the maximum possible depth is 1.0.
+    // That's because `asuint` takes the float's bitpattern, which can exceed
+    // 24 bits.
+    uint clamped_depth = depthBuffer[index] >> 8;
+    float depth = float(clamped_depth) / float(MAX_DEPTH);
+    
+    // `outBuffer` and `outTexture` shared the same memory allocation.
+    uint2 read_values = outTexture.read(tid).xy;
+    ushort2 color_parts = {
+        as_type<ushort2>(read_values[0])[0],
+        as_type<ushort2>(read_values[1])[0],
+    };
+    float color = as_type<float>(color_parts);
+    
+    uint4 pixel{ as_type<uint>(color), as_type<uint>(depth) };
+    outTexture.write(pixel, tid);
 }
 
 // Returns 0 if the test failed. Otherwise, the return value must be >= 1
@@ -66,7 +88,6 @@ inline ushort test_depth(uint index,
                          device atomic_uint *depthBuffer,
                          device atomic_uint *countBuffer) {
     // Represent depth as 24-bit normalized integer.
-    constexpr uint MAX_DEPTH = (1 << 24) - 1;
     uint clamped_depth( saturate(depth) * float(MAX_DEPTH) );
     
     // Masks the lower 8 bits with zeroes. This means it can't be
