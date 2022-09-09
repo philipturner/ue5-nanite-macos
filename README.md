@@ -223,6 +223,10 @@ Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
 
 ### Change 3
 
+Behind the scenes, I think certain shaders fail to compile if they're incompatible with the GPU. For example, shaders asking for texture atomics fail to compile on Apple platforms. This causes Unreal Engine to internally disable Nanite, preventing debug views from appearing in the editor. I built on shader changes from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort), creating a thread-unsafe version of every texture atomic. There had to be additional modifications because since that repo's creation, Epic heavy modified some files. For example, they [removed](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) the lock workaround that enabled Nanite on devices without UInt64 texture atomics.
+
+These changes are so numerous that describing the exact code changes here is impractical. So, I included all of their respective shader files in `Sources`.
+
 > Warning: The text in this section is poorly written, so it may be difficult to understand.
 
 TODO: Clean up changes to shaders, consolidate change 3 to only describe those changes.
