@@ -191,7 +191,7 @@ Next, I tried forcing UE5 to perform unity builds. These supposedly decrease com
 
 ### Change 1
 
-Look at `Sources/RenderUtils_Changes.cpp` in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`. This only enables Nanite on macOS, not iOS or tvOS yet. The engine now crashes at runtime.
+Look at [`Sources/RenderUtils_Changes.h`](./Sources/RenderUtils_Changes.h) in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`. This only enables Nanite on macOS, not iOS or tvOS yet. The engine now crashes at runtime.
 
 ```
 (1) Engine/Source/Runtime/RenderCore/Public/RenderUtils.h
@@ -210,7 +210,7 @@ GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
 
 ### Change 2
 
-To fix the crash above, set the persistent thread group count for MetalRHI to 1440 - the same value as DirectX and Vulkan. Navigate to the path below and change `FMetalDynamicRHI::Init()` to the contents of `Sources/MetalRHI_Changes.cpp`. The engine now crashes because it cannot find `FInstanceCull_CS`. The GPU had a soft fault before UE crashed, so something is going very wrong.
+To fix the crash above, set the persistent thread group count for MetalRHI to 1440 - the same value as DirectX and Vulkan. Navigate to the path below and change `FMetalDynamicRHI::Init()` to the contents of [`Sources/MetalRHI_Changes.cpp`](./Sources/MetalRHI_Changes.cpp). The engine now crashes because it cannot find `FInstanceCull_CS`. The GPU had a soft fault before UE crashed, so something is going very wrong.
 
 ```
 Engine/Source/Runtime/Apple/MetalRHI/Private/MetalRHI.cpp
@@ -231,7 +231,7 @@ Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
 
 [UE5NanitePort](https://github.com/gladhu/UE5NanitePort) enabled Nanite through a special shader execution path on Apple platforms. The path replaced 32-bit texture atomics with unsafe reads and writes. Depths could register incorrectly, causing hidden objects to appear in front of objects that occlude them. This may explain the graphical glitches in the associated Reddit post. Metal supports 32-bit buffer atomics, so a better solution replaces the textures with buffers. This takes more time to implement, but reduces/eliminates graphical glitches.
  
-Since that port, Epic permanently disabled Nanite on platforms that lack 64-bit atomics. [This commit](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) removed the lock-based control path that used 32-bit atomics. Therefore, my shader modifications heavily diverge from UE5NanitePort. `Sources` contains the entire contents of each modified shader. Overwrite the files below with their counterparts from `ue5-nanite-macos`:
+Since that port, Epic permanently disabled Nanite on platforms that lack 64-bit atomics. [This commit](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) removed the lock-based control path that used 32-bit atomics. Therefore, my shader modifications heavily diverge from UE5NanitePort. [`Sources`](./Sources) contains the entire contents of each modified shader. Overwrite the files below with their counterparts from `ue5-nanite-macos`:
  
 ```
 Engine/Shaders/Private/Nanite/NaniteRasterizer.usf
@@ -240,7 +240,7 @@ Engine/Shaders/Private/ShadowDepthPixelShader.usf
 ```
 
 At the path below, the shader compiler checks for 64-bit image atomic support. The check happens in 5 different locations and fails each time. 
-Use the preprocessor directive in `Sources/NaniteCullRaster_Changes.cpp` to disable each check.
+Use the preprocessor directive in [`Sources/NaniteCullRaster_Changes.cpp`](./Sources/NaniteCullRaster_Changes.cpp) to disable each check.
 
 ```
 Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp
