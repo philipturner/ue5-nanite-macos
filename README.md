@@ -2,6 +2,12 @@
 
 Brings the Nanite feature from Unreal Engine 5 to Apple platforms. Read over [this forum thread](https://forums.unrealengine.com/t/lumen-nanite-on-macos/508411) for more context.
 
+## How it Works
+
+> This section is a work in progress.
+
+Nanite can run using entirely 32-bit atomics, without creating data races. Check out the [AtomicsWorkaround](./AtomicsWorkaround) directory for the latest information on this workaround.
+
 ## Usage
 
 Thorough instructions for how to compile UE5 from source and replicate what I've done:
