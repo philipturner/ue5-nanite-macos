@@ -33,6 +33,7 @@ let numTests = 5
 // Right now, this flag doesn't do anything. In the future, it will enable
 // testing 64-bit atomics on the A15 GPU.
 let emulating64BitAtomics: Bool = false
+let enableDebugMode = true
 
 let device = MTLCreateSystemDefaultDevice()!
 let commandQueue = device.makeCommandQueue()!
@@ -75,6 +76,9 @@ func makeBuffer(size: Int) -> MTLBuffer {
 // Generate buffers.
 let recycledBuffer = makeBuffer(size: recycledBufferSize)
 let outBuffer = makeBuffer(size: outBufferSize)
+
+let __debug_depthBuffer = makeBuffer(size: depthBufferSize)
+let __debug_countBuffer = makeBuffer(size: countBufferSize)
 
 let textureDesc = MTLTextureDescriptor()
 textureDesc.width = textureWidth
@@ -125,6 +129,15 @@ func generateRandomData(ptr: UnsafeMutablePointer<RandomData>) {
         
         ptr[i] = data
     }
+}
+
+func showBits(_ value: Float) -> String {
+    let n = value.bitPattern
+    return String(format: "%02X", n)
+}
+
+func showBits(_ value: UInt32) -> String {
+    return String(format: "%02X", value)
 }
 
 // Returns an array of texture rows.
@@ -183,7 +196,9 @@ func validateResults(
                 expected.y = depth
             }
             
-            print("(actual) \(actual.x) \(actual.y) (expected) \(expected.x) \(expected.y)")
+            if enableDebugMode {
+                print("(actual) \(showBits(actual.x)) \(showBits(actual.y)) (expected) \(showBits(expected.x)) \(showBits(expected.y))")
+            }
             let difference = actual - expected
             deviation.x += abs(difference.x)
             deviation.y += abs(difference.y)
@@ -245,8 +260,13 @@ for i in 0..<numTests {
     computeEncoder.setBytes(&params, length: paramsLength, index: 0)
     
     computeEncoder.setBuffer(randomDataBuffer, offset: 0, index: 1)
-    computeEncoder.setBuffer(recycledBuffer, offset: depthBufferOffset, index: 2)
-    computeEncoder.setBuffer(recycledBuffer, offset: countBufferOffset, index: 3)
+    if enableDebugMode {
+        computeEncoder.setBuffer(__debug_depthBuffer, offset: 0, index: 2)
+        computeEncoder.setBuffer(__debug_countBuffer, offset: 0, index: 3)
+    } else {
+        computeEncoder.setBuffer(recycledBuffer, offset: depthBufferOffset, index: 2)
+        computeEncoder.setBuffer(recycledBuffer, offset: countBufferOffset, index: 3)
+    }
     computeEncoder.setBuffer(outBuffer, offset: 0, index: 4)
     do {
         let gridSize = MTLSizeMake(numKernelInvocations, 1, 1)
@@ -272,10 +292,36 @@ for i in 0..<numTests {
     let results = generateExpectedResults(ptr: randomDataPtr)
     commandBuffer.waitUntilCompleted()
     
+    guard enableDebugMode else {
+        continue
+    }
+    
     let deviation = validateResults(ptr: recycledBuffer.contents(), expected: results)
     print("Deviation: \(deviation)")
     for i in 0..<randomDataNumElements {
-        print(randomDataPtr[i])
+        let data = randomDataPtr[i]
+        print("xCoord: \(data.xCoord), yCoord: \(data.yCoord), color: \(showBits(data.color)), depth: \(showBits(data.depth))")
+    }
+    
+    print("Depth buffer:")
+    let depthBufferContents = outBuffer.contents().assumingMemoryBound(to: UInt32.self)
+    for i in 0..<textureWidth * textureHeight {
+        let depth = depthBufferContents[i]
+        print("depth: \(showBits(depth))")
+    }
+    
+    print("Count buffer:")
+    let countBufferContents = outBuffer.contents().assumingMemoryBound(to: UInt16.self)
+    for i in 0..<textureWidth * textureHeight {
+        let count = UInt32(countBufferContents[i])
+        print("count: \(showBits(count))")
+    }
+    
+    print("Out buffer:")
+    let outBufferContents = outBuffer.contents().assumingMemoryBound(to: SIMD2<Float>.self)
+    for i in 0..<textureWidth * textureHeight {
+        let pixel = outBufferContents[i]
+        print("lower part: \(showBits(pixel.x)), upper part: \(showBits(pixel.y))")
     }
     print()
 }
