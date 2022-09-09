@@ -225,7 +225,7 @@ Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
 
 [UE5NanitePort](https://github.com/gladhu/UE5NanitePort) enabled Nanite through a special shader execution path on Apple platforms. The path replaced 32-bit texture atomics with unsafe reads and writes. Depths could register incorrectly, causing hidden objects to appear in front of objects that occlude them. This may explain the graphical glitches in the associated Reddit post. Metal supports 32-bit buffer atomics, so a better solution replaces the textures with buffers. This takes more time to implement, but reduces/eliminates graphical glitches.
  
-Since that port, Epic permanently disabled Nanite on platforms that lack 64-bit atomics. [This commit](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) removed the lock-based control path that used 32-bit atomics. Therefore, my shader modifications heavily diverge from UE5NanitePort. They are too numerous to explain concisely, so I included the entirety of each changed shader file in `Sources`. Overwrite the files below with their counterparts from `ue5-nanite-macos`:
+Since that port, Epic permanently disabled Nanite on platforms that lack 64-bit atomics. [This commit](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) removed the lock-based control path that used 32-bit atomics. Therefore, my shader modifications heavily diverge from UE5NanitePort. `Sources` contains the entire contents of each modified shader. Overwrite the files below with their counterparts from `ue5-nanite-macos`:
  
 ```
 Engine/Shaders/Private/Nanite/NaniteRasterizer.usf
