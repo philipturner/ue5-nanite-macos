@@ -17,15 +17,26 @@ import Metal
 // the same storage mechanism for odd and even textures makes the codebase more
 // maintainable.
 let textureWidth = 3
-let textureHeight = 3
+let textureHeight = 2
+
+// High ratio of (numIterationsPerKernelInvocation * numKernelInvocations) /
+// (textureWidth * textureHeight) creates heavy congestion, and likely many data
+// races.
+//
+// TODO: Create a counter that increments when each type of data race is
+// encountered. Also, increase number of invocations so that lower 8 bits of
+// some depth values overflow to 0x00000000.
 let numIterationsPerKernelInvocation = 20
 let numKernelInvocations = 10
+let numTests = 5
 
 let device = MTLCreateSystemDefaultDevice()!
 let commandQueue = device.makeCommandQueue()!
 let library = device.makeDefaultLibrary()!
-let function = library.makeFunction(name: "atomicsTest")!
-let pipeline = try! device.makeComputePipelineState(function: function)
+let atomicsTestPipeline = try! device.makeComputePipelineState(
+    function: library.makeFunction(name: "atomicsTest")!)
+let reconstructTexturePipeline = try! device.makeComputePipelineState(
+    function: library.makeFunction(name: "reconstructTexture")!)
 
 // MARK: - Allocate Buffers
 
@@ -91,8 +102,7 @@ func linearInterpolate(min: Float, max: Float, t: Float) -> Float {
     max * t + min * (1 - t)
 }
 
-func generateRandomData() -> [RandomData] {
-    var output = [RandomData](repeating: .init(), count: randomDataNumElements)
+func generateRandomData(ptr: UnsafeMutablePointer<RandomData>) {
     for i in 0..<randomDataNumElements {
         let randomValues = SIMD4<UInt32>.random(in: 0..<UInt32.max)
         var data = unsafeBitCast(randomValues, to: RandomData.self)
@@ -110,9 +120,59 @@ func generateRandomData() -> [RandomData] {
         data.depth = Float(depth_uint) / Float(UInt32.max)
         data.depth = linearInterpolate(min: -0.1, max: 1.1, t: data.depth)
         
-        output[i] = data
+        ptr[i] = data
     }
+}
+
+// Returns an array of texture rows.
+func generateExpectedResults(
+    ptr: UnsafeMutablePointer<RandomData>
+) -> [[SIMD2<Float>]] {
+    let row = [SIMD2<Float>](repeating: .zero, count: textureWidth)
+    var output: [[SIMD2<Float>]] = Array(repeating: row, count: textureHeight)
+    
+    for i in 0..<numKernelInvocations * numIterationsPerKernelInvocation {
+        let xCoord = Int(ptr[i].xCoord)
+        let yCoord = Int(ptr[i].yCoord)
+        
+        var pixel: SIMD2<Float> = .zero
+        pixel[0] = ptr[i].color
+        pixel[1] = max(0, min(ptr[i].depth, 1))
+        
+        // On the GPU, this would be an atomic max.
+        let previousValue = unsafeBitCast(output[yCoord][xCoord], to: UInt64.self)
+        let currentValue = unsafeBitCast(pixel, to: UInt64.self)
+        if currentValue > previousValue {
+            output[yCoord][xCoord] = pixel
+        }
+    }
+    
     return output
+}
+
+// Takes in the texture's base address and an array of texture rows.
+//
+// Returns total deviation from expected value, in color and depth separately.
+//
+// Depth may deviate slightly because it's bounded to [0, 0.999999] on GPU. On
+// CPU, it's bounded to [0, 1.0] to emulate 64-bit atomic version.
+func validateResults(
+    ptr: UnsafeMutableRawPointer,
+    expected: [[SIMD2<Float>]]
+) -> (colorDeviation: Float, depthDeviation: Float) {
+    var deviation: SIMD2<Float> = .zero
+    for row in 0..<outTexture.height {
+        let basePtr = ptr + row * outTextureRowWidth
+        let actualPixels = basePtr.assumingMemoryBound(to: SIMD2<Float>.self)
+        let expectedPixels = expected[row]
+        
+        for i in 0..<outTexture.width {
+            let difference = actualPixels[i] - expectedPixels[i]
+            deviation.x += abs(difference.x)
+            deviation.y += abs(difference.y)
+        }
+    }
+    return (deviation.x, deviation.y)
 }
 
 // MARK: - Perform Tests
@@ -122,3 +182,73 @@ func generateRandomData() -> [RandomData] {
 // (2) Encode commands on GPU
 // (3) While waiting on GPU to finish, calculate what should happen on the CPU.
 // (4) Ensure the CPU's results match every GPU result
+
+for i in 0..<numTests {
+    let start = Date()
+    defer {
+        let end = Date()
+        let testTime = end.timeIntervalSince(start)
+        let milliseconds = Int(testTime * 1000)
+        
+        print("Test \(i + 1) took \(milliseconds) milliseconds.")
+    }
+    
+    // Generate random data.
+    do {
+        let contents = randomDataBuffer.contents()
+        let ptr = contents.assumingMemoryBound(to: RandomData.self)
+        generateRandomData(ptr: ptr)
+        #if os(macOS)
+        randomDataBuffer.didModifyRange(0..<randomDataBuffer.length)
+        #endif
+    }
+    
+    let commandBuffer = commandQueue.makeCommandBuffer()!
+    
+    // Zero out all buffers.
+    let blitEncoder = commandBuffer.makeBlitCommandEncoder()!
+    blitEncoder.fill(buffer: recycledBuffer, range: 0..<recycledBuffer.length, value: 0)
+    blitEncoder.fill(buffer: outBuffer, range: 0..<outBuffer.length, value: 0)
+    blitEncoder.endEncoding()
+    
+    let computeEncoder = commandBuffer.makeComputeCommandEncoder()!
+    computeEncoder.setComputePipelineState(atomicsTestPipeline)
+    
+    struct DispatchParams {
+        var writesPerThread: UInt32 = 0
+        var textureWidth: UInt32 = 0
+    }
+    
+    // Set dispatch parameters.
+    var params = DispatchParams()
+    params.writesPerThread = .init(numIterationsPerKernelInvocation)
+    params.textureWidth = .init(outTexture.width)
+    let paramsLength = MemoryLayout<DispatchParams>.stride
+    computeEncoder.setBytes(&params, length: paramsLength, index: 0)
+    
+    computeEncoder.setBuffer(randomDataBuffer, offset: 0, index: 1)
+    computeEncoder.setBuffer(recycledBuffer, offset: depthBufferOffset, index: 2)
+    computeEncoder.setBuffer(recycledBuffer, offset: countBufferOffset, index: 3)
+    computeEncoder.setBuffer(outBuffer, offset: 0, index: 4)
+    do {
+        let gridSize = MTLSizeMake(numKernelInvocations, 1, 1)
+        let threadgroupSize = MTLSizeMake(1, 1, 1)
+        computeEncoder.dispatchThreadgroups(gridSize, threadsPerThreadgroup: threadgroupSize)
+    }
+    
+    computeEncoder.setComputePipelineState(reconstructTexturePipeline)
+    
+    // depthBuffer already bound to index 2.
+    // outBuffer already bound to index 4.
+    computeEncoder.setTexture(outTexture, index: 0)
+    do {
+        let gridSize = MTLSizeMake(outTexture.width, outTexture.height, 1)
+        let threadgroupSize = MTLSizeMake(1, 1, 1)
+        computeEncoder.dispatchThreadgroups(gridSize, threadsPerThreadgroup: threadgroupSize)
+    }
+    
+    computeEncoder.endEncoding()
+    
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+}
