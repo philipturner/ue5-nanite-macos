@@ -96,8 +96,7 @@ inline ushort test_depth(uint index,
     uint comparison_depth = clamped_depth << 8;
     device atomic_uint* depth_ptr = depthBuffer + index;
     
-    // Loop in a spin-lock until the atomic value has been accessed in
-    // a sanitized way.
+    // Spin until you access the atomic value in a sanitized way.
     while (true) {
         uint current_depth = atomic_load_explicit(depth_ptr, memory_order_relaxed);
         if (comparison_depth <= current_depth) {
@@ -123,30 +122,8 @@ inline ushort test_depth(uint index,
             previous_word >>= 16;
         }
         
-        // An overflow in the lower counter would leak into the upper
-        // counter, making it always off by one. The check ((previous_word & 255) != current_depth)
-        // this would always fail for a thread querying the upper value, causing
-        // an infinite loop.
-        //
-        // This workaround shrinks dynamic range from 65536 to 49152,
-        // providing a 16384-pixel grace period to reset the counter.
-        // The grace period should never be exceeded in practice.
-        //
-        // After resetting the counter, it decreases to something close
-        // to 0. That will cause a graphical glitch, but it's better
-        // than freezing the application. Furthermore, there's an almost
-        // zero possibility that 49152 triangles will have a unique
-        // depth value and all test the same pixel in ascending order.
-        bool is_lower = (index & 1) == 0;
-        constexpr ushort MAX_COUNTER = (1 << 14) * 3;
-        if (is_lower && (previous_word >= MAX_COUNTER)) {
-            // Always reset the counter, even if depths do not match.
-            constexpr uint RESET_MASK = 0xFFFF00FF;
-            atomic_fetch_and_explicit(word_ptr, RESET_MASK, memory_order_relaxed);
-        }
-        
-        if ((previous_word & 255) != current_depth) {
-            // If there's a data race, atomic count isn't what you expect.
+        if ((previous_word & 255) != current_counter) {
+            // If there's a data race, counter isn't what you expect.
             continue;
         }
         
