@@ -223,9 +223,7 @@ Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
 
 ### Change 3
 
-> Warning: The text in this section is poorly written, so it may be difficult to understand.
-
-[UE5NanitePort](https://github.com/gladhu/UE5NanitePort) enabled Nanite through a special shader execution path on Apple platforms. This replaced 32-bit texture atomics with thread-unsafe memory accesses. Depths might register incorrectly, causing hidden objects to appear in front of objects that occlude them. This may explain the graphical glitches in the associated Reddit post. Metal supports 32-bit buffer atomics, so an alternative solution might replace texture arguments with buffers. This reduces or eliminates graphical glitches, but takes significant time to implement.
+[UE5NanitePort](https://github.com/gladhu/UE5NanitePort) enabled Nanite through a special shader execution path on Apple platforms. The path replaced 32-bit texture atomics with thread-unsafe memory accesses. Depths might register incorrectly, causing hidden objects to appear in front of objects that occlude them. This may explain the graphical glitches in the associated Reddit post. Metal supports 32-bit buffer atomics, so an alternative solution might replace texture arguments with buffers. This reduces or eliminates graphical glitches, but takes significant time to implement.
  
 Since that port, Nanite was permantently disabled on platforms that lack 64-bit atomics. [This commit](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) removed the lock-based control path that enabled Nanite through 32-bit atomics. I built on the shader modifications from UE5NanitePort and created an entirely new execution path for Apple platforms. These changes are too numerous to practically describe here. So, I included all of their respective shader files in `Sources`. Copy and paste these file's contents into the following directories:
  
@@ -243,7 +241,7 @@ Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp
 
 Debug views now appear; explain the crash.
 
-
+> Warning: The text in this section is poorly written, so it may be difficult to understand.
 
 TODO: Clean up changes to shaders, consolidate change 3 to only describe those changes.
 
