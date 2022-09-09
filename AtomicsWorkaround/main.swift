@@ -16,7 +16,7 @@ import Metal
 // that's (2 * numPixels) bytes larger during the Nanite pass. However, using
 // the same storage mechanism for odd and even textures makes the codebase more
 // maintainable.
-let textureWidth = 3
+let textureWidth = 2
 let textureHeight = 2
 
 // High ratio of (numIterationsPerKernelInvocation * numKernelInvocations) /
@@ -26,9 +26,13 @@ let textureHeight = 2
 // TODO: Create a counter that increments when each type of data race is
 // encountered. Also, increase number of invocations so that lower 8 bits of
 // some depth values overflow to 0x00000000.
-let numIterationsPerKernelInvocation = 20
-let numKernelInvocations = 10
+let numIterationsPerKernelInvocation = 20//20
+let numKernelInvocations = 1//10
 let numTests = 5
+
+// Right now, this flag doesn't do anything. In the future, it will enable
+// testing 64-bit atomics on the A15 GPU.
+let emulating64BitAtomics: Bool = false
 
 let device = MTLCreateSystemDefaultDevice()!
 let commandQueue = device.makeCommandQueue()!
@@ -116,9 +120,8 @@ func generateRandomData(ptr: UnsafeMutablePointer<RandomData>) {
         data.color = Float(color_uint) / Float(UInt32.max)
         
         // Test what happens when depth values are outside [0, 1].
-        let depth_uint = data.color.bitPattern
-        data.depth = Float(depth_uint) / Float(UInt32.max)
-        data.depth = linearInterpolate(min: -0.1, max: 1.1, t: data.depth)
+        data.depth = Float(data.depth.bitPattern) / Float(UInt32.max)
+//        data.depth = linearInterpolate(min: -0.1, max: 1.1, t: data.depth)
         
         ptr[i] = data
     }
@@ -138,6 +141,11 @@ func generateExpectedResults(
         var pixel: SIMD2<Float> = .zero
         pixel[0] = ptr[i].color
         pixel[1] = max(0, min(ptr[i].depth, 1))
+        if !emulating64BitAtomics {
+            let maxDepth: Int = (1 << 24) - 1
+            let clampedDepth = UInt32(pixel[1] * Float(maxDepth))
+            pixel[1] = Float(bitPattern: clampedDepth)
+        }
         
         // On the GPU, this would be an atomic max.
         let previousValue = unsafeBitCast(output[yCoord][xCoord], to: UInt64.self)
@@ -154,8 +162,7 @@ func generateExpectedResults(
 //
 // Returns total deviation from expected value, in color and depth separately.
 //
-// Depth may deviate slightly because it's bounded to [0, 0.999999] on GPU. On
-// CPU, it's bounded to [0, 1.0] to emulate 64-bit atomic version.
+// The deviation should be zero.
 func validateResults(
     ptr: UnsafeMutableRawPointer,
     expected: [[SIMD2<Float>]]
@@ -167,7 +174,17 @@ func validateResults(
         let expectedPixels = expected[row]
         
         for i in 0..<outTexture.width {
-            let difference = actualPixels[i] - expectedPixels[i]
+            let actual = actualPixels[i]
+            var expected = expectedPixels[i]
+            if !emulating64BitAtomics {
+                let maxDepth: Int = (1 << 24) - 1
+                let clampedDepth: UInt32 = expected.y.bitPattern
+                let depth = Float(clampedDepth) / Float(maxDepth)
+                expected.y = depth
+            }
+            
+            print("(actual) \(actual.x) \(actual.y) (expected) \(expected.x) \(expected.y)")
+            let difference = actual - expected
             deviation.x += abs(difference.x)
             deviation.y += abs(difference.y)
         }
@@ -194,10 +211,11 @@ for i in 0..<numTests {
     }
     
     // Generate random data.
+    var randomDataPtr: UnsafeMutablePointer<RandomData>
     do {
         let contents = randomDataBuffer.contents()
-        let ptr = contents.assumingMemoryBound(to: RandomData.self)
-        generateRandomData(ptr: ptr)
+        randomDataPtr = contents.assumingMemoryBound(to: RandomData.self)
+        generateRandomData(ptr: randomDataPtr)
         #if os(macOS)
         randomDataBuffer.didModifyRange(0..<randomDataBuffer.length)
         #endif
@@ -248,7 +266,16 @@ for i in 0..<numTests {
     }
     
     computeEncoder.endEncoding()
-    
     commandBuffer.commit()
+    
+    // Compute results on CPU while waiting for GPU.
+    let results = generateExpectedResults(ptr: randomDataPtr)
     commandBuffer.waitUntilCompleted()
+    
+    let deviation = validateResults(ptr: recycledBuffer.contents(), expected: results)
+    print("Deviation: \(deviation)")
+    for i in 0..<randomDataNumElements {
+        print(randomDataPtr[i])
+    }
+    print()
 }
