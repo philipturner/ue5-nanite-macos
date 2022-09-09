@@ -93,7 +93,7 @@ kernel void atomicsTest(constant uint &writesPerThread [[buffer(0)]],
                 if (is_lower && (previous_word >= MAX_COUNTER)) {
                     // Always reset the counter, even if depths do not match.
                     constexpr uint RESET_MASK = 0xFFFF00FF;
-                    atomic_fetch_max_explicit(word_ptr, RESET_MASK, memory_order_relaxed);
+                    atomic_fetch_and_explicit(word_ptr, RESET_MASK, memory_order_relaxed);
                 }
                 
                 if ((previous_word & 255) != current_depth) {
