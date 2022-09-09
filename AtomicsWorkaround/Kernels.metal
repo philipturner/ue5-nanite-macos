@@ -124,13 +124,13 @@ inline ushort test_depth(uint index,
         }
         
         // An overflow in the lower counter would leak into the upper
-        // counter, making it always off by one. The check directly below
-        // this would always fail for some random thread on the GPU, causing
+        // counter, making it always off by one. The check ((previous_word & 255) != current_depth)
+        // this would always fail for a thread querying the upper value, causing
         // an infinite loop.
         //
         // This workaround shrinks dynamic range from 65536 to 49152,
         // providing a 16384-pixel grace period to reset the counter.
-        // This should never be exceeded in practice.
+        // The grace period should never be exceeded in practice.
         //
         // After resetting the counter, it decreases to something close
         // to 0. That will cause a graphical glitch, but it's better
