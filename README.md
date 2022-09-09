@@ -234,11 +234,15 @@ Engine/Shaders/Private/ShadowDepthPixelShader.usf
 ```
 
 At the path below, the shader compiler checks for 64-bit image atomic support. The check happens in 5 different locations and fails each time. 
-`Sources/NaniteCullRaster_Changes.cpp` demonstrates how to disable these checks. Nanite debug views now appear in the editor. However, rendering any Nanite-enabled object will crash the editor.
+Replicate `Sources/NaniteCullRaster_Changes.cpp` and disable each check. Now, Nanite debug views appear in the editor.
 
 ```
 Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp
 ```
+
+Rendering any Nanite-enabled object causes a crash.
+
+> TODO: Crash description.
 
 ## Attribution
 
