@@ -235,10 +235,10 @@ Engine/Shaders/Private/Nanite/NaniteWritePixel.ush
 Engine/Shaders/Private/ShadowDepthPixelShader.usf
 ```
 
-At the path below, there are 5 locations where the shader compiler checks for 64-bit image atomic support. The check currently fails on Apple platforms, so elide the change. Check `Sources/NaniteCullRaster_Changes.cpp` for an example of how to exclude these checks. Now, Nanite shaders will always compile.
+At the path below, there are 5 locations where the shader compiler checks for 64-bit image atomic support. The check currently fails on Apple platforms, so elide the change. Replicate `Sources/NaniteCullRaster_Changes.cpp`, which demonstrated excluding these checks. All Nanite shaders should now compile.
 
 ```
-
+Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp
 ```
 
 
