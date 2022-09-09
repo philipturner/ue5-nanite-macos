@@ -240,7 +240,7 @@ Engine/Shaders/Private/ShadowDepthPixelShader.usf
 ```
 
 At the path below, the shader compiler checks for 64-bit image atomic support. The check happens in 5 different locations and fails each time. 
-Replicate `Sources/NaniteCullRaster_Changes.cpp` and disable each check.
+Use the preprocessor directive in `Sources/NaniteCullRaster_Changes.cpp` to disable each check.
 
 ```
 Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp
