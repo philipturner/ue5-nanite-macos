@@ -225,9 +225,9 @@ Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
 
 > Warning: The text in this section is poorly written, so it may be difficult to understand.
 
-(This isn't correct!) Behind the scenes, I think certain shaders fail to compile if they're incompatible with the GPU. For example, shaders asking for texture atomics fail to compile on Apple platforms. This causes Unreal Engine to internally disable Nanite, preventing debug views from appearing in the editor. I built on shader changes from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort), creating a thread-unsafe version of every texture atomic. There had to be additional modifications because since that repo's creation, Epic heavy modified some files. For example, they [removed](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) the lock workaround that enabled Nanite on devices without UInt64 texture atomics.
-
-These changes are so numerous that describing the exact code changes here is impractical. So, I included all of their respective shader files in `Sources`. Copy and paste these file's contents into the following directories:
+[UE5NanitePort](https://github.com/gladhu/UE5NanitePort) enabled Nanite by creating an alternative shader execution path on Apple platforms. This was thread-unsafe, replacing atomics with a regular memory write. Depths might register incorrectly, causing hidden objects to appear in front of objects that occlude them. This may explain the graphical glitches in the associated Reddit post.
+ 
+Since that port, Nanite was permantently disabled on platforms that lack 64-bit atomics. [This commit](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) removed the lock-based control path that enabled Nanite through 32-bit atomics. I built on the shader modifications from UE5NanitePort and created an entirely new execution path for Apple platforms. These changes are too numerous to practically describe here. So, I included all of their respective shader files in `Sources`. Copy and paste these file's contents into the following directories:
  
 ```
 Engine/Shaders/Private/Nanite/NaniteRasterizer.usf
@@ -240,6 +240,8 @@ At the path below, there are 5 locations where the shader compiler checks for 64
 ```
 Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp
 ```
+
+Debug views now appear; explain the crash.
 
 
 
