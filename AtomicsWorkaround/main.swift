@@ -7,40 +7,25 @@
 
 import Metal
 
-// A buffer-backed texture have rows aligned to 16 bytes. If texture has odd
-// width, and outBuffer/outTexture share the same underlying allocation, the
-// runtime throws an error.
+// A buffer-backed texture must have rows aligned to 16 bytes. If the texture
+// has odd width, and outBuffer/outTexture share the same underlying allocation,
+// the runtime throws an error.
 //
-// So, use a common buffer to sub-allocate depthBuffer and counterBuffer, and
-// recycle the memory for outTexture. This creates a working set of memory
-// that's (2 * numPixels) byte larger than the other implementation. However,
-// using the same mode for odd and even textures makes the code base more
+// Instead, use a common buffer to sub-allocate depthBuffer and counterBuffer,
+// recycling the memory for outTexture. This creates a working set of memory
+// that's (2 * numPixels) bytes larger during the Nanite pass. However, using
+// the same storage mechanism for odd and even textures makes the codebase more
 // maintainable.
 let textureWidth = 3
 let textureHeight = 3
-let numTrials = 3
 let numIterationsPerKernelInvocation = 20
 let numKernelInvocations = 10
-
-// Loop:
-// (1) Generate random data, zero-initialize buffers
-// (2) Encode commands on GPU, repeated several times because it might be
-//     non-deterministic
-// (3) While waiting on GPU to finish, calculate what should happen on the CPU.
-// (4) Ensure the CPU's results match every GPU result
 
 let device = MTLCreateSystemDefaultDevice()!
 let commandQueue = device.makeCommandQueue()!
 let library = device.makeDefaultLibrary()!
 let function = library.makeFunction(name: "atomicsTest")!
 let pipeline = try! device.makeComputePipelineState(function: function)
-
-struct RandomData {
-    var xCoord: UInt32 = 0
-    var yCoord: UInt32 = 0
-    var color: Float = 0
-    var depth: Float = 0
-}
 
 // MARK: - Allocate Buffers
 
@@ -53,46 +38,54 @@ let bufferOptions: MTLResourceOptions = .storageModeManaged
 let bufferOptions: MTLResourceOptions = .storageModeShared
 #endif
 
+// Determine size of resources.
+let depthBufferSize = 4 * textureWidth * textureHeight
+let countBufferSize = 2 * textureWidth * textureHeight
+let outBufferSize = 8 * textureWidth * textureHeight
+
+var outTextureRowWidth = 8 * textureWidth
+outTextureRowWidth = ~15 & (15 + outTextureRowWidth)
+let outTextureSize = outTextureRowWidth * textureHeight
+
+// Determine size and internal offsets of recycled buffer.
+precondition(depthBufferSize + countBufferSize <= outTextureSize)
+let recycledBufferSize = outTextureSize
+let depthBufferOffset = 0
+let countBufferOffset = depthBufferOffset + depthBufferSize
+
+func makeBuffer(size: Int) -> MTLBuffer {
+    device.makeBuffer(length: size, options: bufferOptions)!
+}
+
+// Generate buffers.
+let recycledBuffer = makeBuffer(size: recycledBufferSize)
+let outBuffer = makeBuffer(size: outBufferSize)
+
+let textureDesc = MTLTextureDescriptor()
+textureDesc.width = textureWidth
+textureDesc.height = textureHeight
+textureDesc.pixelFormat = .rg32Uint
+textureDesc.resourceOptions = bufferOptions
+textureDesc.textureType = .type2D
+textureDesc.usage = [.shaderRead, .shaderWrite]
+
+// Generate out texture.
+let outTexture = recycledBuffer.makeTexture(
+    descriptor: textureDesc, offset: 0, bytesPerRow: outTextureRowWidth)!
+
+// MARK: - Generate Random Data
+
+struct RandomData {
+    var xCoord: UInt32 = 0
+    var yCoord: UInt32 = 0
+    var color: Float = 0
+    var depth: Float = 0
+}
+
+// Create buffer for input data.
 let randomDataNumElements = numIterationsPerKernelInvocation * numKernelInvocations
 let randomDataSize = randomDataNumElements * MemoryLayout<RandomData>.stride
 let randomDataBuffer = device.makeBuffer(length: randomDataSize, options: bufferOptions)!
-
-let numPixels = textureWidth * textureHeight
-let depthBufferSize = 4 * numPixels
-let countBufferSize = 2 * numPixels
-let outBufferSize = 8 * numPixels
-
-var depthBuffers: [MTLBuffer] = []
-var countBuffers: [MTLBuffer] = []
-var outBuffers: [MTLBuffer] = []
-var outTextures: [MTLTexture] = []
-
-for _ in 0..<numTrials {
-    func makeBuffer(size: Int) -> MTLBuffer {
-        device.makeBuffer(length: size, options: bufferOptions)!
-    }
-    
-    depthBuffers.append(makeBuffer(size: depthBufferSize))
-    countBuffers.append(makeBuffer(size: countBufferSize))
-    
-    let outBuffer = makeBuffer(size: outBufferSize)
-    depthBuffers.append(outBuffer)
-    
-    let desc = MTLTextureDescriptor()
-    desc.width = textureWidth
-    desc.height = textureHeight
-    desc.pixelFormat = .rg32Uint
-    desc.resourceOptions = bufferOptions
-    desc.textureType = .type2D
-    desc.usage = [.shaderRead, .shaderWrite]
-    
-    let bytesPerRow = 2 * MemoryLayout<UInt32>.stride * textureWidth
-    let outTexture = outBuffer.makeTexture(
-        descriptor: desc, offset: 0, bytesPerRow: bytesPerRow)!
-    outTextures.append(outTexture)
-}
-
-// MARK: - Perform Tests
 
 func linearInterpolate(min: Float, max: Float, t: Float) -> Float {
     max * t + min * (1 - t)
@@ -121,3 +114,11 @@ func generateRandomData() -> [RandomData] {
     }
     return output
 }
+
+// MARK: - Perform Tests
+
+// Test Structure:
+// (1) Generate random data, zero-initialize buffers
+// (2) Encode commands on GPU
+// (3) While waiting on GPU to finish, calculate what should happen on the CPU.
+// (4) Ensure the CPU's results match every GPU result
