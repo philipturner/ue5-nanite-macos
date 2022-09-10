@@ -9,7 +9,7 @@ With the script's current configuration, around 100 data races occur for each sh
 - The thread updates the value's 24-bit depth.
 - The thread compare-exchanges the lock's new value with its previous value.
 
-I tested this on an Apple M1 Max, and you may get slightly different results on other GPUs. The script has a special execution path for Intel Macs with discrete GPUs, ensuring it uses GPU-private memory to store buffer data. Not doing this would drastically change how atomics work, and tank performance.
+I tested this on an Apple M1 Max, and you may get slightly different results on other GPUs. The script has a special execution path for Intel Macs with discrete GPUs, ensuring it uses GPU-private memory to store buffer data. Not doing this would drastically change how atomics work and would tank performance.
 
 ## Usage
 
