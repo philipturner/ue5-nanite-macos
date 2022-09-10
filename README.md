@@ -264,7 +264,33 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 
 ## Change 4
 
-The crash occured because two texture types were different. One was `2`, the raw value of `MTLTextureType.type2D`. The other was `9`, the raw value of `MTLTextureType.typeTextureBuffer`.
+The crash occured because two texture types were different. One was `2`, the raw value of `MTLTextureType.type2D`. The other was `9`, the raw value of `MTLTextureType.typeTextureBuffer`. This happened while validating that a fragment shading command was encoded correctly. Here, I extracted the raw shader source causing the problem. Notice that one argument is a `texture_buffer`.
+
+```metal
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+// Identity function as workaround for bug in Metal compiler
+template<typename T>
+T spvIdentity(T x)
+{
+    return x;
+}
+
+struct type_Globals
+{
+    uint4 ClearValue;
+};
+
+fragment void Main_0000030f_ba464dd8(constant type_Globals& _Globals [[buffer(1)]], texture_buffer<uint, access::write> ClearResource [[texture(0)]], float4 gl_FragCoord [[position]])
+{
+    ClearResource.write(spvIdentity(_Globals.ClearValue), uint(uint(gl_FragCoord.x)));
+}
+```
 
 ## Attribution
 
