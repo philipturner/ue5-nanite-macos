@@ -380,7 +380,7 @@ fragment void Main_0000030f_ba464dd8(
 The fragment shader was transpiled from an HLSL shader, located at the path below.
 
 ```
-/Engine/Shaders/Private/ClearReplacementShaders.usf
+Engine/Shaders/Private/ClearReplacementShaders.usf
 ```
 
 ## Attribution
