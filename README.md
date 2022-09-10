@@ -377,7 +377,7 @@ fragment void Main_0000030f_ba464dd8(
 
 </details>
  
-The fragment shader was transpiled from an HLSL shader, located at the path below. It was compiled with `RESOURCE_TYPE` set to either 0 or 5, making `ClearResource` a `RWBuffer`. I'll try chasing where it was initialized and setting `RESOURCE_TYPE` to 1. That should change the clear resource to `RWTexture2D`.
+The fragment shader was transpiled from an HLSL shader, located at the path below. `RESOURCE_TYPE` was set to either 0 or 5, making `ClearResource` a `RWBuffer`. I'll try chasing where it was initialized and setting `RESOURCE_TYPE` to 1. That should change the clear resource to `RWTexture2D`.
 
 ```
 Engine/Shaders/Private/ClearReplacementShaders.usf
