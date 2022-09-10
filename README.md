@@ -381,12 +381,13 @@ The fragment shader was transpiled from an HLSL shader, located at path (1) belo
 
 The command in question began in some other portion of the code base, and on another thread, which I can't see from the stack trace. During the command's creation, all of the Metal shader pipelines and resources were assigned. At the crash site, it read the mismatched pipeline and resource, then failed to encode them into a `MTLCommandBuffer`.
 
-At path (2) below, around line 526, it registers a 2D texture as the clear replacement resource. This happens before any render commands are encoded. Next, `FRHICommandListExecutor` encodes several render commands (path 3, circa line 511). 
+At path (2) below, around line 526, it registers a 2D texture as the clear replacement resource. This happens before any render commands are encoded. Next, `FRHICommandListExecutor` encodes several render commands (path 3, circa line 511). `FMetalRHICommandContext` sets a new graphics PSO (path 4, circa line 258) which I presume uses the vertex/fragmemt shaders shown above. After encoding a few more commands, the assertion failure happens.
 
 ```
 (1) Engine/Shaders/Private/ClearReplacementShaders.usf
 (2) Engine/Source/Runtime/Apple/MetalRHI/Private/MetalUAV.cpp
 (3) Engine/Source/Runtime/RHI/Private/RHICommandList.cpp
+(4) Engine/Source/Runtime/Apple/MetalRHI/Private/MetalCommands.cpp
 ```
 
 ## Attribution
