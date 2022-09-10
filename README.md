@@ -264,7 +264,7 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 
 ## Change 4
 
-The crash occured while validating resource bindings for a render command. One texture `.type2D` (raw value 2), the other `.typeTextureBuffer` (raw value 9). In the fragment shader source below, one argument is a `texture_buffer`. A 2D texture was bound in the location of `ClearResource`.
+The crash occured while validating resource bindings for a render command. One texture was `.type2D` (raw value 2) and the other was `.typeTextureBuffer` (raw value 9). In the fragment shader source below, one argument is a `texture_buffer`. A 2D texture was bound in the location of `ClearResource`.
 
 <details>
 <summary>Vertex shader</summary>
