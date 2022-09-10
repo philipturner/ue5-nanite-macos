@@ -7,17 +7,13 @@
 
 import Metal
 
-// A buffer-backed texture must have rows aligned to 16 bytes. If the texture
-// has odd width, and outBuffer/outTexture share the same underlying allocation,
-// the runtime throws an error.
-//
-// Instead, use a common buffer to sub-allocate depthBuffer and counterBuffer,
-// recycling the memory for outTexture. This creates a working set of memory
-// that's (2 * numPixels) bytes larger during the Nanite pass. However, using
-// the same storage mechanism for odd and even textures makes the codebase more
-// maintainable.
 let textureWidth = 2
 let textureHeight = 2
+
+// A buffer-backed texture must have rows aligned to 16 bytes. Accomplish this
+// by setting stride to an even number of 8-bit elements. Align depth/count
+// buffers to this stride, so that one index can address into all buffers.
+let textureRowStride = ~1 & (1 + textureWidth)
 
 // High ratio of (numIterationsPerKernelInvocation * numKernelInvocations) /
 // (textureWidth * textureHeight) creates heavy congestion, and likely many data
@@ -30,9 +26,10 @@ let numKernelInvocations = 100
 let numTests = 5
 
 // Right now, this flag doesn't do anything. In the future, it will enable
-// testing 64-bit atomics on the A15 GPU.
+// testing 64-bit atomics on the A15 GPU. There will be a separate shader that
+// performs the functionality of `atomicsTest` and `reconstructTexture` in a
+// single pass.
 let emulating64BitAtomics: Bool = false
-let enableDebugMode = false
 
 let device = MTLCreateSystemDefaultDevice()!
 let commandQueue = device.makeCommandQueue()!
@@ -54,31 +51,20 @@ let bufferOptions: MTLResourceOptions = .storageModeShared
 #endif
 
 // Determine size of resources.
-let depthBufferSize = 4 * textureWidth * textureHeight
-let countBufferSize = 2 * textureWidth * textureHeight
-let outBufferSize = 8 * textureWidth * textureHeight
-
-var outTextureRowWidth = 8 * textureWidth
-outTextureRowWidth = ~15 & (15 + outTextureRowWidth)
-let outTextureSize = outTextureRowWidth * textureHeight
-
-// Determine size and internal offsets of recycled buffer.
-precondition(depthBufferSize + countBufferSize <= outTextureSize)
-let recycledBufferSize = outTextureSize
-let depthBufferOffset = 0
-let countBufferOffset = depthBufferOffset + depthBufferSize
+let depthBufferSize = 4 * textureRowStride * textureHeight
+let countBufferSize = 4 * textureRowStride * textureHeight
+let outBufferSize = 8 * textureRowStride * textureHeight
 
 func makeBuffer(size: Int) -> MTLBuffer {
     device.makeBuffer(length: size, options: bufferOptions)!
 }
 
 // Generate buffers.
-let recycledBuffer = makeBuffer(size: recycledBufferSize)
+let depthBuffer = makeBuffer(size: depthBufferSize)
+let countBuffer = makeBuffer(size: countBufferSize)
 let outBuffer = makeBuffer(size: outBufferSize)
 
 // Generate buffers for debugging and profiling.
-let __debug_depthBuffer = makeBuffer(size: depthBufferSize)
-let __debug_countBuffer = makeBuffer(size: countBufferSize)
 let dataRacesBuffer = makeBuffer(size: 4 * 64) // Up to 64 unique error codes.
 
 let textureDesc = MTLTextureDescriptor()
@@ -90,8 +76,8 @@ textureDesc.textureType = .type2D
 textureDesc.usage = [.shaderRead, .shaderWrite]
 
 // Generate out texture.
-let outTexture = recycledBuffer.makeTexture(
-    descriptor: textureDesc, offset: 0, bytesPerRow: outTextureRowWidth)!
+let outTexture = outBuffer.makeTexture(
+	descriptor: textureDesc, offset: 0, bytesPerRow: 8 * textureRowStride)!
 
 // MARK: - Generate Random Data
 
@@ -179,13 +165,12 @@ func generateExpectedResults(
 //
 // The deviation should be zero.
 func validateResults(
-    ptr: UnsafeMutableRawPointer,
+	ptr: UnsafeMutablePointer<SIMD2<Float>>,
     expected: [[SIMD2<Float>]]
 ) -> (colorDeviation: Float, depthDeviation: Float) {
     var deviation: SIMD2<Float> = .zero
     for row in 0..<outTexture.height {
-        let basePtr = ptr + row * outTextureRowWidth
-        let actualPixels = basePtr.assumingMemoryBound(to: SIMD2<Float>.self)
+        let actualPixels = ptr + row * textureRowStride
         let expectedPixels = expected[row]
         
         for i in 0..<outTexture.width {
@@ -198,9 +183,6 @@ func validateResults(
                 expected.y = depth
             }
             
-            if enableDebugMode {
-                print("(actual) \(showBits(actual.x)) \(showBits(actual.y)) (expected) \(showBits(expected.x)) \(showBits(expected.y))")
-            }
             let difference = actual - expected
             deviation.x += abs(difference.x)
             deviation.y += abs(difference.y)
@@ -230,29 +212,23 @@ for i in 0..<numTests {
         let milliseconds = Int(testTime * 1000)
         
         print("Test \(i + 1) took \(milliseconds) milliseconds.")
+		print()
     }
     
     // Generate random data.
-    var randomDataPtr: UnsafeMutablePointer<RandomData>
-    do {
-        let contents = randomDataBuffer.contents()
-        randomDataPtr = contents.assumingMemoryBound(to: RandomData.self)
-        generateRandomData(ptr: randomDataPtr)
-        #if os(macOS)
-        randomDataBuffer.didModifyRange(0..<randomDataBuffer.length)
-        #endif
-    }
+	let randomContents = randomDataBuffer.contents().assumingMemoryBound(to: RandomData.self)
+	generateRandomData(ptr: randomContents)
+	#if os(macOS)
+	randomDataBuffer.didModifyRange(0..<randomDataBuffer.length)
+	#endif
     
     let commandBuffer = commandQueue.makeCommandBuffer()!
     
     // Zero out all buffers.
     let blitEncoder = commandBuffer.makeBlitCommandEncoder()!
-    blitEncoder.fill(buffer: recycledBuffer, range: 0..<recycledBuffer.length, value: 0)
+    blitEncoder.fill(buffer: depthBuffer, range: 0..<depthBuffer.length, value: 0)
+	blitEncoder.fill(buffer: countBuffer, range: 0..<countBuffer.length, value: 0)
     blitEncoder.fill(buffer: outBuffer, range: 0..<outBuffer.length, value: 0)
-    if enableDebugMode {
-        blitEncoder.fill(buffer: __debug_depthBuffer, range: 0..<__debug_depthBuffer.length, value: 0)
-        blitEncoder.fill(buffer: __debug_countBuffer, range: 0..<__debug_countBuffer.length, value: 0)
-    }
     blitEncoder.fill(buffer: dataRacesBuffer, range: 0..<dataRacesBuffer.length, value: 0)
     blitEncoder.endEncoding()
     
@@ -261,24 +237,19 @@ for i in 0..<numTests {
     
     struct DispatchParams {
         var writesPerThread: UInt32 = 0
-        var textureWidth: UInt32 = 0
+        var textureRowStride: UInt32 = 0
     }
     
     // Set dispatch parameters.
     var params = DispatchParams()
     params.writesPerThread = .init(numIterationsPerKernelInvocation)
-    params.textureWidth = .init(outTexture.width)
+    params.textureRowStride = .init(textureRowStride)
     let paramsLength = MemoryLayout<DispatchParams>.stride
     computeEncoder.setBytes(&params, length: paramsLength, index: 0)
     
     computeEncoder.setBuffer(randomDataBuffer, offset: 0, index: 1)
-    if enableDebugMode {
-        computeEncoder.setBuffer(__debug_depthBuffer, offset: 0, index: 2)
-        computeEncoder.setBuffer(__debug_countBuffer, offset: 0, index: 3)
-    } else {
-        computeEncoder.setBuffer(recycledBuffer, offset: depthBufferOffset, index: 2)
-        computeEncoder.setBuffer(recycledBuffer, offset: countBufferOffset, index: 3)
-    }
+	computeEncoder.setBuffer(depthBuffer, offset: 0, index: 2)
+	computeEncoder.setBuffer(countBuffer, offset: 0, index: 3)
     computeEncoder.setBuffer(outBuffer, offset: 0, index: 4)
     computeEncoder.setBuffer(dataRacesBuffer, offset: 0, index: 5)
     do {
@@ -289,6 +260,7 @@ for i in 0..<numTests {
     
     computeEncoder.setComputePipelineState(reconstructTexturePipeline)
     
+	// params already bound to index 0.
     // depthBuffer already bound to index 2.
     // outBuffer already bound to index 4.
     computeEncoder.setTexture(outTexture, index: 0)
@@ -302,11 +274,12 @@ for i in 0..<numTests {
     commandBuffer.commit()
     
     // Compute results on CPU while waiting for GPU.
-    let results = generateExpectedResults(ptr: randomDataPtr)
+    let results = generateExpectedResults(ptr: randomContents)
     commandBuffer.waitUntilCompleted()
     
     // Validate results.
-    let deviation = validateResults(ptr: recycledBuffer.contents(), expected: results)
+	let outContents = outBuffer.contents().assumingMemoryBound(to: SIMD2<Float>.self)
+    let deviation = validateResults(ptr: outContents, expected: results)
     print("Deviation: \(deviation)")
     
     let dataRacesContents = dataRacesBuffer.contents().assumingMemoryBound(to: UInt32.self)
@@ -315,36 +288,4 @@ for i in 0..<numTests {
             print("There were \(dataRacesContents[i]) data races with error code \(i).")
         }
     }
-    print()
-    
-    guard enableDebugMode else {
-        continue
-    }
-    
-    for i in 0..<randomDataNumElements {
-        let data = randomDataPtr[i]
-        print("xCoord: \(data.xCoord), yCoord: \(data.yCoord), color: \(showBits(data.color)), depth: \(showBits(data.depth))")
-    }
-    
-    print("Depth buffer:")
-    let depthBufferContents = __debug_depthBuffer.contents().assumingMemoryBound(to: UInt32.self)
-    for i in 0..<textureWidth * textureHeight {
-        let depth = depthBufferContents[i]
-        print("depth: \(showBits(depth))")
-    }
-    
-    print("Count buffer:")
-    let countBufferContents = __debug_countBuffer.contents().assumingMemoryBound(to: UInt16.self)
-    for i in 0..<textureWidth * textureHeight {
-        let count = UInt32(countBufferContents[i])
-        print("count: \(showBits(count))")
-    }
-    
-    print("Out buffer:")
-    let outBufferContents = outBuffer.contents().assumingMemoryBound(to: SIMD2<UInt32>.self)
-    for i in 0..<textureWidth * textureHeight {
-        let pixel = outBufferContents[i]
-        print("lower part: \(showBits(pixel.x)), upper part: \(showBits(pixel.y))")
-    }
-    print()
 }
