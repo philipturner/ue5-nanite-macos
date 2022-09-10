@@ -264,46 +264,10 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 
 ## Change 4
 
-The crash occured because two texture types were different. One was `2`, the raw value of `MTLTextureType.type2D`. The other was `9`, the raw value of `MTLTextureType.typeTextureBuffer`. This happened while validating that a fragment shading command was encoded correctly. Notice that one argument in the fragment shader source is a `texture_buffer`.
+The crash occured while validating resource bindings for a render command. One texture `.type2D` (raw value 2), the other `.typeTextureBuffer` (raw value 9). In the fragment shader source below, one argument is a `texture_buffer`. A 2D texture was bound in the location of `ClearResource`.
 
 <details>
-<summary>Faulting fragment shader</summary>
-
-```metal
-#pragma clang diagnostic ignored "-Wmissing-prototypes"
-
-#include <metal_stdlib>
-#include <simd/simd.h>
-
-using namespace metal;
-
-// Identity function as workaround for bug in Metal compiler
-template<typename T>
-T spvIdentity(T x)
-{
-    return x;
-}
-
-struct type_Globals
-{
-    uint4 ClearValue;
-};
-
-fragment void Main_0000030f_ba464dd8(
-    constant type_Globals& _Globals [[buffer(1)]], 
-    texture_buffer<uint, access::write> ClearResource [[texture(0)]], 
-    float4 gl_FragCoord [[position]])
-{
-    ClearResource.write(
-        spvIdentity(_Globals.ClearValue), 
-        uint(uint(gl_FragCoord.x)));
-}
-```
-
-</details>
-
-<details>
-<summary>Associated vertex shader</summary>
+<summary>Vertex shader</summary>
 
 ```metal
 #include <metal_stdlib>
@@ -372,6 +336,42 @@ vertex RasterizeToRectsVS_out Main_0000092b_c6f0736c(
     out.out_var_TEXCOORD1 = _92;
     out.out_var_RECT_INDEX = float((gl_InstanceIndex - gl_BaseInstance));
     return out;
+}
+```
+
+</details>
+
+<details>
+<summary>Fragment shader</summary>
+
+```metal
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+// Identity function as workaround for bug in Metal compiler
+template<typename T>
+T spvIdentity(T x)
+{
+    return x;
+}
+
+struct type_Globals
+{
+    uint4 ClearValue;
+};
+
+fragment void Main_0000030f_ba464dd8(
+    constant type_Globals& _Globals [[buffer(1)]], 
+    texture_buffer<uint, access::write> ClearResource [[texture(0)]], 
+    float4 gl_FragCoord [[position]])
+{
+    ClearResource.write(
+        spvIdentity(_Globals.ClearValue), 
+        uint(uint(gl_FragCoord.x)));
 }
 ```
 
