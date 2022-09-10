@@ -262,6 +262,10 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 
 </details>
 
+## Change 4
+
+The crash occured because two texture types were different. The first type was `2`, the raw value of `MTLTextureType.type2D`. The second type was `9`, the raw value of `MTLTextureType.typeTextureBuffer`.
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
