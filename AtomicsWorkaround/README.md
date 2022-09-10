@@ -7,7 +7,7 @@ With the parameters currently present in the script, around 100 data races occur
 - A thread loads a lock's 32-bit value.
 - The thread increments the value's 8-bit counter.
 - The thread updates the value's 24-bit depth.
-- The thread compare-exchanges with the lock's new value with its current value.
+- The thread compare-exchanges the lock's new value with its current value.
 
 ## Usage
 
