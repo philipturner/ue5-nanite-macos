@@ -305,7 +305,7 @@ fragment void Main_0000030f_ba464dd8(
 <details>
 <summary>Associated vertex shader</summary>
 
-```
+```metal
 #include <metal_stdlib>
 #include <simd/simd.h>
 
@@ -327,7 +327,13 @@ struct RasterizeToRectsVS_out
     float4 gl_Position [[position, invariant]];
 };
 
-vertex RasterizeToRectsVS_out Main_0000092b_c6f0736c(constant type_Globals& _Globals [[buffer(0)]], texture_buffer<uint> RectCoordBuffer [[texture(0)]], uint gl_InstanceIndex [[instance_id]], uint gl_VertexIndex [[vertex_id]], uint gl_BaseVertex [[base_vertex]], uint gl_BaseInstance [[base_instance]])
+vertex RasterizeToRectsVS_out Main_0000092b_c6f0736c(
+    constant type_Globals& _Globals [[buffer(0)]], 
+    texture_buffer<uint> RectCoordBuffer [[texture(0)]], 
+    uint gl_InstanceIndex [[instance_id]], 
+    uint gl_VertexIndex [[vertex_id]], 
+    uint gl_BaseVertex [[base_vertex]], 
+    uint gl_BaseInstance [[base_instance]])
 {
     RasterizeToRectsVS_out out = {};
     uint4 _49 = RectCoordBuffer.read(uint((gl_InstanceIndex - gl_BaseInstance)));
