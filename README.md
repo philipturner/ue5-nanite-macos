@@ -4,7 +4,7 @@ Brings the Nanite feature from Unreal Engine 5 to Apple platforms. Read over [th
 
 ## How it Works
 
-Nanite can run using entirely 32-bit atomics, without creating data races. The [AtomicsWorkaround](./AtomicsWorkaround) directory provides source code demonstrating this workaround. Eventually, `ue5-nanite-macos` will use the workaround to make Nanite run without graphical glitches.
+Nanite can run entirely through 32-bit atomics, without creating data races. The [AtomicsWorkaround](./AtomicsWorkaround) directory provides source code demonstrating this workaround. Eventually, `ue5-nanite-macos` will use the workaround to make Nanite run without graphical glitches.
 
 ## Usage
 
