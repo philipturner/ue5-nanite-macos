@@ -15,4 +15,4 @@ I tested this on an Apple M1 Max, and you may get slightly different results on 
 
 Create a new Xcode project with the template <b>macOS > Command Line Tool</b>. Replace the Swift file with `main.swift` from this repository. Then, copy the Metal shader file into the project. Click <b>Menu Bar > Product > Run</b> to execute the test.
 
-The script has a variable for testing 64-bit atomics on Apple8 GPUs. You must execute it on a device running macOS 13 or iOS 16, or else it fails at runtime.
+The script has a variable for testing 64-bit atomics on Apple8 GPUs. You must execute it on a device running macOS 13 or iOS 16, or else it fails at runtime. Because of this limitation, I have not verified that the 64-bit atomic version works.
