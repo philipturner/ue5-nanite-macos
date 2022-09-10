@@ -302,6 +302,75 @@ fragment void Main_0000030f_ba464dd8(
 
 </details>
 
+<details>
+<summary>Associated vertex shader</summary>
+
+```
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+struct type_Globals
+{
+    float DownsampleFactor;
+    float2 InvViewSize;
+};
+
+constant float2 _44 = {};
+
+struct RasterizeToRectsVS_out
+{
+    float2 out_var_TEXCOORD0 [[user(locn0)]];
+    float2 out_var_TEXCOORD1 [[user(locn1)]];
+    float out_var_RECT_INDEX [[user(locn2)]];
+    float4 gl_Position [[position, invariant]];
+};
+
+vertex RasterizeToRectsVS_out Main_0000092b_c6f0736c(constant type_Globals& _Globals [[buffer(0)]], texture_buffer<uint> RectCoordBuffer [[texture(0)]], uint gl_InstanceIndex [[instance_id]], uint gl_VertexIndex [[vertex_id]], uint gl_BaseVertex [[base_vertex]], uint gl_BaseInstance [[base_instance]])
+{
+    RasterizeToRectsVS_out out = {};
+    uint4 _49 = RectCoordBuffer.read(uint((gl_InstanceIndex - gl_BaseInstance)));
+    float4 _50 = float4(_49);
+    float4 _53 = _50 * _Globals.DownsampleFactor;
+    uint4 _54 = uint4(_53);
+    bool _55 = (gl_VertexIndex - gl_BaseVertex) == 1u;
+    bool _56 = (gl_VertexIndex - gl_BaseVertex) == 2u;
+    bool _57 = _55 || _56;
+    bool _58 = (gl_VertexIndex - gl_BaseVertex) == 4u;
+    bool _59 = _57 || _58;
+    bool _60 = _56 || _58;
+    bool _61 = (gl_VertexIndex - gl_BaseVertex) == 5u;
+    bool _62 = _60 || _61;
+    uint _63 = _54.z;
+    uint _64 = _54.x;
+    uint _65 = _59 ? _63 : _64;
+    uint _66 = _54.w;
+    uint _67 = _54.y;
+    uint _68 = _62 ? _66 : _67;
+    uint2 _69 = uint2(_65, _68);
+    float4 _74 = float4(_54) * _Globals.InvViewSize.xyxy;
+    float2 _82 = float2(_69);
+    float2 _83 = _82 * _Globals.InvViewSize;
+    float2 _84 = _83 * float2(2.0, -2.0);
+    float2 _85 = _84 + float2(-1.0, 1.0);
+    float _86 = _85.x;
+    float _87 = _85.y;
+    float4 _88 = float4(_86, _87, 0.0, 1.0);
+    float2 _90 = _44;
+    _90.x = float(_59);
+    float2 _92 = _90;
+    _92.y = float(_62);
+    out.gl_Position = _88;
+    out.out_var_TEXCOORD0 = float2(_59 ? _74.z : _74.x, _62 ? _74.w : _74.y);
+    out.out_var_TEXCOORD1 = _92;
+    out.out_var_RECT_INDEX = float((gl_InstanceIndex - gl_BaseInstance));
+    return out;
+}
+```
+
+</details>
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
