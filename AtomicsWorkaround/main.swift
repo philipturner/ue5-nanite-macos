@@ -29,13 +29,14 @@ let numTests = 5
 // testing 64-bit atomics on the A15 GPU. There will be a separate shader that
 // performs the functionality of `atomicsTest` and `reconstructTexture` in a
 // single pass.
-let emulating64BitAtomics: Bool = false
+let emulating64BitAtomics: Bool = true
+let atomicsPipelineName = emulating64BitAtomics ? "atomicsTestApple8" : "atomicsTest"
 
 let device = MTLCreateSystemDefaultDevice()!
 let commandQueue = device.makeCommandQueue()!
 let library = device.makeDefaultLibrary()!
 let atomicsTestPipeline = try! device.makeComputePipelineState(
-    function: library.makeFunction(name: "atomicsTest")!)
+	function: library.makeFunction(name: atomicsPipelineName)!)
 let reconstructTexturePipeline = try! device.makeComputePipelineState(
     function: library.makeFunction(name: "reconstructTexture")!)
 
@@ -87,16 +88,11 @@ struct RandomData {
     var color: Float = 0
     var depth: Float = 0
 }
-precondition(MemoryLayout<RandomData>.stride == 16)
 
 // Create buffer for input data.
 let randomDataNumElements = numIterationsPerKernelInvocation * numKernelInvocations
 let randomDataSize = randomDataNumElements * MemoryLayout<RandomData>.stride
 let randomDataBuffer = device.makeBuffer(length: randomDataSize, options: bufferOptions)!
-
-func linearInterpolate(min: Float, max: Float, t: Float) -> Float {
-    max * t + min * (1 - t)
-}
 
 func generateRandomData(ptr: UnsafeMutablePointer<RandomData>) {
     for i in 0..<randomDataNumElements {
@@ -111,9 +107,9 @@ func generateRandomData(ptr: UnsafeMutablePointer<RandomData>) {
         let color_uint = data.color.bitPattern
         data.color = Float(color_uint) / Float(UInt32.max)
         
-        // Test what happens when depth values are outside [0, 1].
+        // Keep depths within the range [0, 1]. Otherwise, the GPU's results
+		// could differ drastically from the CPU's results.
         data.depth = Float(data.depth.bitPattern) / Float(UInt32.max)
-//        data.depth = linearInterpolate(min: -0.1, max: 1.1, t: data.depth)
         
         ptr[i] = data
     }
@@ -248,27 +244,31 @@ for i in 0..<numTests {
     computeEncoder.setBytes(&params, length: paramsLength, index: 0)
     
     computeEncoder.setBuffer(randomDataBuffer, offset: 0, index: 1)
-	computeEncoder.setBuffer(depthBuffer, offset: 0, index: 2)
-	computeEncoder.setBuffer(countBuffer, offset: 0, index: 3)
-    computeEncoder.setBuffer(outBuffer, offset: 0, index: 4)
-    computeEncoder.setBuffer(dataRacesBuffer, offset: 0, index: 5)
+	computeEncoder.setBuffer(outBuffer, offset: 0, index: 4)
+	if !emulating64BitAtomics {
+		computeEncoder.setBuffer(depthBuffer, offset: 0, index: 2)
+		computeEncoder.setBuffer(countBuffer, offset: 0, index: 3)
+		computeEncoder.setBuffer(dataRacesBuffer, offset: 0, index: 5)
+	}
     do {
         let gridSize = MTLSizeMake(numKernelInvocations, 1, 1)
         let threadgroupSize = MTLSizeMake(1, 1, 1)
         computeEncoder.dispatchThreadgroups(gridSize, threadsPerThreadgroup: threadgroupSize)
     }
     
-    computeEncoder.setComputePipelineState(reconstructTexturePipeline)
-    
-	// params already bound to index 0.
-    // depthBuffer already bound to index 2.
-    // outBuffer already bound to index 4.
-    computeEncoder.setTexture(outTexture, index: 0)
-    do {
-        let gridSize = MTLSizeMake(outTexture.width, outTexture.height, 1)
-        let threadgroupSize = MTLSizeMake(1, 1, 1)
-        computeEncoder.dispatchThreadgroups(gridSize, threadsPerThreadgroup: threadgroupSize)
-    }
+	if !emulating64BitAtomics {
+		computeEncoder.setComputePipelineState(reconstructTexturePipeline)
+		
+		// params already bound to index 0.
+		// depthBuffer already bound to index 2.
+		// outBuffer already bound to index 4.
+		computeEncoder.setTexture(outTexture, index: 0)
+		do {
+			let gridSize = MTLSizeMake(outTexture.width, outTexture.height, 1)
+			let threadgroupSize = MTLSizeMake(1, 1, 1)
+			computeEncoder.dispatchThreadgroups(gridSize, threadsPerThreadgroup: threadgroupSize)
+		}
+	}
     
     computeEncoder.endEncoding()
     commandBuffer.commit()
