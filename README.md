@@ -264,10 +264,10 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 
 ## Change 4
 
-The crash occured because two texture types were different. One was `2`, the raw value of `MTLTextureType.type2D`. The other was `9`, the raw value of `MTLTextureType.typeTextureBuffer`. This happened while validating that a fragment shading command was encoded correctly. Here, I extracted the raw shader source causing the problem. Notice that one argument is a `texture_buffer`.
+The crash occured because two texture types were different. One was `2`, the raw value of `MTLTextureType.type2D`. The other was `9`, the raw value of `MTLTextureType.typeTextureBuffer`. This happened while validating that a fragment shading command was encoded correctly. Notice that one argument in the fragment shader source is a `texture_buffer`.
 
 <details>
-<summary>Source code</summary>
+<summary>Faulting fragment shader</summary>
 
 ```metal
 #pragma clang diagnostic ignored "-Wmissing-prototypes"
