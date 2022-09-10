@@ -10,7 +10,7 @@ using namespace metal;
 
 struct DispatchParams {
     uint writesPerThread;
-    uint textureWidth;
+    uint textureRowStride;
 };
 
 struct RandomData {
@@ -20,18 +20,18 @@ struct RandomData {
     float depth;
 };
 
-// Keeps track of every time a certain data race happens.
+// Records every time a certain data race happens.
 class DataRaces {
-    device atomic_uint *atomics;
-    
+	device atomic_uint *atomics;
+	
 public:
-    DataRaces(device atomic_uint *atomics) {
-        this->atomics = atomics;
-    }
-    
-    void recordEvent(int code) {
-        atomic_fetch_add_explicit(atomics + code, 1, memory_order_relaxed);
-    }
+	DataRaces(device atomic_uint *atomics) {
+		this->atomics = atomics;
+	}
+	
+	void recordEvent(int code) {
+		atomic_fetch_add_explicit(atomics + code, 1, memory_order_relaxed);
+	}
 };
 
 constant uint MAX_DEPTH = (1 << 24) - 1;
@@ -61,7 +61,7 @@ kernel void atomicsTest(constant DispatchParams &params [[buffer(0)]],
     for (uint i = startIndex; i < endIndex; ++i)
     {
         auto data = randomData[i];
-        uint index = data.yCoord * params.textureWidth + data.xCoord;
+        uint index = mad24(data.yCoord, params.textureRowStride, data.xCoord);
         ushort counter = test_depth(
             index, data.depth, depthBuffer, countBuffer, dataRaces);
         if (counter == 0) {
@@ -81,12 +81,13 @@ kernel void atomicsTest(constant DispatchParams &params [[buffer(0)]],
 }
 
 // Thread dispatch size must equal texture dimensions.
-kernel void reconstructTexture(device uint *depthBuffer [[buffer(2)]],
+kernel void reconstructTexture(constant DispatchParams &params [[buffer(0)]],
+							   device uint *depthBuffer [[buffer(2)]],
                                device uint2 *outBuffer [[buffer(4)]],
                                texture2d<uint, access::read_write> outTexture [[texture(0)]],
                                uint2 tid [[thread_position_in_grid]])
 {
-    uint index = tid.y * outTexture.get_width() + tid.x;
+    uint index = mad24(tid.y, params.textureRowStride, tid.x);
     
     // The converted float is clamped to 0.99999999. In the Nanite
     // implementation with 64-bit atomics, the maximum possible depth is 1.0.
@@ -145,25 +146,24 @@ inline ushort test_depth(uint index,
             continue;
         }
         
-        // Each word contains 2 atomic counts.
-        device atomic_uint *word_ptr = countBuffer + (index / 2);
-        uint increment = 1;
-        if (index & 1) {
-            increment = 1 << 16;
-        }
-        uint previous_word = atomic_fetch_add_explicit(word_ptr, increment, memory_order_relaxed);
-        if (index & 1) {
-            previous_word >>= 16;
-        }
-        
-        if ((previous_word & 255) != current_counter) {
+		// Although we could pack two 16-bit counters into one word, that
+		// creates a theoretical possibility to overflow the lower half, leaking
+		// into the upper half. A thread accessing the upper half would be
+		// thrown into an infinite loop because the 16-bit counter is always 1
+		// ahead of the lock's 8-bit counter.
+		//
+		// We could store the lock and count contiguously in memory, but that
+		// decreases bandwidth utilization in the texture reconstruction pass.
+		device atomic_uint* count_ptr = countBuffer + index;
+        uint current_count = atomic_fetch_add_explicit(count_ptr, 1, memory_order_relaxed);
+        if ((current_count & 255) != current_counter) {
             // If there's a data race, the counter isn't what you expect.
             num_data_races_2 += 1;
             continue;
         }
         
         // Exit the loop with a success.
-        output = previous_word + 1;
+        output = ushort(current_count + 1);
         break;
     }
     
