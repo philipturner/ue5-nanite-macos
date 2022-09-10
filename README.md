@@ -383,6 +383,8 @@ The fragment shader was transpiled from an HLSL shader, located at the path belo
 Engine/Shaders/Private/ClearReplacementShaders.usf
 ```
 
+The command in question began in some other portion of the code base, and on another thread, which I can't see from the stack trace. During the creation, all of the Metal shader pipelines and resources were assigned. At the crash site, it read the mismatched pipeline and resource, then failed to encode them into a `MTLCommandBuffer`.
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
