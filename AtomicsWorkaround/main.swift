@@ -10,10 +10,15 @@ import Metal
 let textureWidth = 2
 let textureHeight = 2
 
+#if os(macOS)
 // A buffer-backed texture must have rows aligned to 16 bytes. Accomplish this
 // by setting stride to an even number of 8-bit elements. Align depth/count
 // buffers to this stride, so that one index can address into all buffers.
 let textureRowStride = ~1 & (1 + textureWidth)
+#else
+// On iOS, the minimum alignment is 64 bytes.
+let textureRowStride = ~7 & (7 + textureWidth)
+#endif
 
 // High ratio of (numIterationsPerKernelInvocation * numKernelInvocations) /
 // (textureWidth * textureHeight) creates heavy congestion, and likely many data
@@ -25,11 +30,8 @@ let numIterationsPerKernelInvocation = 20
 let numKernelInvocations = 100
 let numTests = 5
 
-// Right now, this flag doesn't do anything. In the future, it will enable
-// testing 64-bit atomics on the A15 GPU. There will be a separate shader that
-// performs the functionality of `atomicsTest` and `reconstructTexture` in a
-// single pass.
-let emulating64BitAtomics: Bool = true
+// Whether to test 64-bit atomics on an A15 or M2 GPU.
+let emulating64BitAtomics: Bool = false
 let atomicsPipelineName = emulating64BitAtomics ? "atomicsTestApple8" : "atomicsTest"
 
 let device = MTLCreateSystemDefaultDevice()!
