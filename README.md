@@ -286,9 +286,14 @@ struct type_Globals
     uint4 ClearValue;
 };
 
-fragment void Main_0000030f_ba464dd8(constant type_Globals& _Globals [[buffer(1)]], texture_buffer<uint, access::write> ClearResource [[texture(0)]], float4 gl_FragCoord [[position]])
+fragment void Main_0000030f_ba464dd8(
+    constant type_Globals& _Globals [[buffer(1)]], 
+    texture_buffer<uint, access::write> ClearResource [[texture(0)]], 
+    float4 gl_FragCoord [[position]])
 {
-    ClearResource.write(spvIdentity(_Globals.ClearValue), uint(uint(gl_FragCoord.x)));
+    ClearResource.write(
+        spvIdentity(_Globals.ClearValue), 
+        uint(uint(gl_FragCoord.x)));
 }
 ```
 
