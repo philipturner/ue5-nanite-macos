@@ -53,7 +53,6 @@ kernel void atomicsTest(constant DispatchParams &params [[buffer(0)]],
                         device atomic_uint *data_races [[buffer(5)]],
                         uint tid [[thread_position_in_grid]])
 {
-    static_assert(sizeof(RandomData) == 16, "Size not expected.");
     uint startIndex = tid * params.writesPerThread;
     uint endIndex = startIndex + params.writesPerThread;
     DataRaces dataRaces(data_races);
@@ -79,6 +78,29 @@ kernel void atomicsTest(constant DispatchParams &params [[buffer(0)]],
         atomic_fetch_max_explicit(out_ptr + 1, atomic_words[1], memory_order_relaxed);
     }
 }
+
+#if defined(__HAVE_ATOMIC_ULONG_MIN_MAX__)
+kernel void atomicsTestApple8(constant DispatchParams &params [[buffer(0)]],
+							  device RandomData *randomData [[buffer(1)]],
+							  device atomic_ulong *outBuffer [[buffer(4)]],
+							  uint tid [[thread_position_in_grid]])
+{
+	uint startIndex = tid * params.writesPerThread;
+	uint endIndex = startIndex + params.writesPerThread;
+	
+	for (uint i = startIndex; i < endIndex; ++i)
+	{
+		auto data = randomData[i];
+		uint index = mad24(data.yCoord, params.textureRowStride, data.xCoord);
+		auto pixel = as_type<ulong>(uint2{
+			as_type<uint>(data.color),
+			as_type<uint>(data.depth),
+		});
+		
+		atomic_max_explicit(outBuffer + index, pixel, memory_order_relaxed);
+	}
+}
+#endif
 
 // Thread dispatch size must equal texture dimensions.
 kernel void reconstructTexture(constant DispatchParams &params [[buffer(0)]],
