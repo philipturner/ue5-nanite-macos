@@ -264,7 +264,7 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 
 ## Change 4
 
-The crash occured because two texture types were different. The first type was `2`, the raw value of `MTLTextureType.type2D`. The second type was `9`, the raw value of `MTLTextureType.typeTextureBuffer`.
+The crash occured because two texture types were different. One was `2`, the raw value of `MTLTextureType.type2D`. The other was `9`, the raw value of `MTLTextureType.typeTextureBuffer`.
 
 ## Attribution
 
