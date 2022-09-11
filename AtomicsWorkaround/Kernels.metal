@@ -29,8 +29,8 @@ public:
 		this->atomics = atomics;
 	}
 	
-	void recordEvent(int code) {
-		atomic_fetch_add_explicit(atomics + code, 1, memory_order_relaxed);
+	void recordEvent(int code, int value) {
+		atomic_fetch_add_explicit(atomics + code, value, memory_order_relaxed);
 	}
 };
 
@@ -174,8 +174,9 @@ inline ushort test_depth(uint index,
 		// thrown into an infinite loop because the 16-bit counter is always 1
 		// ahead of the lock's 8-bit counter.
 		//
-		// We could store the lock and count contiguously in memory, but that
-		// decreases bandwidth utilization in the texture reconstruction pass.
+		// Since it's 32-bit instead, we could store the lock and count
+		// contiguously in memory. That decreases bandwidth utilization in the
+		// texture reconstruction pass, so it's not a good idea.
 		device atomic_uint* count_ptr = countBuffer + index;
         uint current_count = atomic_fetch_add_explicit(count_ptr, 1, memory_order_relaxed);
         if ((current_count & 255) != current_counter) {
@@ -190,10 +191,10 @@ inline ushort test_depth(uint index,
     }
     
     if (num_data_races_1 > 0) {
-        dataRaces.recordEvent(1);
+        dataRaces.recordEvent(1, num_data_races_1);
     }
     if (num_data_races_2 > 0) {
-        dataRaces.recordEvent(2);
+        dataRaces.recordEvent(2, num_data_races_2);
     }
     
     return output;
