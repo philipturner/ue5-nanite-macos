@@ -391,14 +391,6 @@ At path (2) below, around line 526, it registers a 2D texture as the clear repla
 (5) Engine/Source/Runtime/Apple/MetalRHI/Private/MetalStateCache.cpp
 ```
 
-During the crash, the current `GraphicsPSO` does not match anything set at (path 4, circa line 258). I don't know whether it's because `UE_LOG` always fails to flush before the crash, or the graphics pipeline was modified at a different call site. I could not force `UE_LOG` to flush\* with, and the only way I could reliably extract information before the crash was in the crash message itself (`ensureMsgf`).
-
-> \*I tried passing `-FORCELOGFLUSH` as an "argument passed on launch" to the `UnrealEditor.app` in Xcode schemes. I also tried passing `FORCELOGFLUSH=1` (without a dash) and had to prepend it with `YES` to open `YES.uproject`. I got the idea from [this thread](https://forums.unrealengine.com/t/flush-log-file-on-critical-error/359971). I couldn't tell whether the output stream's behavior changed, but it didn't show certain messages I had created immediately before the crash. Finally,
-
-Now, I think I know what the problem is. I removed all of my custom messages, and I was able to send one message immediately before the crash. I think I'll work around it as follows. Make a custom log file, with its absolute path hard-coded into the C++ source. Delete the file before launching the Unreal Editor, then look at the file's contents after it crashes. Copy and paste code for opening the file, checking whether it exists, and logging, without messing with C++ headers. Such code duplication is bad practice for production code, but I'm just debugging. I need something that works.
-
-TODO: Reimplement my logging mechanism from Swift-Colab, then paste the C++ code into this repository for reproducibility.
-
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
