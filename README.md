@@ -393,7 +393,14 @@ At path (2) below, around line 526, it registers a 2D texture as the clear repla
 
 During the crash, the current `GraphicsPSO` does not match anything set at (path 4, circa line 258). I don't know whether it's because `UE_LOG` always fails to flush before the crash, or the graphics pipeline was modified at a different call site. I could not force `UE_LOG` to flush\* with, and the only way I could reliably extract information before the crash was in the crash message itself (`ensureMsgf`).
 
-> \*I tried passing `-FORCELOGFLUSH` as an "argument passed on launch" to the `UnrealEditor.app` in Xcode schemes. I also tried passing `FORCELOGFLUSH=1` (without a dash) and had to prepend it with `YES` to open `YES.uproject`. I got the idea from [this thread](https://forums.unrealengine.com/t/flush-log-file-on-critical-error/359971). I couldn't tell whether the output stream's behavior changed, but it didn't show certain messages I had created immediately before the crash.
+> \*I tried passing `-FORCELOGFLUSH` as an "argument passed on launch" to the `UnrealEditor.app` in Xcode schemes. I also tried passing `FORCELOGFLUSH=1` (without a dash) and had to prepend it with `YES` to open `YES.uproject`. I got the idea from [this thread](https://forums.unrealengine.com/t/flush-log-file-on-critical-error/359971). I couldn't tell whether the output stream's behavior changed, but it didn't show certain messages I had created immediately before the crash. Finally,
+
+I made one last attempt to flush the log before the crash (below). Even this did not work.
+ 
+```
+fflush(stdout);
+usleep(500000);
+```
 
 ## Attribution
 
