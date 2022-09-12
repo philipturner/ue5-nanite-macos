@@ -397,6 +397,8 @@ During the crash, the current `GraphicsPSO` does not match anything set at (path
 
 Now, I think I know what the problem is. I removed all of my custom messages, and I was able to send one message immediately before the crash. I think I'll work around it as follows. Make a custom log file, with its absolute path hard-coded into the C++ source. Delete the file before launching the Unreal Editor, then look at the file's contents after it crashes. Copy and paste code for opening the file, checking whether it exists, and logging, without messing with C++ headers. Such code duplication is bad practice for production code, but I'm just debugging. I need something that works.
 
+TODO: Reimplement my logging mechanism from Swift-Colab, then paste the C++ code into this repository for reproducibility.
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
