@@ -395,14 +395,7 @@ During the crash, the current `GraphicsPSO` does not match anything set at (path
 
 > \*I tried passing `-FORCELOGFLUSH` as an "argument passed on launch" to the `UnrealEditor.app` in Xcode schemes. I also tried passing `FORCELOGFLUSH=1` (without a dash) and had to prepend it with `YES` to open `YES.uproject`. I got the idea from [this thread](https://forums.unrealengine.com/t/flush-log-file-on-critical-error/359971). I couldn't tell whether the output stream's behavior changed, but it didn't show certain messages I had created immediately before the crash. Finally,
 
-Now, I think I know what the problem is. I removed all of my custom messages, and I was able to send one message immediately before the crash. I think I'll work around it as follows. This will also give me freedom to only print the most recent messages. I don't need most of the messages that are flooding the console; only the last few messages before the crash.
- 
- - First, create a global variable that can hold several string messages.
- - Second, make that variable accessible to multiple disparate locations in Unreal Engine source code.
- - Third, append messages to that variable, recording valuable information for debugging purposes.
- - Fourth, concatenate all messages into one massive string, separated with `\n`. Print that as the error message.
- 
-Alternatively, I could do something like [shown here](https://github.com/philipturner/swift-colab/blob/200ec9c9ba4ff29365e77551a65fd5824482a11b/Sources/LLDBProcess/LLDBProcess.cpp#L21-L34). Make a custom log file, with its absolute path hard-coded into the C++ source. Delete the file before launching the Unreal Editor, then look at the file's contents after it crashes. This seems like the easier option. I could copy and paste code for opening the file, checking whether it exists, and logging, without messing with headers. Such code duplication is bad practice for production code, but I'm just debugging. I need something that works.
+Now, I think I know what the problem is. I removed all of my custom messages, and I was able to send one message immediately before the crash. I think I'll work around it as follows. Make a custom log file, with its absolute path hard-coded into the C++ source. Delete the file before launching the Unreal Editor, then look at the file's contents after it crashes. Copy and paste code for opening the file, checking whether it exists, and logging, without messing with C++ headers. Such code duplication is bad practice for production code, but I'm just debugging. I need something that works.
 
 ## Attribution
 
