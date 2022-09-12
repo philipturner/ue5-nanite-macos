@@ -399,7 +399,7 @@ Now, I think I know what the problem is. I removed all of my custom messages, an
  
  - First, create a global variable that can hold several string messages.
  - Second, make that variable accessible to multiple disparate locations in Unreal Engine source code.
- - Third, append messages to that variable, recording valuable information to debugging.
+ - Third, append messages to that variable, recording valuable information for debugging purposes.
  - Fourth, concatenate all messages into one massive string, separated with `\n`. Print that as the error message.
 
 ## Attribution
