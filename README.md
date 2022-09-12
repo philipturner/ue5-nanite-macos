@@ -395,7 +395,7 @@ During the crash, the current `GraphicsPSO` does not match anything set at (path
 
 > \*I tried passing `-FORCELOGFLUSH` as an "argument passed on launch" to the `UnrealEditor.app` in Xcode schemes. I also tried passing `FORCELOGFLUSH=1` (without a dash) and had to prepend it with `YES` to open `YES.uproject`. I got the idea from [this thread](https://forums.unrealengine.com/t/flush-log-file-on-critical-error/359971). I couldn't tell whether the output stream's behavior changed, but it didn't show certain messages I had created immediately before the crash. Finally,
 
-I made one last attempt to flush the log before the crash (below). Even this did not work.
+I made one last attempt to flush the log before the crash (below). This did not work.
  
 ```
 fflush(stdout);
