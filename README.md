@@ -402,7 +402,7 @@ Now, I think I know what the problem is. I removed all of my custom messages, an
  - Third, append messages to that variable, recording valuable information for debugging purposes.
  - Fourth, concatenate all messages into one massive string, separated with `\n`. Print that as the error message.
  
-Alternatively, I could do something like [shown here](https://github.com/philipturner/swift-colab/blob/200ec9c9ba4ff29365e77551a65fd5824482a11b/Sources/LLDBProcess/LLDBProcess.cpp#L21-L34). Make a custom log file, with its absolute path hard-coded into the C++ source. Delete the file before launching the Unreal Editor, then look at the file's contents after it crashes. This seems like the easier option, so I'll go for it.
+Alternatively, I could do something like [shown here](https://github.com/philipturner/swift-colab/blob/200ec9c9ba4ff29365e77551a65fd5824482a11b/Sources/LLDBProcess/LLDBProcess.cpp#L21-L34). Make a custom log file, with its absolute path hard-coded into the C++ source. Delete the file before launching the Unreal Editor, then look at the file's contents after it crashes. This seems like the easier option.
 
 ## Attribution
 
