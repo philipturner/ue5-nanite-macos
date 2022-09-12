@@ -398,7 +398,7 @@ During the crash, the current `GraphicsPSO` does not match anything set at (path
 Now, I think I know what the problem is. I removed all of my custom messages, and I was able to send one message immediately before the crash. I think I'll work around it as follows. This will also give me freedom to only print the most recent messages. I don't need most of the messages that are flooding the console; only the last few messages before the crash.
  
  - First, create a global variable that can hold several string messages.
- - Second, make that variable accessible to multiple disparate locations in Unreal Engine.
+ - Second, make that variable accessible to multiple disparate locations in Unreal Engine source code.
  - Third, append messages to that variable, recording valuable information to debugging.
  - Fourth, concatenate all messages into one massive string, separated with `\n`. Print that as the error message.
 
