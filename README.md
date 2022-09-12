@@ -395,12 +395,12 @@ During the crash, the current `GraphicsPSO` does not match anything set at (path
 
 > \*I tried passing `-FORCELOGFLUSH` as an "argument passed on launch" to the `UnrealEditor.app` in Xcode schemes. I also tried passing `FORCELOGFLUSH=1` (without a dash) and had to prepend it with `YES` to open `YES.uproject`. I got the idea from [this thread](https://forums.unrealengine.com/t/flush-log-file-on-critical-error/359971). I couldn't tell whether the output stream's behavior changed, but it didn't show certain messages I had created immediately before the crash. Finally,
 
-I made one last attempt to flush the log before the crash (below). This did not work.
+Now, I think I know what the problem is. I removed all of my custom messages, and I was able to send one message immediately before the crash. I think I'll work around it as follows. This will also give me freedom to only print the most recent messages. I don't need most of the messages that are flooding the console; only the last few messages before the crash.
  
-```
-fflush(stdout);
-usleep(500000);
-```
+ - First, create a global variable that can hold several string messages.
+ - Second, make that variable accessible to multiple disparate locations in Unreal Engine.
+ - Third, append messages to that variable, recording valuable information to debugging.
+ - Fourth, concatenate all messages into one massive string, separated with `\n`. Print that as the error message.
 
 ## Attribution
 
