@@ -391,7 +391,9 @@ At path (2) below, around line 526, it registers a 2D texture as the clear repla
 (5) Engine/Source/Runtime/Apple/MetalRHI/Private/MetalStateCache.cpp
 ```
 
-During the crash, the current `GraphicsPSO` does not match anything set at (path 4, circa line 258). I don't know whether it's because `UE_LOG` always fails to flush before the crash, or the graphics pipeline was modified at a different call site. I could not force `UE_LOG` to flush, and they only way I could reliably extract information before the crash was in the crash message itself (`ensureMsgf`).
+During the crash, the current `GraphicsPSO` does not match anything set at (path 4, circa line 258). I don't know whether it's because `UE_LOG` always fails to flush before the crash, or the graphics pipeline was modified at a different call site. I could not force `UE_LOG` to flush\* with, and the only way I could reliably extract information before the crash was in the crash message itself (`ensureMsgf`).
+
+> \*I tried passing `-FORCELOGFLUSH` as an "argument passed on launch" to the `UnrealEditor.app` in Xcode schemes. I got the idea from [this thread](https://forums.unrealengine.com/t/flush-log-file-on-critical-error/359971).
 
 ## Attribution
 
