@@ -393,7 +393,7 @@ At path (2) below, around line 526, it registers a 2D texture as the clear repla
 
 ### Breakthrough
 
-After several days of debugging and investigating, I finally think I've traced this command back to its origin. There are two candidates, which I'm currently investigating. I was looking for the place that initially set the mismatched pixel shader. I need to determine whether these locations associate a render target texture with the pixel shader. If so, that render target texture should be mismatched with the pixel shader.
+After several days of debugging and investigating, I may have traced this crash back to its origin. There are two candidates, which I'm currently investigating. I was looking for the place that initially set the mismatched pixel shader. I need to determine whether these locations associate a render target texture with the pixel shader. If so, that render target texture should be `.type2D`.
 
 ```
 (1) Engine/Source/Runtime/Renderer/Private/Nanite/Nanite.cpp, circa line 761
