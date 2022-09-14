@@ -377,7 +377,7 @@ fragment void Main_0000030f_ba464dd8(
 
 </details>
  
-The fragment shader was transpiled from an HLSL shader, located at path (1) below. `RESOURCE_TYPE` was set to either 0 or 5, making `ClearResource` a `RWBuffer`. I'll swapping the fragment shader with another one, where `RESOURCE_TYPE` was set to 1. That should change the clear resource to a `RWTexture2D`.
+The fragment shader was transpiled from an HLSL shader, located at path (1) below. `RESOURCE_TYPE` was set to either 0 or 5, making `ClearResource` a `RWBuffer`. I'll try swapping the fragment shader with another one, where `RESOURCE_TYPE` was set to 1. That should change the clear resource to a `RWTexture2D`.
 
 The command in question began in some other portion of the code base, and on another thread, which I can't see from the stack trace. During the command's creation, all of the Metal shader pipelines and resources were assigned. At the crash site, it read the mismatched pipeline and resource, then failed to encode them into a `MTLCommandBuffer`.
 
