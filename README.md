@@ -391,6 +391,15 @@ At path (2) below, around line 526, it registers a 2D texture as the clear repla
 (5) Engine/Source/Runtime/Apple/MetalRHI/Private/MetalStateCache.cpp
 ```
 
+### Breakthrough
+
+After several says of debugging and investigating, I finally think I've traced this command back to its origin. There are two candidates, which I'm currently investigating. I was looking for the place that initially set the mismatched pixel shader. I need to determine whether these locations associate a render target texture with the pixel shader. If so, that render target texture should be mismatched with the pixel shader.
+
+```
+(1) Engine/Source/Runtime/Renderer/Private/Nanite/Nanite.cpp, circa line 761
+(2) Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp, circa line 2531
+```
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
