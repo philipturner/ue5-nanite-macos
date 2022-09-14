@@ -393,7 +393,7 @@ At path (2) below, around line 526, it registers a 2D texture as the clear repla
 
 ### Breakthrough
 
-After several days of debugging and investigating, I may have traced this crash back to its origin. There are two candidates, which I'm currently investigating. I was looking for the place that initially set the mismatched pixel shader. I need to determine whether these locations associate a render target texture with the pixel shader. If so, that render target texture should be `.type2D`.
+After several days of debugging and investigating, I may have traced this crash back to its origin. There are two candidates, which I'm currently investigating. One of these should set a pixel shader that requires a `texture_buffer`. Hopefully, a line of code very close by will also assign a render target of type `.type2D`. The render target wouldn't match the pixel shader, and would cause a crash the Metal commands are encoded on the asynchronous task queue.
 
 ```
 (1) Engine/Source/Runtime/Renderer/Private/Nanite/Nanite.cpp, circa line 761
