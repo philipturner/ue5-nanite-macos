@@ -584,7 +584,7 @@ It doesn't look like crash originates here. After a little more investigation, I
 4 /Engine/Source/Runtime/RenderCore/Private/RenderGraphBuilder.cpp, line 2685 - void FRDGBuilder::DispatchParallelExecute(IRHICommandContext* RHICmdContext)
 ```
 
-Three places in Nanite code call `FPixelShaderUtils::AddRasterizeToRectsPass`. They all happen inside `void DrawLumenMeshCapturePass`. That function starts with a call to `AddClearUAVPass`, which takes an argument of type `FRDGBufferRef`. All of that terminology sounds familiar. Now, I need to clean up the massive code mess accumulated from debugging, and rethink my approach.
+Three places in Nanite code call `FPixelShaderUtils::AddRasterizeToRectsPass`. They all happen inside `Nanite::DrawLumenMeshCapturePass`. The mesh capture pass starts with a call to `AddClearUAVPass`, which takes an argument of type `FRDGBufferRef`. All of that terminology matches the stack trace. Now, I need to clean up the massive code mess accumulated from debugging, and move on to the next phase.
 
 
 ## Attribution
