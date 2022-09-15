@@ -264,6 +264,8 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 
 ## Change 4
 
+> Extract this bug investigation into one of the dropdowns way above <b>Change 1</b>. Shrink this section to include only the patch, but link to the bug investigation.
+
 The crash occured while validating resource bindings for a render command. One texture was `.type2D` (raw value 2) and the other was `.typeTextureBuffer` (raw value 9). In the fragment shader source below, one argument is a `texture_buffer`. A 2D texture was bound in the location of this resource.
 
 <details>
