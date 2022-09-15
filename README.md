@@ -575,8 +575,7 @@ fragment void Main_00000b87_92c3932b(HWRasterizePS_in in [[stage_in]], constant 
 
 </details>
 
-It doesn't look like crash originates here. After a little more investigation, I traced back the actual source (stack trace below). It makes a lot more sense, because the words `RasterizeToRects` also appear in the captured vertex shader above. This particular stack trace was captured inside an asynchronous task queue, but I have a good idea where it came from. Three places in Nanite code call a `FPixelShaderUtils::AddRasterizeToRectsPass(` function. They all happen inside `void DrawLumenMeshCapturePass`. That function start with a call to `AddClearUAVPass`, which takes an argument of type `FRDGBufferRef`. All of that sounds very familiar.
-
+It doesn't look like crash originates here. After a little more investigation, I traced back the actual source (stack trace below). It makes a lot more sense, because the words `RasterizeToRects` also appear in the captured vertex shader above. This particular stack trace was captured inside an asynchronous task queue, but I have a good idea where it came from.
 ```
 0 void FPixelShaderUtils::AddRasterizeToRectsPass<FClearUAVRectsPS, FClearUAVRectsParameters>(...)
 1 /Engine/Source/Runtime/RenderCore/Public/RenderGraphPass.h, line 615 - TEnableIf<!TIsSame<T, FRDGPass>::Value, void>::Type ExecuteLambdaFunc(FRHIComputeCommandList& RHICmdList) 
@@ -584,6 +583,9 @@ It doesn't look like crash originates here. After a little more investigation, I
 3 /Engine/Source/Runtime/RenderCore/Private/RenderGraphBuilder.cpp, line 2877 - void FRDGBuilder::ExecutePass(FRDGPass* Pass, FRHIComputeCommandList& RHICmdListPass)
 4 /Engine/Source/Runtime/RenderCore/Private/RenderGraphBuilder.cpp, line 2685 - void FRDGBuilder::DispatchParallelExecute(IRHICommandContext* RHICmdContext)
 ```
+
+Three places in Nanite code call a `FPixelShaderUtils::AddRasterizeToRectsPass(` function. They all happen inside `void DrawLumenMeshCapturePass`. That function start with a call to `AddClearUAVPass`, which takes an argument of type `FRDGBufferRef`. All of that sounds very familiar.
+
 
 ## Attribution
 
