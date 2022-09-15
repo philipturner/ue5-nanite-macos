@@ -400,6 +400,8 @@ After several days of debugging and investigating, I may have traced this crash 
 (2) Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp, circa line 2531
 ```
 
+It doesn't look like this is where the crash originated. However, I have a much deeper understanding of the bug, and can search several other places throughout the next few days.
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
