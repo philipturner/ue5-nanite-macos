@@ -590,7 +590,7 @@ Three places in Nanite code call `FPixelShaderUtils::AddRasterizeToRectsPass`. T
 
 ---
 
-I'm reading [this 155-page document](https://advances.realtimerendering.com/s2021/Karis_Nanite_SIGGRAPH_Advances_2021_final.pdf) on how Nanite works internally, which will make debugging this much simpler. Since the crash source mentions Lumen, perhaps I should search for a similar document about Lumen.
+I'm reading [this 155-page document](https://advances.realtimerendering.com/s2021/Karis_Nanite_SIGGRAPH_Advances_2021_final.pdf) on how Nanite works internally. This should help me understand what's going on during the crash and provide a nice break from debugging. Since `DrawLumenMeshCapturePass` mentions Lumen, perhaps I should search for a similar document about Lumen.
 
 
 ## Attribution
