@@ -400,7 +400,182 @@ After several days of debugging and investigating, I may have traced this crash 
 (2) Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp, circa line 2531
 ```
 
-It doesn't look like this is where the crash originated. However, I have a much deeper understanding of the bug, and can search several other places throughout the next few days.
+<details>
+<summary>First fragment shader bound at NaniteCullRaster.cpp</summary>
+
+```metal
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+// Identity function as workaround for bug in Metal compiler
+template<typename T>
+T spvIdentity(T x)
+{
+    return x;
+}
+
+struct type_Globals
+{
+    uint VisualizeModeBitMask;
+};
+
+struct HWRasterizePS_in
+{
+    float4 in_var_TEXCOORD0 [[user(locn0)]];
+    uint3 in_var_TEXCOORD1 [[user(locn1)]];
+};
+
+fragment void Main_00000669_8d8d857e(HWRasterizePS_in in [[stage_in]], constant type_Globals& _Globals [[buffer(3)]], texture2d<uint, access::read_write> OutVisBuffer64 [[texture(0)]], texture2d<uint, access::read_write> OutDbgBuffer64 [[texture(1)]], texture2d<uint, access::read_write> OutDbgBuffer32 [[texture(2)]])
+{
+    float3 _42 = in.in_var_TEXCOORD0.xyz / float3(in.in_var_TEXCOORD0.w);
+    uint2 _48 = uint2(float4(_42, in.in_var_TEXCOORD0.w).xy);
+    uint _52 = as_type<uint>(fast::clamp(_42.z, 0.0, 1.0));
+    if (OutVisBuffer64.read(uint2(_48)).y < _52)
+    {
+        OutVisBuffer64.write(spvIdentity(uint2(in.in_var_TEXCOORD1.x, _52).xyyy), uint2(_48));
+    }
+    if (OutDbgBuffer64.read(uint2(_48)).y < _52)
+    {
+        OutDbgBuffer64.write(spvIdentity(uint2(1u, _52).xyyy), uint2(_48));
+    }
+    OutDbgBuffer32.write(spvIdentity(uint4(OutDbgBuffer32.read(uint2(_48)).x + uint((_Globals.VisualizeModeBitMask & 64u) != 0u))), uint2(_48));
+}
+```
+
+</details>
+
+<details>
+<summary>Second fragment shader bound at NaniteCullRaster.cpp</summary>
+
+```metal
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+// Identity function as workaround for bug in Metal compiler
+template<typename T>
+T spvIdentity(T x)
+{
+    return x;
+}
+
+struct HWRasterizePS_in
+{
+    float4 in_var_TEXCOORD0 [[user(locn0)]];
+    uint3 in_var_TEXCOORD1 [[user(locn1)]];
+    int4 in_var_TEXCOORD2 [[user(locn2)]];
+};
+
+fragment void Main_000004ca_3fb5a62b(HWRasterizePS_in in [[stage_in]], texture2d<uint, access::read_write> OutVisBuffer64 [[texture(0)]])
+{
+    float3 _36 = in.in_var_TEXCOORD0.xyz / float3(in.in_var_TEXCOORD0.w);
+    uint2 _42 = uint2(float4(_36, in.in_var_TEXCOORD0.w).xy);
+    bool2 _46 = _42 >= uint2(in.in_var_TEXCOORD2.xy);
+    bool2 _49 = _42 < uint2(in.in_var_TEXCOORD2.zw);
+    if (all(bool2(_46.x && _49.x, _46.y && _49.y)))
+    {
+        uint _56 = as_type<uint>(fast::clamp(_36.z, 0.0, 1.0));
+        if (OutVisBuffer64.read(uint2(_42)).y < _56)
+        {
+            OutVisBuffer64.write(spvIdentity(uint2(in.in_var_TEXCOORD1.x, _56).xyyy), uint2(_42));
+        }
+    }
+}
+```
+
+</details>
+
+<details>
+<summary>Third fragment shader bound at NaniteCullRaster.cpp</summary>
+
+```metal
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+// Returns buffer coords clamped to storage buffer size
+#define spvStorageBufferCoords(idx, sizes, type, coord) metal::min((type)(coord), (type)(sizes[(type)(idx)*3] / sizeof(type)) - 1)
+
+// Identity function as workaround for bug in Metal compiler
+template<typename T>
+T spvIdentity(T x)
+{
+    return x;
+}
+
+struct type_StructuredBuffer_uint
+{
+    uint _m0[1];
+};
+
+struct HWRasterizePS_in
+{
+    float4 in_var_TEXCOORD0 [[user(locn0)]];
+    uint3 in_var_TEXCOORD1 [[user(locn1)]];
+    int4 in_var_TEXCOORD2 [[user(locn2)]];
+};
+
+fragment void Main_00000b87_92c3932b(HWRasterizePS_in in [[stage_in]], constant uint* spvBufferSizeConstants [[buffer(2)]], const device type_StructuredBuffer_uint& VirtualShadowMap_PageTable [[buffer(1)]], texture2d_array<uint, access::read_write> OutDepthBufferArray [[texture(0)]])
+{
+    constant uint& VirtualShadowMap_PageTableBufferSize = spvBufferSizeConstants[1];
+    float3 _60 = in.in_var_TEXCOORD0.xyz / float3(in.in_var_TEXCOORD0.w);
+    uint2 _66 = uint2(float4(_60, in.in_var_TEXCOORD0.w).xy);
+    if (all(_66 < uint2(in.in_var_TEXCOORD2.zw)))
+    {
+        do
+        {
+            uint3 _115;
+            bool _119;
+            do
+            {
+                uint _85 = _66.x;
+                uint _99;
+                if (!(in.in_var_TEXCOORD1.z < 8192u))
+                {
+                    _99 = in.in_var_TEXCOORD1.z + ((_85 >> 7u) + ((_66.y >> 7u) << ((7u - uint(int((in.in_var_TEXCOORD1.y >> 16u) & 255u))) & 31u)));
+                }
+                else
+                {
+                    _99 = in.in_var_TEXCOORD1.z;
+                }
+                uint2 _114 = (uint2(VirtualShadowMap_PageTable._m0[_99] & 1023u, (VirtualShadowMap_PageTable._m0[_99] >> 10u) & 1023u) * uint2(128u)) + (_66 & uint2(127u));
+                _115 = uint3(_114.x, _114.y, uint3(_85, _66.y, (in.in_var_TEXCOORD1.y >> 24u) & 255u).z);
+                if (!(((VirtualShadowMap_PageTable._m0[_99] & 134217728u) != 0u) && (((VirtualShadowMap_PageTable._m0[_99] >> 20u) & 63u) == 0u)))
+                {
+                    _119 = false;
+                    break;
+                }
+                _119 = true;
+                break;
+            } while(false);
+            if (!_119)
+            {
+                break;
+            }
+            uint _124 = as_type<uint>(fast::clamp(_60.z, 0.0, 1.0));
+            if (OutDepthBufferArray.read(uint2(_115.xy), uint(_115.z)).x < _124)
+            {
+                OutDepthBufferArray.write(spvIdentity(uint4(_124)), uint2(_115.xy), uint(_115.z));
+            }
+            break;
+        } while(false);
+    }
+}
+```
+
+</details>
+
+It doesn't look like crash originates here. However, I have a much deeper understanding of the bug, which is arguably the most important development in this investigation. I can search several similar places throughout the next few days.
 
 ## Attribution
 
