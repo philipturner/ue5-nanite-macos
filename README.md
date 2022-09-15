@@ -575,7 +575,7 @@ fragment void Main_00000b87_92c3932b(HWRasterizePS_in in [[stage_in]], constant 
 
 </details>
 
-It doesn't look like crash originates here. After a little more investigation, I traced back the actual source. Here's the stack trace:
+It doesn't look like crash originates here. After a little more investigation, I traced back the actual source (stack trace below). It makes a lot more sense, because the words `RasterizeToRects` also appear in the captured vertex shader above. This particular stack trace was captured inside an asynchronous task queue, but I have a good idea where it came from. Three places in Nanite code call a `FPixelShaderUtils::AddRasterizeToRectsPass(` function. They all happen inside `void DrawLumenMeshCapturePass`. That function start with a call to `AddClearUAVPass`, which takes an argument of type `FRDGBufferRef`. All of that sounds very familiar.
 
 ```
 0 void FPixelShaderUtils::AddRasterizeToRectsPass<FClearUAVRectsPS, FClearUAVRectsParameters>(...)
