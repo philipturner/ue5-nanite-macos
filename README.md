@@ -575,7 +575,15 @@ fragment void Main_00000b87_92c3932b(HWRasterizePS_in in [[stage_in]], constant 
 
 </details>
 
-It doesn't look like crash originates here. However, I have a much deeper understanding of the bug, which is arguably the most important development in this investigation. I can search several similar places throughout the next few days.
+It doesn't look like crash originates here. After a little more investigation, I traced back the actual source. Here's the stack trace:
+
+```
+0 void FPixelShaderUtils::AddRasterizeToRectsPass<FClearUAVRectsPS, FClearUAVRectsParameters>(...)
+1 /Engine/Source/Runtime/RenderCore/Public/RenderGraphPass.h, line 615 - TEnableIf<!TIsSame<T, FRDGPass>::Value, void>::Type ExecuteLambdaFunc(FRHIComputeCommandList& RHICmdList) 
+2 /Engine/Source/Runtime/RenderCore/Public/RenderGraphPass.h, line 629 - void Execute(FRHIComputeCommandList& RHICmdList) override
+3 /Engine/Source/Runtime/RenderCore/Private/RenderGraphBuilder.cpp, line 2877 - void FRDGBuilder::ExecutePass(FRDGPass* Pass, FRHIComputeCommandList& RHICmdListPass)
+4 /Engine/Source/Runtime/RenderCore/Private/RenderGraphBuilder.cpp, line 2685 - void FRDGBuilder::DispatchParallelExecute(IRHICommandContext* RHICmdContext)
+```
 
 ## Attribution
 
