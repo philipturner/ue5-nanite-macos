@@ -592,7 +592,7 @@ Three places in Nanite code call `FPixelShaderUtils::AddRasterizeToRectsPass`. T
 
 I'm reading [this 155-page slideshow](https://advances.realtimerendering.com/s2021/Karis_Nanite_SIGGRAPH_Advances_2021_final.pdf) on how Nanite works internally. This should help me understand what's going on during the crash and provide a nice break from debugging. Since `DrawLumenMeshCapturePass` mentions Lumen, perhaps I should search for a similar document about Lumen.
 
-> Notes: The workaround for 64-bit atomics has either 2.5x or 5x the overhead, depending on how you look at it. We might see a performance improvement from a work distribution approach to software rasterization.
+> Notes: The workaround for 64-bit atomics has either 2.5x or 5x the overhead, based solely on number of possible atomic instructions. Worst-case overhead is unbounded. We might see a performance improvement from a work distribution approach to pixel writing, which can reduce SIMD divergence.
 
 ## Attribution
 
