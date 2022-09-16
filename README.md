@@ -21,7 +21,7 @@ Thorough instructions for how to compile UE5 from source and replicate what I've
 - Install Xcode 13.6<sup>1</sup> from [developer.apple.com](https://developer.apple.com/xcode/resources). Place the unzipped app in `~/Applications` and name it `Xcode-13`.
 - [Create](https://www.epicgames.com/id/register) an Epic Games account and [link](https://www.epicgames.com/help/en-US/epic-accounts-c5719348850459/connect-accounts-c5719351300507/how-do-i-link-my-unreal-engine-account-with-my-github-account-a5720369784347) it to your GitHub account.
 
-> <sup>1</sup>Xcode 14 was released in September 2022. Most of this guide was created while using Xcode 14 beta. I later learned that it crashes unexpectedly, aborting 40-minute builds that have almost finished. Please stick with Xcode 13 until someone finds a solution to the `XCBBuildService` crash.
+> <sup>1</sup>Xcode 14 was released in September 2022. I made most of this guide using Xcode 14 beta. I later learned that it crashes unexpectedly, aborting 40-minute builds that have almost finished. Please stick with Xcode 13 until someone finds a solution to the `XCBBuildService` crash.
 
 Perform the following in a new Terminal window, then close the window. This ensures\* that UnrealBuildTool uses Xcode beta instead of regular Xcode.
 
