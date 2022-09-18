@@ -604,10 +604,19 @@ Now, I'm reading the source code directly related to Nanite. That equates to thi
 Here, I estimate how long that would take to read. This could be off by an order of magnitude.
 ```
 1554 + 8483 + 10873 = 20910 lines
-////////////////////////////////////////////////////////////////////////////////
+--------------------------------------------------------------------------------
 Epic uses extensive whitespace and places control flow brackets on a separate 
 line. This approximately doubles the number of "real" source lines.
 20910 / 2 = 10455 lines
+--------------------------------------------------------------------------------
+Average indentation is 10 spaces, average line width is 80 characters. Assume 
+each line contains 5 non-alphanumeric characters, which do not form words.
+80 - 10 - 5 = 65 characters
+10455 * 64 = 679575 characters
+--------------------------------------------------------------------------------
+In English, average word size is 5 characters. Source code is much more wordy,
+so set average word length to 10 characters.
+679575 / 10 = 67957 words
 ```
 
 ## Attribution
