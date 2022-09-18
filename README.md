@@ -617,6 +617,10 @@ each line contains 5 non-alphanumeric characters, which do not form words.
 In English, average word size is 5 characters. Source code is much more wordy,
 so set average word length to 10 characters.
 679575 / 10 = 67957 words
+--------------------------------------------------------------------------------
+The average person can skim text at 700 words per minute. Code is less well-
+structured than normal text, and some sections may require deep thought to fully
+understand. I'll also enter the human reading comprehension speed, 200 wpm.
 ```
 
 ## Attribution
