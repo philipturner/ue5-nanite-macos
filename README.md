@@ -596,7 +596,7 @@ I read [this 155-page slideshow\*](https://advances.realtimerendering.com/s2021/
 >
 > In other words: decouple the HW/SW rasterization from the storage of triangle/instance ID.
 
-Next, I'm going to read over all source code in the Nanite directory, C++ and HLSL. I listed how many lines of code this is below:
+Now, I'm reading the source code directly related to Nanite. This is how many lines of code I will read:
 - Headers: ??? lines
 - C++ Source: ??? lines
 - Shaders: ??? lines
