@@ -648,7 +648,7 @@ RHI_API int32 RHIGetPreferredClearUAVRectPSResourceType(const FStaticShaderPlatf
 ```
 
 Called from:
-```
+```cpp
 class FClearUAVRectsPS : public FGlobalShader
 {
 	DECLARE_GLOBAL_SHADER(FClearUAVRectsPS);
@@ -674,7 +674,7 @@ class FClearUAVRectsPS : public FGlobalShader
 ```
 
 Called from:
-```
+```cpp
 void AddClearUAVPass(FRDGBuilder& GraphBuilder, ERHIFeatureLevel::Type FeatureLevel, FRDGTextureUAVRef TextureUAV, const uint32(&ClearValues)[4], FRDGBufferSRVRef RectCoordBufferSRV, uint32 NumRects)
 {
  ...
