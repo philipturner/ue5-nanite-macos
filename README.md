@@ -599,7 +599,7 @@ I read [this 155-page slideshow\*](https://advances.realtimerendering.com/s2021/
 Now, I'm reading the source code directly related to Nanite. This is how many lines of code I will read:
 - `/Engine/Source/Runtime/Renderer/Private/Nanite` Headers: ??? lines
 - `/Engine/Source/Runtime/Renderer/Private/Nanite` C++ Source: ??? lines
-- Shaders: ??? lines
+- `/Engine/Shaders/Private/Nanite` HLSL Shaders: ??? lines
 
 ## Attribution
 
