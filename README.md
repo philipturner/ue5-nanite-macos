@@ -601,6 +601,15 @@ Now, I'm reading the source code directly related to Nanite. That equates to thi
 - `/Engine/Source/Runtime/Renderer/Private/Nanite` C++ Source: 8483 lines
 - `/Engine/Shaders/Private/Nanite` HLSL Shaders: 10873 lines
 
+Here, I estimate how long that would take to read. This could be off by an order of magnitude.
+```
+1554 + 8483 + 10873 = 20910 lines
+////////////////////////////////////////////////////////////////////////////////
+Epic uses extensive whitespace and places control flow brackets on a separate 
+line. This approximately doubles the number of "real" source lines.
+20910 / 2 = 10455 lines
+```
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
