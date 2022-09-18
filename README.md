@@ -620,7 +620,8 @@ so set average word length to 10 characters.
 --------------------------------------------------------------------------------
 The average person can skim text at 700 words per minute. Code is less well-
 structured than normal text, and some sections may require deep thought to fully
-understand. I'll also enter the human reading comprehension speed, 200 wpm.
+understand. Therefore, I'll also try the low estimate of reading comprehension 
+speed, 200 words per minute.
 ```
 
 ## Attribution
