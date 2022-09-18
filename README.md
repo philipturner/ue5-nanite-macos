@@ -627,7 +627,7 @@ speed, 200 words per minute.
 --------------------------------------------------------------------------------
 Assuming it takes 4 hours to read, here's a breakdown by section.
 Headers: 7% of total time = 20 minutes
-C++ Source: 41% of total time = 1.5 hours
+C++ Source: 41% of total time = 1.6 hours
 Shaders: 52% of total time = 2.1 hours
 ```
 
