@@ -601,7 +601,7 @@ Now, I'm reading the source code directly related to Nanite. That equates to thi
 - `/Engine/Source/Runtime/Renderer/Private/Nanite` C++ Source: 8483 lines
 - `/Engine/Shaders/Private/Nanite` HLSL Shaders: 10873 lines
 
-Here, I estimate how long that would take to read. This could be off by an order of magnitude.
+Here, I estimate how long that would take to read. The end result was much lower than I expected. It should take anywhere from 1.5 to 5.5 hours of elapsed time. That's about how long it took to digest the 155-page Nanite presentation and the explanation of Lumen.
 ```
 1554 + 8483 + 10873 = 20910 lines
 --------------------------------------------------------------------------------
@@ -622,6 +622,8 @@ The average person can skim text at 700 words per minute. Code is less well-
 structured than normal text, and some sections may require deep thought to fully
 understand. Therefore, I'll also try the low estimate of reading comprehension 
 speed, 200 words per minute.
+67957 / 700 = 97 minutes = 1.5 hours
+67957 / 200 = 340 minutes = 5.5 hours
 ```
 
 ## Attribution
