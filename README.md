@@ -631,6 +631,64 @@ C++ Source: 41% of total time = 1.5 hours
 Shaders: 52% of total time = 2 hours
 ```
 
+An hour into reading, I found this:
+```cpp
+RHI_API int32 RHIGetPreferredClearUAVRectPSResourceType(const FStaticShaderPlatform Platform)
+{
+	if (IsMetalPlatform(Platform))
+	{
+		static constexpr uint32 METAL_TEXTUREBUFFER_SHADER_LANGUAGE_VERSION = 4;
+		if (METAL_TEXTUREBUFFER_SHADER_LANGUAGE_VERSION <= RHIGetMetalShaderLanguageVersion(Platform))
+		{
+			return 0; // BUFFER
+		}
+	}
+	return 1; // TEXTURE_2D
+}
+```
+
+Called from:
+```
+class FClearUAVRectsPS : public FGlobalShader
+{
+	DECLARE_GLOBAL_SHADER(FClearUAVRectsPS);
+	SHADER_USE_PARAMETER_STRUCT(FClearUAVRectsPS, FGlobalShader);
+
+	BEGIN_SHADER_PARAMETER_STRUCT(FParameters, )
+		SHADER_PARAMETER(FUintVector4, ClearValue)
+		SHADER_PARAMETER_RDG_TEXTURE_UAV(RWTexture2D, ClearResource)
+	END_SHADER_PARAMETER_STRUCT()
+
+	...
+
+	static void ModifyCompilationEnvironment(const FGlobalShaderPermutationParameters& Parameters, FShaderCompilerEnvironment& OutEnvironment)
+	{
+		int32 ResourceType = RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
+
+		FGlobalShader::ModifyCompilationEnvironment(Parameters, OutEnvironment);
+		OutEnvironment.SetDefine(TEXT("ENABLE_CLEAR_VALUE"), 1);
+		OutEnvironment.SetDefine(TEXT("RESOURCE_TYPE"), ResourceType);
+		OutEnvironment.SetDefine(TEXT("VALUE_TYPE"), TEXT("uint4"));
+	}
+};
+```
+
+Called from:
+```
+void AddClearUAVPass(FRDGBuilder& GraphBuilder, ERHIFeatureLevel::Type FeatureLevel, FRDGTextureUAVRef TextureUAV, const uint32(&ClearValues)[4], FRDGBufferSRVRef RectCoordBufferSRV, uint32 NumRects)
+{
+ ...
+ auto PixelShader = ShaderMap->GetShader<FClearUAVRectsPS>();
+ ...
+ FPixelShaderUtils::AddRasterizeToRectsPass<FClearUAVRectsPS>(GraphBuilder,
+  ...
+  PixelShader,
+  ...
+  );
+}
+```
+
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
