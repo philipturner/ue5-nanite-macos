@@ -597,8 +597,8 @@ I read [this 155-page slideshow\*](https://advances.realtimerendering.com/s2021/
 > In other words: decouple the HW/SW rasterization from the storage of triangle/instance ID.
 
 Now, I'm reading the source code directly related to Nanite. This is how many lines of code I will read:
-- Headers: ??? lines
-- C++ Source: ??? lines
+- `/Engine/Source/Runtime/Renderer/Private/Nanite` Headers: ??? lines
+- `/Engine/Source/Runtime/Renderer/Private/Nanite` C++ Source: ??? lines
 - Shaders: ??? lines
 
 ## Attribution
