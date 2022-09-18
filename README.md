@@ -590,11 +590,16 @@ Three places in Nanite code call `FPixelShaderUtils::AddRasterizeToRectsPass`. T
 
 ---
 
-I'm reading [this 155-page slideshow](https://advances.realtimerendering.com/s2021/Karis_Nanite_SIGGRAPH_Advances_2021_final.pdf) on how Nanite works internally. This should help me understand what's going on during the crash and provide a nice break from debugging. Since `DrawLumenMeshCapturePass` mentions Lumen, perhaps I should search for a similar document about Lumen.
+I'm read [this 155-page slideshow](https://advances.realtimerendering.com/s2021/Karis_Nanite_SIGGRAPH_Advances_2021_final.pdf) on how Nanite works internally. This helped me understand what's going on during the crash and providead nice break from debugging. Since `DrawLumenMeshCapturePass` mentions Lumen, I also looked for similar documentation on Nanite. There was an overview presentation from SIGGRAPH 2022, but it wasn't available online.
 
 > Note regarding pages 91-92: The workaround for 64-bit atomics has either 2.5x or 5x the overhead, based on number of atomic instructions. Worst-case overhead is unbounded. We might see a performance improvement from a work distribution approach to pixel writing, which can reduce SIMD divergence. This might even benefit hardware rasterization because we're not distributing the computation of pixels; just distributing the atomic write operations after proving the depth test passes. That has greater sparsity than spatial distribution of pixels.
 >
 > In other words: decouple the HW/SW rasterization from the storage of triangle/instance ID.
+
+Next, I'm going to read over all source code in the Nanite directory, C++ and HLSL. I listed how many lines of code this is below:
+- Headers: ??? lines
+- C++ Source: ??? lines
+- Shaders: ??? lines
 
 ## Attribution
 
