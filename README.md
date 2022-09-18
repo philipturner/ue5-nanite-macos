@@ -599,7 +599,7 @@ I read [this 155-page slideshow\*](https://advances.realtimerendering.com/s2021/
 Now, I'm reading the source code directly related to Nanite. That equates to this many lines of code:
 - `/Engine/Source/Runtime/Renderer/Private/Nanite` Headers: 1554 lines
 - `/Engine/Source/Runtime/Renderer/Private/Nanite` C++ Source: 8483 lines
-- `/Engine/Shaders/Private/Nanite` HLSL Shaders: ??? lines
+- `/Engine/Shaders/Private/Nanite` HLSL Shaders: 10873 lines
 
 ## Attribution
 
