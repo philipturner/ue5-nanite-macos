@@ -601,7 +601,7 @@ Now, I'm reading the source code directly related to Nanite. That equates to thi
 - `/Engine/Source/Runtime/Renderer/Private/Nanite` C++ Source: 8483 lines
 - `/Engine/Shaders/Private/Nanite` HLSL Shaders: 10873 lines
 
-Here, I estimate how long that would take to read. The end result was much lower than I expected - between 1.5 and 5.5 hours of elapsed time. That's about how long it took to digest the 155-page Nanite presentation and the explanation of Lumen.
+Here, I estimate how long that would take to read. The end result was much lower than I expected - between 1.5 and 5.5 hours. That's about how long it took to digest the 155-page Nanite presentation and the explanation of Lumen.
 ```
 1554 + 8483 + 10873 = 20910 lines
 --------------------------------------------------------------------------------
