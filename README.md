@@ -706,7 +706,7 @@ Fix: at path (1) below, comment out the right-hand side of line (2). Replace it 
 
 Okay, so now it works. I saw a Nanite sphere appear in all 8 debug views inside the Unreal Editor, although I didn't see it in the main view. Then, it froze up and I had to reboot my Mac.
 
-To investigate, I need to read over some more Nanite source code. Then, I should try implementing the [AtomicsWorkaround](./AtomicsWorkaround) and fix all the atomic things I set to non-atomic. Perhaps some shader loop expected a number to be atomically incremented. When it wasn't, the value become corrupted. The integrated GPU looped infinitely and made my Mac unresponsive.
+To investigate, I need to read over some more Nanite source code. Then, I should try implementing the [AtomicsWorkaround](./AtomicsWorkaround) and fix all the atomic things I set to non-atomic. Perhaps some shader loop expected a number to be atomically incremented. When it wasn't, the value became corrupted. The integrated GPU looped infinitely and made my Mac unresponsive.
 
 ## Attribution
 
