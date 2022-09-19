@@ -693,7 +693,7 @@ The bug actually occurred in a different place; it did not occur in `DrawLumenMe
 /Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp, circa line 2690
 ```
 
-Circa line 2667 of the file above, it always creates a 2D texture for the various inputs into Nanite shaders. There are called `OutDepthBuffer`, `OutVisBuffer64`, `OutDbgBuffer64`, and `OutDbgBuffer32`. That code was only ever tested on DirectX and Vulkan, a platform that defaults to 2D textures for `ClearResource` views. Between the UE5NanitePort and when I investigated the bug, Epic rewrote a certain Nanite shader. They replaced and/or renamed the arguments set at line 2667. Before the change, they may have never triggered the code that sets them as a `texture_buffer` in Metal.
+Circa line 2667 of the file above, it always creates a 2D texture for the various inputs into Nanite shaders. These are called `OutDepthBuffer`, `OutVisBuffer64`, `OutDbgBuffer64`, and `OutDbgBuffer32`. That code was only ever tested on DirectX and Vulkan, a platform that defaults to 2D textures for `ClearResource` views. Between the UE5NanitePort and when I investigated the bug, Epic rewrote a certain Nanite shader. They replaced and/or renamed the arguments set at line 2667. Before the change, they may have never triggered the code that sets them as a `texture_buffer` in Metal.
 
 ## Attribution
 
