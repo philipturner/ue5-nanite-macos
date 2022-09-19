@@ -688,6 +688,11 @@ void AddClearUAVPass(FRDGBuilder& GraphBuilder, ERHIFeatureLevel::Type FeatureLe
 }
 ```
 
+The bug actually occurred in a different place; it did not occur in `DrawLumenMeshCapturePass`. `Nanite::InitRasterContext` is the only place that calls the overload of `AddClearUAVPass` defined above. This makes more sense because Nanite crashes the moment I fire it up. Revised origin of crash:
+```
+/Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp, circa line 2690
+```
+
 
 ## Attribution
 
