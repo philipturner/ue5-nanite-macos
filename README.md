@@ -717,10 +717,41 @@ To investigate, I need to read over some more Nanite source code. Then, I should
 
 I was able to extract a screenshot of the Nanite state. The Unreal Editor is like a hot potato; if I click the editor window, my Mac freezes. Otherwise, I can still perform everyday actions like working in Xcode and using Google Chrome.
 
-I am repeatedly triggering a warning (2) inside RenderCore (1):
+I repeatedly triggered a warning (2) inside RenderCore (1). A few minutes later, I got a new GPU soft fault when the editor autosaved.
 
 ```
 (1) /Engine/Source/Runtime/RenderCore/Private/ProfilingDebugging/RealtimeGPUProfiler.cpp
+(2)
+2022-09-19 19:49:50.218770-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.49.50:218][  1]LogRendererCore: Warning: Query 'Unaccounted' not ready.
+2022-09-19 19:49:58.205410-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.49.58:205][ 13]LogRendererCore: Warning: Query 'Unaccounted' not ready.
+2022-09-19 19:50:11.704696-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.50.11:704][ 52]LogRendererCore: Warning: Query 'Unaccounted' not ready.
+2022-09-19 19:50:12.329862-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.50.12:329][ 57]LogRendererCore: Warning: Query 'Unaccounted' not ready.
+2022-09-19 19:50:23.372222-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.50.23:372][ 70]LogRendererCore: Warning: Query 'Unaccounted' not ready.
+2022-09-19 19:50:25.610363-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.50.25:610][ 80]LogRendererCore: Warning: Query 'Unaccounted' not ready.
+2022-09-19 19:50:29.198663-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.50.29:198][ 85]LogRendererCore: Warning: Query 'Unaccounted' not ready.
+2022-09-19 19:50:32.301911-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.50.32:301][ 95]LogRendererCore: Warning: Query 'Unaccounted' not ready.
+2022-09-19 19:50:46.777136-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.50.46:776][100]LogRendererCore: Warning: Query 'Unaccounted' not ready.
+(3)
+2022-09-19 19:57:44.219144-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:218][350]LogUObjectHash: Compacting FUObjectHashTables data took   0.20ms
+2022-09-19 19:57:44.220352-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:220][350]Cmd: OBJ SAVEPACKAGE PACKAGE="/Temp/Untitled_0" FILE="../../../YES/Saved/Autosaves/Temp/Untitled_0_Auto1.umap" SILENT=true AUTOSAVING=true KEEPDIRTY=false
+2022-09-19 19:57:44.221367-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:221][350]LogSavePackage: Moving output files for package: /Temp/Autosaves/Temp/Untitled_0_Auto1
+2022-09-19 19:57:44.221478-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:221][350]LogSavePackage: Moving '../../../YES/Saved/Untitled_0_Auto18424315AD444B643906E18A972075761.tmp' to '../../../YES/Saved/Autosaves/Temp/Untitled_0_Auto1.umap'
+2022-09-19 19:57:44.222368-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:222][350]LogFileHelpers: Editor autosave (incl. external actors) for '/Temp/Untitled_0' took 0.034
+2022-09-19 19:57:44.222458-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:222][350]LogFileHelpers: Editor autosave (incl. sublevels & external actors) for all levels took 0.034
+2022-09-19 19:57:44.222696-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:222][350]OBJ SavePackage: Generating thumbnails for [1] asset(s) in package [/Game/StarterContent/Materials/M_Basic_Wall] ([1] browsable assets)...
+2022-09-19 19:57:44.365219-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:365][350]OBJ SavePackage:     Rendered thumbnail for [Material /Game/StarterContent/Materials/M_Basic_Wall.M_Basic_Wall]
+2022-09-19 19:57:44.365386-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:365][350]OBJ SavePackage: Finished generating thumbnails for package [/Game/StarterContent/Materials/M_Basic_Wall]
+2022-09-19 19:57:44.365524-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:365][350]Cmd: OBJ SAVEPACKAGE PACKAGE="/Game/StarterContent/Materials/M_Basic_Wall" FILE="../../../YES/Saved/Autosaves/Game/StarterContent/Materials/M_Basic_Wall_Auto1.uasset" SILENT=false AUTOSAVING=true
+2022-09-19 19:57:44.366561-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:366][350]LogSavePackage: Moving output files for package: /Temp/Autosaves/Game/StarterContent/Materials/M_Basic_Wall_Auto1
+2022-09-19 19:57:44.366720-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:366][350]LogSavePackage: Moving '../../../YES/Saved/M_Basic_Wall_Auto10954F2D8614414D856C02BACBCA1C362.tmp' to '../../../YES/Saved/Autosaves/Game/StarterContent/Materials/M_Basic_Wall_Auto1.uasset'
+2022-09-19 19:57:44.366933-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:366][350]OBJ SavePackage: Generating thumbnails for [1] asset(s) in package [/Game/StarterContent/Shapes/Shape_Sphere] ([1] browsable assets)...
+2022-09-19 19:57:44.704431-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:704][350]OBJ SavePackage:     Rendered thumbnail for [StaticMesh /Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere]
+2022-09-19 19:57:44.704543-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:704][350]OBJ SavePackage: Finished generating thumbnails for package [/Game/StarterContent/Shapes/Shape_Sphere]
+2022-09-19 19:57:44.704792-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:704][350]Cmd: OBJ SAVEPACKAGE PACKAGE="/Game/StarterContent/Shapes/Shape_Sphere" FILE="../../../YES/Saved/Autosaves/Game/StarterContent/Shapes/Shape_Sphere_Auto1.uasset" SILENT=false AUTOSAVING=true
+2022-09-19 19:57:44.708663-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:708][350]LogSavePackage: Moving output files for package: /Temp/Autosaves/Game/StarterContent/Shapes/Shape_Sphere_Auto1
+2022-09-19 19:57:44.708780-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:708][350]LogSavePackage: Moving '../../../YES/Saved/Shape_Sphere_Auto1F20B5BF64F41FC42939908B3AF9E388B.tmp' to '../../../YES/Saved/Autosaves/Game/StarterContent/Shapes/Shape_Sphere_Auto1.uasset'
+2022-09-19 19:57:44.708871-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:708][350]LogFileHelpers: Auto-saving content packages took 0.486
+2022-09-19 19:57:45.016897-0400 UnrealEditor[12227:417732] GPU Soft Fault count: 1905
 ```
 
 ## Attribution
