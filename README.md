@@ -704,7 +704,7 @@ Fix: at path (1) below, comment out the right-hand side of line (2). Replace it 
 (3) int32 ResourceType = 1; //RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
 ```
 
-Okay, so now it works. I saw a Nanite sphere appear in all 8 debug views inside the Unreal Editor, although I didn't see it in the main view. Then, it froze up and I had to reboot my Mac. I'll read over all the rest of the Nanite source code. Then, I'll try implementing the [AtomicsWorkaround](./AtomicsWorkaround) and fix all the atomic things I set to non-atomic. Perhaps some shader loop expected a number to be atomically incremented. When it wasn't, the integrated GPU looped infinitely and made the UI unresponsive.
+Okay, so now it works. I saw a Nanite sphere appear in all 8 debug views inside the Unreal Editor, although I didn't see it in the main view. Then, it froze up and I had to reboot my Mac. I'll read over all the rest of the Nanite source code. Then, I'll try implementing the [AtomicsWorkaround](./AtomicsWorkaround) and fix all the atomic things I set to non-atomic. Perhaps some shader loop expected a number to be atomically incremented. When it wasn't, the integrated GPU looped infinitely and made my Mac unresponsive.
 
 ## Attribution
 
