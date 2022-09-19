@@ -596,7 +596,7 @@ I read [this 155-page slideshow\*](https://advances.realtimerendering.com/s2021/
 >
 > In other words: decouple the HW/SW rasterization from the storage of triangle/instance ID.
 
-Next, I read the source code directly related to Nanite. That equates to this many lines of code:
+Next, I planned to read the source code directly related to Nanite. That equates to this many lines of code:
 - `/Engine/Source/Runtime/Renderer/Private/Nanite` Headers: 1554 lines
 - `/Engine/Source/Runtime/Renderer/Private/Nanite` C++ Source: 8483 lines
 - `/Engine/Shaders/Private/Nanite` HLSL Shaders: 10873 lines
@@ -694,6 +694,8 @@ The bug actually occurred in a different place; it did not occur in `DrawLumenMe
 ```
 
 Circa line 2667 of the file above, it always creates a 2D texture for the various inputs into Nanite shaders. These are called `OutDepthBuffer`, `OutVisBuffer64`, `OutDbgBuffer64`, and `OutDbgBuffer32`. That code was only ever tested on DirectX and Vulkan, a platform that defaults to 2D textures for `ClearResource` views. Between the UE5NanitePort and when I investigated the bug, Epic rewrote a certain Nanite shader. They replaced and/or renamed the arguments set at line 2667. Before the change, they may have never triggered the code that sets them as a `texture_buffer` in Metal.
+
+Alternatively, UE5NanitePort could have found this bug and fixed it. The port is a closed-source binary, so I can't see its changes to engine C++ code.
 
 ## Attribution
 
