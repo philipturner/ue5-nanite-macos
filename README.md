@@ -6,7 +6,7 @@ Brings the Nanite feature from Unreal Engine 5 to Apple platforms. Read over [th
 
 Nanite can run entirely through 32-bit atomics, without creating data races. The [AtomicsWorkaround](./AtomicsWorkaround) directory provides source code demonstrating this workaround. Eventually, `ue5-nanite-macos` will use the workaround to make Nanite run without graphical glitches.
 
-Furthermore, this port needs to create major optimizations for macOS and iOS. The previous port (UE5NanitePort) ran at around 15 frames per second, which is far from optimal. The 32-bit atomics workaround could makes this even slower, so it will require a lot of creative thinking to maximize frame rate. A few ideas are:
+Furthermore, this port needs to create major optimizations for macOS and iOS. The previous port (UE5NanitePort) ran at around 15 frames per second - far from optimal. The 32-bit atomics workaround could makes this even slower, requiring very creative thinking to maximize frame rate. A few ideas:
 - Decoupling atomic writes from rasterization, then distributing the writes evenly among simdgroups.
 - Using MetalFX temporal upscaling, which is optimized for M1 GPUs. The built-in fork of FidelityFX Super Resolution is optimized for AMD GPUs.
 - Other architectural improvements specifically for the Apple GPU architecture. Intel Macs won't see a regression because UE5 is already heavily optimized for AMD GPUs.
