@@ -697,6 +697,11 @@ Circa line 2667 of the file above, it always creates a 2D texture for the variou
 
 Alternatively, UE5NanitePort could have found this bug and fixed it. The port is a closed-source binary, so I can't see its changes to engine C++ code.
 
+Likely fix: at the location below, comment out the right-hand side of `int32 ResourceType = ...`. Replace it with `1;`, whic forces it to be a 2D texture.
+```
+/Engine/Source/Runtime/RenderCore/Private/RenderGraphUtils.cpp, circa line 582
+```
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
