@@ -697,12 +697,14 @@ Circa line 2667 of the file above, it always creates a 2D texture for the variou
 
 Alternatively, UE5NanitePort could have found this bug and fixed it. The port is a closed-source binary, so I can't see its changes to engine C++ code.
 
-Likely fix: at path (1) below, comment out the right-hand side of line (2). Replace it with line (3), which forces it to be a 2D texture.
+Fix: at path (1) below, comment out the right-hand side of line (2). Replace it with line (3), which forces it to be a 2D texture.
 ```
 (1) /Engine/Source/Runtime/RenderCore/Private/RenderGraphUtils.cpp, circa line 582
 (2) int32 ResourceType = RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
 (3) int32 ResourceType = 1; //RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
 ```
+
+Okay, so now it works. I saw a Nanite sphere appear in all 8 debug views inside the Unreal Editor, although I didn't see it in the main view. Then, it froze up and I had to reboot my Mac. I'll read over all the rest of the Nanite source code. Then, I'll try implementing the [AtomicsWorkaround](./AtomicsWorkaround) and fix all the atomic things I set to non-atomic. Perhaps some shader loop expected a number to be atomically incremented. When it wasn't, the integrated GPU looped infinitely and made the UI unresponsive.
 
 ## Attribution
 
