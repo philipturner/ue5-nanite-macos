@@ -699,9 +699,9 @@ Alternatively, UE5NanitePort could have found this bug and fixed it. The port is
 
 Likely fix: at path (1) below, comment out the right-hand side of line (2). Replace it with line (3), which forces it to be a 2D texture.
 ```
-/Engine/Source/Runtime/RenderCore/Private/RenderGraphUtils.cpp, circa line 582
-int32 ResourceType = RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
-int32 ResourceType = 1; //RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
+(1) /Engine/Source/Runtime/RenderCore/Private/RenderGraphUtils.cpp, circa line 582
+(2) int32 ResourceType = RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
+(3) int32 ResourceType = 1; //RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
 ```
 
 ## Attribution
