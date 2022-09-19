@@ -713,6 +713,16 @@ Okay, so now it works. I saw a Nanite sphere appear in all 8 debug views inside 
 
 To investigate, I need to read over some more Nanite source code. Then, I should try implementing the [AtomicsWorkaround](./AtomicsWorkaround) and fix all the atomic things I set to non-atomic. Perhaps some shader loop expected a number to be atomically incremented. When it wasn't, the value became corrupted. The integrated GPU looped infinitely and made my Mac unresponsive.
 
+---
+
+I was able to extract a screenshot of the Nanite state. The Unreal Editor is like a hot potato; if I click the editor window, my Mac freezes. Otherwise, I can still perform everyday actions like working in Xcode and using Google Chrome.
+
+I am repeatedly triggering a warning (2) inside RenderCore (1):
+
+```
+(1) /Engine/Source/Runtime/RenderCore/Private/ProfilingDebugging/RealtimeGPUProfiler.cpp
+```
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
