@@ -2,6 +2,10 @@
 
 Brings the Nanite feature from Unreal Engine 5 to Apple platforms. Read over [this forum thread](https://forums.unrealengine.com/t/lumen-nanite-on-macos/508411) for more context.
 
+[Nanite Debug Views](./Documentation/NaniteDebugViews.png)
+
+> Screenshot taken on September 19, 2022. Configuration: 32-core M1 Max, macOS 12.5.1
+
 ## How it Works
 
 Nanite can run entirely through 32-bit atomics, without creating data races. The [AtomicsWorkaround](./AtomicsWorkaround) directory provides source code demonstrating this workaround. Eventually, `ue5-nanite-macos` will use the workaround to make Nanite run without graphical glitches.
