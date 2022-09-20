@@ -719,7 +719,7 @@ To investigate, I need to read over some more Nanite source code. Then, I should
 
 ---
 
-I was able to extract a screenshot of the Nanite state. I have to avoid clicking the editor window, or else my Mac freezes. Otherwise, I can still perform everyday actions like working in Xcode and using Google Chrome.
+I somehow extracted a screenshot of the Nanite debug view. I have to avoid clicking the editor window, or else my Mac freezes. Otherwise, I can still perform everyday actions like working in Xcode and using Google Chrome.
 
 ![Nanite Debug Views](./Documentation/NaniteDebugViews.png)
 
