@@ -4,7 +4,7 @@ Brings the Nanite feature from Unreal Engine 5 to Apple platforms. Read over [th
 
 ![Nanite Debug Views](./Documentation/NaniteDebugViews.png)
 
-> The "Hot Potato" Unreal Editor - don't click it, or else your Mac freezes! 
+> The "Hot Potato" Unreal Editor - if you click it, your computer freezes! 
 > 
 > Screenshot taken on September 19, 2022. Configuration: 32-core M1 Max, macOS 12.5.1, Xcode 13.4.1, Unreal Engine 5.2 beta
 
