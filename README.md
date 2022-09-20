@@ -719,7 +719,7 @@ To investigate, I need to read over some more Nanite source code. Then, I should
 
 ---
 
-I somehow extracted a screenshot of the Nanite debug views. I have to avoid clicking the editor window, otherwise my Mac freezes. If I leave the window alone, I can still perform everyday actions like working in Xcode and using Google Chrome.
+I took a screenshot of the Nanite debug views. I have to avoid clicking the editor window, otherwise my Mac freezes. If I leave the window alone, I can still perform everyday actions like working in Xcode and using Google Chrome.
 
 ![Nanite Debug Views](./Documentation/NaniteDebugViews.png)
 
