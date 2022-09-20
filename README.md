@@ -760,7 +760,7 @@ I repeatedly triggered a warning (2) inside RenderCore (1). A few minutes later,
 2022-09-19 19:57:45.016897-0400 UnrealEditor[12227:417732] GPU Soft Fault count: 1905
 ```
 
-I swapped out one texture for a buffer, and it still froze the iGPU, to the point where I had to reboot my Mac. I'm not sure whether the Unreal Editor is worse off than before this modification. Regardless, I now understand how to bind new resources to the HLSL shaders. I should be able to implement the entire atomics workaround, then see if that fixes anything. If it doesn't, I at least narrowed down the list of possible causes.
+I swapped out one texture (`DbgBuffer32`) for a buffer, and it still froze the iGPU, to the point where I had to reboot my Mac. I'm not sure whether the Unreal Editor is worse off than before this modification. Regardless, I now understand how to bind new resources to the HLSL shaders. I should be able to implement the entire atomics workaround, then see if that fixes anything. If it doesn't, I at least narrowed down the list of possible causes.
 
 ## Attribution
 
