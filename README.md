@@ -2,7 +2,7 @@
 
 Brings the Nanite feature from Unreal Engine 5 to Apple platforms. Read over [this forum thread](https://forums.unrealengine.com/t/lumen-nanite-on-macos/508411) for more context.
 
-[Nanite Debug Views](./Documentation/NaniteDebugViews.png)
+![Nanite Debug Views](./Documentation/NaniteDebugViews.png)
 
 > Screenshot taken on September 19, 2022. Configuration: 32-core M1 Max, macOS 12.5.1
 
