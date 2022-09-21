@@ -191,6 +191,15 @@ I figured out the bug. I did not set `bSupportsNanite=true` in `DataDrivenPlatfo
 Next, I tried forcing UE5 to perform unity builds. These supposedly decrease compile time but allow for mistakes where you forget an `#include` directive. Under `~/.config/Unreal Engine/UnrealBuildTool/BuildConfiguration.xml`, I set the following XML tags to `true`: "bUseUnityBuild", "bForceUnityBuild", and "bUseUBTMakefiles". There's no way to validate whether this hack works, but incremental builds seem to be running faster now.
 
 </details>
+<a id="investigation-of-change-4"></a>
+<details>
+<summary>Investigation of change 4</summary>
+
+---
+
+> This section does not follow sequentially from the sections above. Check back here after implementing changes 1 - 3.
+
+</details>
 
 ## Modifications to UE5
 
@@ -212,15 +221,6 @@ Look at [`Sources/RenderUtils_Changes.h`](./Sources/RenderUtils_Changes.h) in th
 [UE] Assertion failed: GRHIPersistentThreadGroupCount > 0 [File:./Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp] [Line: 1738] 
 GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
 ```
-
-</details>
-<a id="investigation-of-change-4"></a>
-<details>
-<summary>Investigation of change 4</summary>
-
----
-
-> This section does not follow sequentially from the sections above. Check back here after implementing changes 1 - 3.
 
 </details>
 
