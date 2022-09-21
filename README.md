@@ -749,7 +749,7 @@ At path (1) below, `Nanite::InitRasterContext` calls `AddClearUAVPass` on four d
 
 At path (2), `ModifyCompilationEnvironment` calls a function to determine the cleared resource's type. On Apple platforms, the function treats the cleared resource like a `texture_buffer`. However, the four textures created in `Nanite::InitRasterContext` were 2D textures. The crash shown in [Change 3](#change-3) included the text: `ShaderTextureType 2 != TexTypes 9`. It attempted to bind a `texture2d`, when the shader expected a `texture_buffer`!
 
-To fix the bug, you must change one line of code. In the first statement of `ModifyCompilationEnvironment`, comment out the function call. Instead, assign `1` to `ResourceType`. Your code should match [`Sources/RenderGraphUtils_Changes.cpp`](./Sources/RenderGraphUtils_Changes.cpp).
+To fix the bug, you must change one line of code. In the first statement of `ModifyCompilationEnvironment`, comment out the function call. Then, assign `1` to `ResourceType`. Your code should match [`Sources/RenderGraphUtils_Changes.cpp`](./Sources/RenderGraphUtils_Changes.cpp).
 
 ## Change 5
 
