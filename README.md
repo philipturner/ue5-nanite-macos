@@ -762,6 +762,8 @@ I repeatedly triggered a warning (2) inside RenderCore (1). A few minutes later,
 
 I swapped out one texture (`DbgBuffer32`) for a buffer, and it still froze the iGPU, to the point where I had to reboot my Mac. I'm not sure whether the Unreal Editor was worse off than before the modification. Regardless, I now understand how to bind new resources to the HLSL shaders. I should be able to implement the entire atomics workaround, then see if that fixes anything. If not, this narrows down the list of possible causes.
 
+> TODO: It's already pretty clear that a "Change 4" exists. Fix the section of code that treated a 2D texture like a texture buffer. I can transfer the current bug investigation into a "Change 5".
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
