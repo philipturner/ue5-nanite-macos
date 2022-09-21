@@ -144,6 +144,7 @@ Build the project again. It should succeed\*, taking only a minute. If it takes 
 > \*Ignore the warning stating "Run script build phase 'Sign Manual Frameworks' will be run during every build".
 
 Launch the Unreal Editor and open UnrealProject1. This time, the 3D graphical user interface should appear.
+
 </details>
 <details>
 <summary>Revert to Xcode 13</summary>
@@ -159,7 +160,6 @@ To debug `UnrealEditor.app` when it crashes, you must launch it from Xcode. This
 Copy the `YES` project folder from `~/Documents/Unreal Projects` to `~/Documents/UnrealEngine/UnrealEngine`. This lets Unreal Editor automatically detect it when launched from inside Xcode. Finally, open `UE5.xcworkspace` and select <b>Menu Bar > Product > Run</b>. Open the editor this way after incorporating the code changes described below.
 
 </details>
-
 <details>
 <summary>Facing extremely long build times</summary>
 
@@ -212,6 +212,16 @@ Look at [`Sources/RenderUtils_Changes.h`](./Sources/RenderUtils_Changes.h) in th
 [UE] Assertion failed: GRHIPersistentThreadGroupCount > 0 [File:./Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp] [Line: 1738] 
 GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
 ```
+
+</details>
+<details>
+<summary>Investigation of change 4</summary>
+
+---
+
+<a id="investigation-of-change-4"></a>
+
+> This section does not follow sequentially from the sections above. Check back here after implementing changes 1 - 3.
 
 </details>
 
@@ -272,6 +282,8 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 </details>
 
 ## Change 4
+
+> To come up with this change, I spent several days looking for the source of a bug. Read ["Investigation of change 4"](#investigation-of-change-4) under [Usage](#usage) to learn how the bug was solved.
 
 > TODO: Extract this bug investigation into one of the dropdowns way above <b>Change 1</b>. Shrink this section to include only the patch, but link to the bug investigation.
 
