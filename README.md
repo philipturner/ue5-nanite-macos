@@ -740,7 +740,7 @@ RHI_API int32 RHIGetPreferredClearUAVRectPSResourceType(const FStaticShaderPlatf
 }
 ```
 
-At path (1) below, `Nanite::InitRasterContext` calls `AddClearUAVPass` on four distinct textures. These textures are called `OutDepthBuffer`, `OutVisBuffer64`, `OutDbgBuffer64`, and `OutDbgBuffer32`. They enable z-buffering for Nanite's software-emulated triangle rasterization, which accesses each pixel atomically. Within `AddClearUAVPass`, Unreal Engine would create a corrupted render command and send it to an asynchronous queue. Another CPU thread picked up the render command, tried to encode it, and crashed. The asynchronous queue erased all information about where the command originated, making the crash especially difficult to debug.
+At path (1) below, `Nanite::InitRasterContext` calls `AddClearUAVPass` on four distinct textures. These textures are named `OutDepthBuffer`, `OutVisBuffer64`, `OutDbgBuffer64`, and `OutDbgBuffer32`. They enable z-buffering for Nanite's software-emulated triangle rasterization, which accesses each pixel atomically. Within `AddClearUAVPass`, Unreal Engine would create a corrupted render command and send it to an asynchronous queue. Another CPU thread picked up the render command, tried to encode it, and crashed. The asynchronous queue erased all information about where the command originated, making the crash especially difficult to debug.
 
 ```
 (1) /Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp, circa line 2690
