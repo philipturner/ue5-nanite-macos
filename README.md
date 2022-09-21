@@ -214,12 +214,11 @@ GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
 ```
 
 </details>
+<a id="investigation-of-change-4"></a>
 <details>
 <summary>Investigation of change 4</summary>
 
 ---
-
-<a id="investigation-of-change-4"></a>
 
 > This section does not follow sequentially from the sections above. Check back here after implementing changes 1 - 3.
 
