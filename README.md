@@ -722,7 +722,7 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 
 > To come up with this change, I spent several days looking for the source of a bug. Read ["Investigation of change 4"](#investigation-of-change-4) to learn how the bug was solved.
 
-When Epic published the UE5 early access branch, something very strange happened. They created an entirely new function for clearing textures, specifically for Nanite. In that function, a special code path triggers on Apple platforms. This is strange because Nanite was never intended to run via Metal. The change happened ~1 year before UE5NanitePort (TODO: double-check this time span).
+When Epic published the UE5 early access branch, something very strange happened. They created an entirely new function for clearing textures, specifically for Nanite. In that function, a special code path triggers when using the Metal backend. This is strange because Nanite was never intended to run on Metal. The change happened ~1 year before UE5NanitePort (TODO: double-check this time span).
 
 ```cpp
 // /Engine/Source/Runtime/RHI/Private/RHI.cpp, circa line 1906
