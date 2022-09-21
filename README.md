@@ -743,21 +743,17 @@ RHI_API int32 RHIGetPreferredClearUAVRectPSResourceType(const FStaticShaderPlatf
 At path (1) below, `Nanite::InitRasterContext` calls `AddClearUAVPass` on four distinct textures. These textures are called `OutDepthBuffer`, `OutVisBuffer64`, `OutDbgBuffer64`, and `OutDbgBuffer32`. They enable z-buffering for Nanite's software-emulated triangle rasterization, which accesses each pixel atomically. Within `AddClearUAVPass`, Unreal Engine would create a corrupted render command and send it to an asynchronous queue. Another CPU thread picked up the render command, tried to encode it, and crashed. The asynchronous queue erased all information about where the command originated, making the crash especially difficult to debug.
 
 ```
-/Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp, circa line 2690
+(1) /Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp, circa line 2690
+(2) /Engine/Source/Runtime/RenderCore/Private/RenderGraphUtils.cpp, circa line 582
 ```
 
-Circa line 2667 of the file above, it always creates a 2D texture for the various inputs into Nanite shaders. These are called `OutDepthBuffer`, `OutVisBuffer64`, `OutDbgBuffer64`, and `OutDbgBuffer32`. That code was only ever tested on DirectX and Vulkan, a platform that defaults to 2D textures for `ClearResource` views. Between the UE5NanitePort and when I investigated the bug, Epic rewrote a certain Nanite shader. They replaced and/or renamed the arguments set at line 2667. Before the change, they may have never triggered the code that sets them as a `texture_buffer` in Metal.
+At path (2), `ModifyCompilationEnvironment` calls a function to determine the clear resource's type. On Apple platforms, it would treate the clear resource like a `texture_buffer`. The four textures created in `Nanite::InitRasterContext` were 2D textures - not texture buffers. Upon encoding the render command, the crash message stated `ShaderTextureType 2 != TexTypes 9`. It had attempted to bind a `texture2d` when the shader expected a `texture_buffer`!
 
-Alternatively, UE5NanitePort could have found this bug and fixed it. The port is a closed-source binary, so I can't see its changes to engine C++ code.
-
-Fix: at path (1) below, comment out the right-hand side of line (2). Replace it with line (3), which forces it to be a 2D texture.
-```
-(1) /Engine/Source/Runtime/RenderCore/Private/RenderGraphUtils.cpp, circa line 582
-(2) int32 ResourceType = RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
-(3) int32 ResourceType = 1; //RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
-```
+To fix the bug, you only need to change one line of code. Change the first statement of `ModifyCompilationEnvironment`, so that it always assigns `1` to `ResourceType`. The code should now match [`Sources/RenderGraphUtils_Changes.cpp`](./Sources/RenderGraphUtils_Changes.cpp).
 
 ## Change 5
+
+> I am currently investigating a bug. When it is solved, I will post the solution in this section.
 
 Okay, so now it works. I saw a Nanite sphere appear in all 8 debug views inside the Unreal Editor, although I didn't see it in the main view. Then, it froze up and I had to reboot my Mac.
 
