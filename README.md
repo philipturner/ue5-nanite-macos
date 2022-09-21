@@ -199,93 +199,6 @@ Next, I tried forcing UE5 to perform unity builds. These supposedly decrease com
 
 > This section does not follow sequentially from the sections above. Check back here after implementing changes 1 - 3.
 
-</details>
-
-## Modifications to UE5
-
-[This link](https://github.com/philipturner/UnrealEngine/commits/modifications) shows my most recent modifications to Unreal Engine. Sign into your Epic Games-licensed GitHub account to view it. I also post raw source code in `ue5-nanite-macos`, explaining it below.
-
-### Change 1
-
-Look at [`Sources/RenderUtils_Changes.h`](./Sources/RenderUtils_Changes.h) in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`. This only enables Nanite on macOS, not iOS or tvOS yet. The engine now crashes at runtime.
-
-```
-(1) Engine/Source/Runtime/RenderCore/Public/RenderUtils.h
-(2) Engine/Config/Mac/DataDrivenPlatformInfo.ini
-```
-
-<details>
-<summary>Crash description</summary>
-
-```
-[UE] Assertion failed: GRHIPersistentThreadGroupCount > 0 [File:./Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp] [Line: 1738] 
-GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
-```
-
-</details>
-
-### Change 2
-
-To fix the crash above, set the persistent thread group count for MetalRHI to 1440 - the same value as DirectX and Vulkan. Navigate to the path below and change `FMetalDynamicRHI::Init()` to the contents of [`Sources/MetalRHI_Changes.cpp`](./Sources/MetalRHI_Changes.cpp). The engine now crashes because it cannot find `FInstanceCull_CS`. The GPU had a soft fault before UE crashed, so something is going very wrong.
-
-```
-Engine/Source/Runtime/Apple/MetalRHI/Private/MetalRHI.cpp
-```
-
-<details>
-<summary>Crash description</summary>
-
-```
-GPU Soft Fault count: 1
-2022-09-05 09:50:10.761740-0400 UnrealEditor[68890:538318] [UE] Assertion failed: Shader.IsValid() [File:Runtime/RenderCore/Public/GlobalShader.h] [Line: 201] 
-Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
-```
-
-</details>
-
-### Change 3
-
-[UE5NanitePort](https://github.com/gladhu/UE5NanitePort) enabled Nanite through a special shader execution path on Apple platforms. The path replaced 32-bit texture atomics with unsafe reads and writes. Depths could register incorrectly, causing hidden objects to appear in front of objects that occlude them. This may explain the graphical glitches in the associated Reddit post. Metal supports 32-bit buffer atomics, so a better solution replaces the textures with buffers. This takes more time to implement, but reduces/eliminates graphical glitches.
- 
-Since that port, Epic permanently disabled Nanite on platforms that lack 64-bit atomics. [This commit](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) removed the lock-based control path that used 32-bit atomics. Therefore, my shader modifications heavily diverge from UE5NanitePort. [`Sources`](./Sources) contains the entire contents of each modified shader. Overwrite the files below with their counterparts from `ue5-nanite-macos`:
- 
-```
-Engine/Shaders/Private/Nanite/NaniteRasterizer.usf
-Engine/Shaders/Private/Nanite/NaniteWritePixel.ush
-Engine/Shaders/Private/ShadowDepthPixelShader.usf
-```
-
-At the path below, the shader compiler checks for 64-bit image atomic support. The check happens in 5 different locations and fails each time. 
-Use the preprocessor directive in [`Sources/NaniteCullRaster_Changes.cpp`](./Sources/NaniteCullRaster_Changes.cpp) to disable each check.
-
-```
-Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp
-```
-
-Now, Nanite debug views appear in the editor. Rendering any Nanite-enabled object causes a crash.
-
-<details>
-<summary>Crash description</summary>
-
-```
-[UE] [2022.09.09-17.56.48:845][ 12]LogMaterial: Display: Material /Game/StarterContent/Materials/M_Basic_Wall.M_Basic_Wall needed to have new flag set bUsedWithNanite !
-[UE] [2022.09.09-17.57.01:471][129]LogEditorViewport: Clicking Background
-[UE] [2022.09.09-17.57.04:933][441]LogSlate: Took 0.000082 seconds to synchronously load lazily loaded font '../../../Engine/Content/Slate/Fonts/Roboto-Regular.ttf' (155K)
-[UE] [2022.09.09-17.57.12:041][858]LogActorFactory: Actor Factory attempting to spawn StaticMesh /Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere
-[UE] [2022.09.09-17.57.12:041][858]LogActorFactory: Actor Factory attempting to spawn StaticMesh /Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere
-[UE] [2022.09.09-17.57.12:042][858]LogActorFactory: Actor Factory spawned StaticMesh /Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere as actor: StaticMeshActor /Temp/Untitled_0.Untitled:PersistentLevel.StaticMeshActor_0
-[UE] Ensure condition failed: 0 [File:./Runtime/Apple/MetalRHI/Private/MetalStateCache.cpp] [Line: 1958] 
-Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != TexTypes 9
-```
-
-</details>
-
-## Change 4
-
-> To come up with this change, I spent several days looking for the source of a bug. Read ["Investigation of change 4"](#investigation-of-change-4) under [Usage](#usage) to learn how the bug was solved.
-
-> TODO: Extract this bug investigation into one of the dropdowns way above <b>Change 1</b>. Shrink this section to include only the patch, but link to the bug investigation.
-
 The crash occured while validating resource bindings for a render command. One texture was `.type2D` (raw value 2) and the other was `.typeTextureBuffer` (raw value 9). In the fragment shader source below, one argument is a `texture_buffer`. A 2D texture was bound in the location of this resource.
 
 <details>
@@ -724,6 +637,93 @@ Fix: at path (1) below, comment out the right-hand side of line (2). Replace it 
 (3) int32 ResourceType = 1; //RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
 ```
 
+</details>
+
+## Modifications to UE5
+
+[This link](https://github.com/philipturner/UnrealEngine/commits/modifications) shows my most recent modifications to Unreal Engine. Sign into your Epic Games-licensed GitHub account to view it. I also post raw source code in `ue5-nanite-macos`, explaining it below.
+
+### Change 1
+
+Look at [`Sources/RenderUtils_Changes.h`](./Sources/RenderUtils_Changes.h) in this repository. In UE source code, navigate to the path (1) below. Replace the body of `NaniteAtomicsSupported()` with my changes. At path (2), add `bSupportsNanite=true` underneath `[ShaderPlatform METAL_SM5]`. This only enables Nanite on macOS, not iOS or tvOS yet. The engine now crashes at runtime.
+
+```
+(1) Engine/Source/Runtime/RenderCore/Public/RenderUtils.h
+(2) Engine/Config/Mac/DataDrivenPlatformInfo.ini
+```
+
+<details>
+<summary>Crash description</summary>
+
+```
+[UE] Assertion failed: GRHIPersistentThreadGroupCount > 0 [File:./Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp] [Line: 1738] 
+GRHIPersistentThreadGroupCount must be configured correctly in the RHI.
+```
+
+</details>
+
+### Change 2
+
+To fix the crash above, set the persistent thread group count for MetalRHI to 1440 - the same value as DirectX and Vulkan. Navigate to the path below and change `FMetalDynamicRHI::Init()` to the contents of [`Sources/MetalRHI_Changes.cpp`](./Sources/MetalRHI_Changes.cpp). The engine now crashes because it cannot find `FInstanceCull_CS`. The GPU had a soft fault before UE crashed, so something is going very wrong.
+
+```
+Engine/Source/Runtime/Apple/MetalRHI/Private/MetalRHI.cpp
+```
+
+<details>
+<summary>Crash description</summary>
+
+```
+GPU Soft Fault count: 1
+2022-09-05 09:50:10.761740-0400 UnrealEditor[68890:538318] [UE] Assertion failed: Shader.IsValid() [File:Runtime/RenderCore/Public/GlobalShader.h] [Line: 201] 
+Failed to find shader type FInstanceCull_CS in Platform SF_METAL_SM5
+```
+
+</details>
+
+### Change 3
+
+[UE5NanitePort](https://github.com/gladhu/UE5NanitePort) enabled Nanite through a special shader execution path on Apple platforms. The path replaced 32-bit texture atomics with unsafe reads and writes. Depths could register incorrectly, causing hidden objects to appear in front of objects that occlude them. This may explain the graphical glitches in the associated Reddit post. Metal supports 32-bit buffer atomics, so a better solution replaces the textures with buffers. This takes more time to implement, but reduces/eliminates graphical glitches.
+ 
+Since that port, Epic permanently disabled Nanite on platforms that lack 64-bit atomics. [This commit](https://github.com/EpicGames/UnrealEngine/commit/9b68f6b76686b3fabe1c8513efcf95dd74dea1c3#) removed the lock-based control path that used 32-bit atomics. Therefore, my shader modifications heavily diverge from UE5NanitePort. [`Sources`](./Sources) contains the entire contents of each modified shader. Overwrite the files below with their counterparts from `ue5-nanite-macos`:
+ 
+```
+Engine/Shaders/Private/Nanite/NaniteRasterizer.usf
+Engine/Shaders/Private/Nanite/NaniteWritePixel.ush
+Engine/Shaders/Private/ShadowDepthPixelShader.usf
+```
+
+At the path below, the shader compiler checks for 64-bit image atomic support. The check happens in 5 different locations and fails each time. 
+Use the preprocessor directive in [`Sources/NaniteCullRaster_Changes.cpp`](./Sources/NaniteCullRaster_Changes.cpp) to disable each check.
+
+```
+Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp
+```
+
+Now, Nanite debug views appear in the editor. Rendering any Nanite-enabled object causes a crash.
+
+<details>
+<summary>Crash description</summary>
+
+```
+[UE] [2022.09.09-17.56.48:845][ 12]LogMaterial: Display: Material /Game/StarterContent/Materials/M_Basic_Wall.M_Basic_Wall needed to have new flag set bUsedWithNanite !
+[UE] [2022.09.09-17.57.01:471][129]LogEditorViewport: Clicking Background
+[UE] [2022.09.09-17.57.04:933][441]LogSlate: Took 0.000082 seconds to synchronously load lazily loaded font '../../../Engine/Content/Slate/Fonts/Roboto-Regular.ttf' (155K)
+[UE] [2022.09.09-17.57.12:041][858]LogActorFactory: Actor Factory attempting to spawn StaticMesh /Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere
+[UE] [2022.09.09-17.57.12:041][858]LogActorFactory: Actor Factory attempting to spawn StaticMesh /Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere
+[UE] [2022.09.09-17.57.12:042][858]LogActorFactory: Actor Factory spawned StaticMesh /Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere as actor: StaticMeshActor /Temp/Untitled_0.Untitled:PersistentLevel.StaticMeshActor_0
+[UE] Ensure condition failed: 0 [File:./Runtime/Apple/MetalRHI/Private/MetalStateCache.cpp] [Line: 1958] 
+Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != TexTypes 9
+```
+
+</details>
+
+## Change 4
+
+> To come up with this change, I spent several days looking for the source of a bug. Read ["Investigation of change 4"](#investigation-of-change-4) to learn how the bug was solved.
+
+## Change 5
+
 Okay, so now it works. I saw a Nanite sphere appear in all 8 debug views inside the Unreal Editor, although I didn't see it in the main view. Then, it froze up and I had to reboot my Mac.
 
 To investigate, I need to read over some more Nanite source code. Then, I should try implementing the [AtomicsWorkaround](./AtomicsWorkaround) and fix all the atomic things I set to non-atomic. Perhaps some shader loop expected a number to be atomically incremented. When it wasn't, the value became corrupted. The integrated GPU looped infinitely and made my Mac unresponsive.
@@ -736,6 +736,8 @@ I took a screenshot of the Nanite debug views. I have to avoid clicking the edit
 
 I repeatedly triggered a warning (2) inside RenderCore (1). A few minutes later, I got a new GPU soft fault when the editor autosaved.
 
+<details>
+<summary>Log output referenced in the paragraph above</summary>
 ```
 (1) /Engine/Source/Runtime/RenderCore/Private/ProfilingDebugging/RealtimeGPUProfiler.cpp
 (2)
@@ -770,10 +772,9 @@ I repeatedly triggered a warning (2) inside RenderCore (1). A few minutes later,
 2022-09-19 19:57:44.708871-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:708][350]LogFileHelpers: Auto-saving content packages took 0.486
 2022-09-19 19:57:45.016897-0400 UnrealEditor[12227:417732] GPU Soft Fault count: 1905
 ```
+</details>
 
 I swapped out one texture (`DbgBuffer32`) for a buffer, and it still froze the iGPU, to the point where I had to reboot my Mac. I'm not sure whether the Unreal Editor was worse off than before the modification. Regardless, I now understand how to bind new resources to the HLSL shaders. I should be able to implement the entire atomics workaround, then see if that fixes anything. If not, this narrows down the list of possible causes.
-
-> TODO: It's already pretty clear that a "Change 4" exists. Fix the section of code that treated a 2D texture like a texture buffer. I can transfer the current bug investigation into a "Change 5".
 
 ## Attribution
 
