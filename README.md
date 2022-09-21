@@ -722,6 +722,41 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 
 > To come up with this change, I spent several days looking for the source of a bug. Read ["Investigation of change 4"](#investigation-of-change-4) to learn how the bug was solved.
 
+When Epic merged the UE5 early access branch into `ue5-main`, something very strange happened. They created an entirely new function for clearing textures, specifically for Nanite. In that function, a special code path triggers on Apple platforms. This is strange because Nanite was never intended to run via Metal. The change happened ~1 year before UE5NanitePort (I need to double-check).
+
+```cpp
+// /Engine/Source/Runtime/RHI/Private/RHI.cpp, circa line 1906
+RHI_API int32 RHIGetPreferredClearUAVRectPSResourceType(const FStaticShaderPlatform Platform)
+{
+	if (IsMetalPlatform(Platform))
+	{
+		static constexpr uint32 METAL_TEXTUREBUFFER_SHADER_LANGUAGE_VERSION = 4;
+		if (METAL_TEXTUREBUFFER_SHADER_LANGUAGE_VERSION <= RHIGetMetalShaderLanguageVersion(Platform))
+		{
+			return 0; // BUFFER
+		}
+	}
+	return 1; // TEXTURE_2D
+}
+```
+
+At path (1) below, `Nanite::InitRasterContext` calls `AddClearUAVPass` on four distinct textures. These textures are called `OutDepthBuffer`, `OutVisBuffer64`, `OutDbgBuffer64`, and `OutDbgBuffer32`. They enable z-buffering for Nanite's software-emulated triangle rasterization, which accesses each pixel atomically. Within `AddClearUAVPass`, Unreal Engine would create a corrupted render command and send it to an asynchronous queue. Another CPU thread picked up the render command, tried to encode it, and crashed. The asynchronous queue erased all information about where the command originated, making the crash especially difficult to debug.
+
+```
+/Engine/Source/Runtime/Renderer/Private/Nanite/NaniteCullRaster.cpp, circa line 2690
+```
+
+Circa line 2667 of the file above, it always creates a 2D texture for the various inputs into Nanite shaders. These are called `OutDepthBuffer`, `OutVisBuffer64`, `OutDbgBuffer64`, and `OutDbgBuffer32`. That code was only ever tested on DirectX and Vulkan, a platform that defaults to 2D textures for `ClearResource` views. Between the UE5NanitePort and when I investigated the bug, Epic rewrote a certain Nanite shader. They replaced and/or renamed the arguments set at line 2667. Before the change, they may have never triggered the code that sets them as a `texture_buffer` in Metal.
+
+Alternatively, UE5NanitePort could have found this bug and fixed it. The port is a closed-source binary, so I can't see its changes to engine C++ code.
+
+Fix: at path (1) below, comment out the right-hand side of line (2). Replace it with line (3), which forces it to be a 2D texture.
+```
+(1) /Engine/Source/Runtime/RenderCore/Private/RenderGraphUtils.cpp, circa line 582
+(2) int32 ResourceType = RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
+(3) int32 ResourceType = 1; //RHIGetPreferredClearUAVRectPSResourceType(Parameters.Platform);
+```
+
 ## Change 5
 
 Okay, so now it works. I saw a Nanite sphere appear in all 8 debug views inside the Unreal Editor, although I didn't see it in the main view. Then, it froze up and I had to reboot my Mac.
