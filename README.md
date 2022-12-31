@@ -718,7 +718,7 @@ Mismatched texture type: EMetalShaderStages 1, Index 0, ShaderTextureType 2 != T
 
 </details>
 
-## Change 4
+### Change 4
 
 > To come up with this change, I spent several days looking for the source of a bug. Read ["Investigation of change 4"](#investigation-of-change-4) to learn how the bug was solved.
 
@@ -751,7 +751,7 @@ At path (2), `ModifyCompilationEnvironment` calls a function to determine the cl
 
 To fix the bug, you must change one line of code. In the first statement of `ModifyCompilationEnvironment`, comment out the function call. Then, assign `1` to `ResourceType`. Your code should match [`Sources/RenderGraphUtils_Changes.cpp`](./Sources/RenderGraphUtils_Changes.cpp).
 
-## Change 5
+### Change 5
 
 > I am currently investigating a bug. When it is solved, I will post the solution in this section.
 
@@ -769,6 +769,7 @@ I repeatedly triggered a warning (2) inside RenderCore (1). A few minutes later,
 
 <details>
 <summary>Log output referenced in the paragraph above</summary>
+
 ```
 (1) /Engine/Source/Runtime/RenderCore/Private/ProfilingDebugging/RealtimeGPUProfiler.cpp
 (2)
@@ -803,6 +804,7 @@ I repeatedly triggered a warning (2) inside RenderCore (1). A few minutes later,
 2022-09-19 19:57:44.708871-0400 UnrealEditor[12227:410904] [UE] [2022.09.19-23.57.44:708][350]LogFileHelpers: Auto-saving content packages took 0.486
 2022-09-19 19:57:45.016897-0400 UnrealEditor[12227:417732] GPU Soft Fault count: 1905
 ```
+
 </details>
 
 I swapped out one texture (`DbgBuffer32`) for a buffer, and it still froze the iGPU, to the point where I had to reboot my Mac. I'm not sure whether the Unreal Editor was worse off than before the modification. Regardless, I now understand how to bind new resources to the HLSL shaders. I should be able to implement the entire atomics workaround, then see if that fixes anything. If not, this narrows down the list of possible causes.
