@@ -13,7 +13,7 @@ Nanite can run entirely through 32-bit atomics, without creating data races. The
 Furthermore, this port needs to create major optimizations for macOS and iOS. The previous port (UE5NanitePort) ran at around 15 frames per second - far from optimal. The 64-bit atomics workaround could make this even slower, requiring very creative thinking to maximize frame rate. A few ideas:
 - Decouple atomic writes from rasterization, then distribute the writes evenly among simdgroups.
 - Use MetalFX temporal upscaling, which is optimized for M1 GPUs. UE5's built-in Temporal Super Resolution is optimized for AMD GPUs.
-- Minor architectural improvements for the Apple GPU architecture, which is very similar to RDNA.
+- Minor architectural improvements for the Apple GPU architecture, which is <s>very similar to RDNA</s> [kind of unusual but thoroughly documented (not by Apple)](https://github.com/philipturner/metal-benchmarks).
 
 ## Usage
 
