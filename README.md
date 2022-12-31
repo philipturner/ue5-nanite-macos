@@ -809,6 +809,12 @@ I repeatedly triggered a warning (2) inside RenderCore (1). A few minutes later,
 
 I swapped out one texture (`DbgBuffer32`) for a buffer, and it still froze the iGPU, to the point where I had to reboot my Mac. I'm not sure whether the Unreal Editor was worse off than before the modification. Regardless, I now understand how to bind new resources to the HLSL shaders. I should be able to implement the entire atomics workaround, then see if that fixes anything. If not, this narrows down the list of possible causes.
 
+## Next Steps
+
+I do not plan to finish this project myself. It was started by another person, then I picked up where they left off. The torch should be passed to another contributor, with stronger interest in finishing it. I'm more than willing to guide anyone with enough time and dedication.
+
+Recently, [metal-float64](https://github.com/philipturner/metal-float64) implemented working emulated 64-bit atomics, inspired by this port. This could be an alternative implementation for the atomics workaround. Upon completion (probably summer 2023), the library should be easy to integrate. However, it will have lower performance during the render stage (5x bandwidth vs. 3x bandwidth). This downside may cancel with the benefit of rasterizing in-place.
+
 ## Attribution
 
 This repo sources some information from [UE5NanitePort](https://github.com/gladhu/UE5NanitePort). By linking to the repository, I hereby give the creator attribution for their work.
