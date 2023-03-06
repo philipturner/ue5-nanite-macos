@@ -34,7 +34,7 @@ let numTests = 5
 let emulating64BitAtomics: Bool = false
 let atomicsPipelineName = emulating64BitAtomics ? "atomicsTestApple8" : "atomicsTest"
 
-let device = MTLCreateSystemDefaultDevice()!
+let device = MTLCopyAllDevices().first { !$0.isLowPower } ?? MTLCopyAllDevices().first!
 let commandQueue = device.makeCommandQueue()!
 let library = device.makeDefaultLibrary()!
 let atomicsTestPipeline = try! device.makeComputePipelineState(
