@@ -14,7 +14,10 @@ let textureHeight = 2
 // A buffer-backed texture must have rows aligned to 16 bytes. Accomplish this
 // by setting stride to an even number of 8-bit elements. Align depth/count
 // buffers to this stride, so that one index can address into all buffers.
-let textureRowStride = ~1 & (1 + textureWidth)
+//let textureRowStride = ~1 & (1 + textureWidth)
+
+// Apparently that is not true?
+let textureRowStride = ~(512/8 - 1) & ((512/8 - 1) + textureWidth)
 #else
 // On iOS, the minimum alignment is 64 bytes.
 let textureRowStride = ~7 & (7 + textureWidth)
@@ -31,14 +34,14 @@ let numKernelInvocations = 100
 let numTests = 5
 
 // Whether to test 64-bit atomics on an A15 or M2 GPU.
-let emulating64BitAtomics: Bool = false
-let atomicsPipelineName = emulating64BitAtomics ? "atomicsTestApple8" : "atomicsTest"
+let emulating64BitAtomics: Bool = true
+let atomicsPipelineName = !emulating64BitAtomics ? "atomicsTestApple8" : "atomicsTest"
 
 let device = MTLCopyAllDevices().first { !$0.isLowPower } ?? MTLCopyAllDevices().first!
 let commandQueue = device.makeCommandQueue()!
 let library = device.makeDefaultLibrary()!
 let atomicsTestPipeline = try! device.makeComputePipelineState(
-	function: library.makeFunction(name: atomicsPipelineName)!)
+  function: library.makeFunction(name: atomicsPipelineName)!)
 let reconstructTexturePipeline = try! device.makeComputePipelineState(
     function: library.makeFunction(name: "reconstructTexture")!)
 
@@ -80,7 +83,7 @@ textureDesc.usage = [.shaderRead, .shaderWrite]
 
 // Generate out texture.
 let outTexture = outBuffer.makeTexture(
-	descriptor: textureDesc, offset: 0, bytesPerRow: 8 * textureRowStride)!
+  descriptor: textureDesc, offset: 0, bytesPerRow: 8 * textureRowStride)!
 
 // MARK: - Generate Random Data
 
@@ -110,7 +113,7 @@ func generateRandomData(ptr: UnsafeMutablePointer<RandomData>) {
         data.color = Float(color_uint) / Float(UInt32.max)
         
         // Keep depths within the range [0, 1]. Otherwise, the GPU's results
-		// could differ drastically from the CPU's results.
+    // could differ drastically from the CPU's results.
         data.depth = Float(data.depth.bitPattern) / Float(UInt32.max)
         
         ptr[i] = data
@@ -140,7 +143,7 @@ func generateExpectedResults(
         var pixel: SIMD2<Float> = .zero
         pixel[0] = ptr[i].color
         pixel[1] = max(0, min(ptr[i].depth, 1))
-        if !emulating64BitAtomics {
+        if emulating64BitAtomics {
             let maxDepth: Int = (1 << 24) - 1
             let clampedDepth = UInt32(pixel[1] * Float(maxDepth))
             pixel[1] = Float(bitPattern: clampedDepth)
@@ -163,7 +166,7 @@ func generateExpectedResults(
 //
 // The deviation should be zero.
 func validateResults(
-	ptr: UnsafeMutablePointer<SIMD2<Float>>,
+  ptr: UnsafeMutablePointer<SIMD2<Float>>,
     expected: [[SIMD2<Float>]]
 ) -> (colorDeviation: Float, depthDeviation: Float) {
     var deviation: SIMD2<Float> = .zero
@@ -174,7 +177,7 @@ func validateResults(
         for i in 0..<outTexture.width {
             let actual = actualPixels[i]
             var expected = expectedPixels[i]
-            if !emulating64BitAtomics {
+            if emulating64BitAtomics {
                 let maxDepth: Int = (1 << 24) - 1
                 let clampedDepth: UInt32 = expected.y.bitPattern
                 let depth = Float(clampedDepth) / Float(maxDepth + 1)
@@ -210,22 +213,22 @@ for i in 0..<numTests {
         let milliseconds = Int(testTime * 1000)
         
         print("Test \(i + 1) took \(milliseconds) milliseconds.")
-		print()
+    print()
     }
     
     // Generate random data.
-	let randomContents = randomDataBuffer.contents().assumingMemoryBound(to: RandomData.self)
-	generateRandomData(ptr: randomContents)
-	#if os(macOS)
-	randomDataBuffer.didModifyRange(0..<randomDataBuffer.length)
-	#endif
+  let randomContents = randomDataBuffer.contents().assumingMemoryBound(to: RandomData.self)
+  generateRandomData(ptr: randomContents)
+  #if os(macOS)
+  randomDataBuffer.didModifyRange(0..<randomDataBuffer.length)
+  #endif
     
     let commandBuffer = commandQueue.makeCommandBuffer()!
     
     // Zero out all buffers.
     let blitEncoder = commandBuffer.makeBlitCommandEncoder()!
     blitEncoder.fill(buffer: depthBuffer, range: 0..<depthBuffer.length, value: 0)
-	blitEncoder.fill(buffer: countBuffer, range: 0..<countBuffer.length, value: 0)
+  blitEncoder.fill(buffer: countBuffer, range: 0..<countBuffer.length, value: 0)
     blitEncoder.fill(buffer: outBuffer, range: 0..<outBuffer.length, value: 0)
     blitEncoder.fill(buffer: dataRacesBuffer, range: 0..<dataRacesBuffer.length, value: 0)
     blitEncoder.endEncoding()
@@ -246,31 +249,31 @@ for i in 0..<numTests {
     computeEncoder.setBytes(&params, length: paramsLength, index: 0)
     
     computeEncoder.setBuffer(randomDataBuffer, offset: 0, index: 1)
-	computeEncoder.setBuffer(outBuffer, offset: 0, index: 4)
-	if !emulating64BitAtomics {
-		computeEncoder.setBuffer(depthBuffer, offset: 0, index: 2)
-		computeEncoder.setBuffer(countBuffer, offset: 0, index: 3)
-		computeEncoder.setBuffer(dataRacesBuffer, offset: 0, index: 5)
-	}
+  computeEncoder.setBuffer(outBuffer, offset: 0, index: 4)
+  if emulating64BitAtomics {
+    computeEncoder.setBuffer(depthBuffer, offset: 0, index: 2)
+    computeEncoder.setBuffer(countBuffer, offset: 0, index: 3)
+    computeEncoder.setBuffer(dataRacesBuffer, offset: 0, index: 5)
+  }
     do {
         let gridSize = MTLSizeMake(numKernelInvocations, 1, 1)
         let threadgroupSize = MTLSizeMake(1, 1, 1)
         computeEncoder.dispatchThreadgroups(gridSize, threadsPerThreadgroup: threadgroupSize)
     }
     
-	if !emulating64BitAtomics {
-		computeEncoder.setComputePipelineState(reconstructTexturePipeline)
-		
-		// params already bound to index 0.
-		// depthBuffer already bound to index 2.
-		// outBuffer already bound to index 4.
-		computeEncoder.setTexture(outTexture, index: 0)
-		do {
-			let gridSize = MTLSizeMake(outTexture.width, outTexture.height, 1)
-			let threadgroupSize = MTLSizeMake(1, 1, 1)
-			computeEncoder.dispatchThreadgroups(gridSize, threadsPerThreadgroup: threadgroupSize)
-		}
-	}
+  if emulating64BitAtomics {
+    computeEncoder.setComputePipelineState(reconstructTexturePipeline)
+    
+    // params already bound to index 0.
+    // depthBuffer already bound to index 2.
+    // outBuffer already bound to index 4.
+    computeEncoder.setTexture(outTexture, index: 0)
+    do {
+      let gridSize = MTLSizeMake(outTexture.width, outTexture.height, 1)
+      let threadgroupSize = MTLSizeMake(1, 1, 1)
+      computeEncoder.dispatchThreadgroups(gridSize, threadsPerThreadgroup: threadgroupSize)
+    }
+  }
     
     computeEncoder.endEncoding()
     commandBuffer.commit()
@@ -280,7 +283,7 @@ for i in 0..<numTests {
     commandBuffer.waitUntilCompleted()
     
     // Validate results.
-	let outContents = outBuffer.contents().assumingMemoryBound(to: SIMD2<Float>.self)
+  let outContents = outBuffer.contents().assumingMemoryBound(to: SIMD2<Float>.self)
     let deviation = validateResults(ptr: outContents, expected: results)
     print("Deviation: \(deviation)")
     
