@@ -13,7 +13,7 @@ I tested this on an Apple M1 Max, and you may get slightly different results on 
 
 ## Tested Devices
 
-| GPU | Original Nanite Workaround | MetalFloat64 Approach | Metal `ULONG_MIN_MAX` |
+| GPU | Original Nanite Workaround | [MetalFloat64](https://github.com/philipturner/metal-float64) Approach | Metal `ULONG_MIN_MAX` |
 | --- | ----- | ---- | ---- |
 | AMD GCN 5 | ✅ | n/a | ❌ |
 | M1 Max | ✅ | ❌\* | ❌ |
