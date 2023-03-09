@@ -35,6 +35,6 @@ Apple added hardware acceleration for Nanite to the M2 series of GPUs, but not t
 
 ![d01df8388fbab8ee24d81dcf058a6131a3d932f5_2_1380x910](https://user-images.githubusercontent.com/71743241/224036245-4e2783e1-c1bd-4300-adee-f33856e68030.jpeg)
 
-> Screenshot taken on March 9, 2023. Configuration: 38-core M2 Max, macOS 13.2.1, Xcode 14.2
+> Screenshot taken on March 9, 2023. Configuration: 38-core M2 Max, macOS 13.2.1, Xcode 14.2. Courtesy of [@jelmer3000](https://github.com/jelmer3000).
 
 
