@@ -65,7 +65,7 @@ let textureHeight = 2
 #if os(macOS)
 // A buffer-backed texture must have rows aligned to 16 bytes. Accomplish this
 // by setting stride to an even number of 8-bit elements. Align depth/count
-// buffers to this stride, so that one index can address into all buffers.
+// buffers to this stride, so that one address can index into all buffers.
 //let textureRowStride = ~1 & (1 + textureWidth)
 
 // Apparently that is not true?
